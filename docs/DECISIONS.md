@@ -38,6 +38,13 @@ What the user asked for, liked and rejected. Read before any design change; neve
 - **Screen name pattern:** DONE: three-part kept.
 - (was) **Screen name pattern:** three-part (above) or the brief's two-part examples ("Primary Customer — Product Catalogue")? One-line change.
 
+## Raised at the Phase 2 design checkpoint, waiting for the user
+
+- Approval of the application look (sidebar, top bar, cards, colours, laminate swatches, charts).
+- **Manager ordering dead end:** Place Order is shared by Owner and Manager but Order Builder, Order Confirmation and Inventory Item Details are Owner only; tag the Managers onto them (no new screens)? Same for the Secondary Manager.
+- **Date format:** 26/10/2026 in tables, "26 October 2026" in text; no three-letter month names (the no-abbreviations rule).
+- **Money format:** full figures with Indian grouping (₹33,52,882). Alternative within the rule: ₹33.53 lakh (a full word).
+
 ## Rejected
 
 Nothing yet.

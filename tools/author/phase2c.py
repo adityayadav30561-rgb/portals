@@ -70,7 +70,7 @@ body = f'''  <div class="head">
       <section class="card"><header><h2>Delivery</h2><span class="meta mono">DSP-2026-5521</span></header><div class="body"><dl class="kv"><dt>Deliver To</dt><dd>Bhiwandi Warehouse, Thane District</dd><dt>Expected</dt><dd>27/10/2026</dd><dt>Transporter</dt><dd>Western Freight Carriers</dd><dt>Vehicle</dt><dd>MH 04 KP 7712</dd><dt>Driver</dt><dd>Ramesh Pawar<br><span class="sub">+91 90000 12345</span></dd></dl></div></section>
       <section class="card"><header><h2>Invoice</h2></header><div class="body"><dl class="kv"><dt>Invoice Number</dt><dd><a data-link="PRI-BIL-02">INV-2026-03318</a></dd><dt>Issued</dt><dd>24/10/2026</dd><dt>Due</dt><dd>08/12/2026</dd><dt>Amount</dt><dd><b>{M(total)}</b></dd><dt>Status</dt><dd>{chip('Unpaid')}</dd></dl>
         <a class="btn block" data-link="PRI-BIL-02" style="margin-top:1rem">View Invoice</a></div></section>
-      <section class="card"><header><h2>Order Information</h2></header><div class="body"><dl class="kv"><dt>Payment Terms</dt><dd>45 days from invoice</dd><dt>Transport</dt><dd>Company Transport</dd><dt>Scheme</dt><dd>None applied</dd><dt>Reference Number</dt><dd>DA-OCT-117</dd></dl></div></section>
+      <section class="card"><header><h2>Order Information</h2></header><div class="body"><dl class="kv"><dt>Payment Terms</dt><dd>45 days from invoice</dd><dt>Transport</dt><dd>Company Transport</dd><dt>Scheme</dt><dd>None applied</dd><dt>Reference Number</dt><dd>DA-2026-117</dd></dl></div></section>
     </div>
   </div>
 '''

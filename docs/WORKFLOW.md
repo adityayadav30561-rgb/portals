@@ -12,7 +12,7 @@ How the work is run so the session can be cleared after every phase and the next
 
 **During**
 - Read [DATA.md](DATA.md) before building screens: the products, prices, people, number series and formats every screen must reuse.
-- Authoring aids for generating screen HTML are in `tools/author/` (shared data and helpers, one script per phase). The generated HTML is the source of truth afterwards.
+- Authoring aids for generating screen HTML are in `tools/author/` (shared data and helpers, one script per phase). The generator scripts are the source of the screens they write (change the script, re-run it; never hand-edit a generated file).
 - One phase per session. Content and screens come from the registry (`assets/registry.js`), never duplicated.
 - When the user states a preference, add it to DECISIONS.md immediately.
 

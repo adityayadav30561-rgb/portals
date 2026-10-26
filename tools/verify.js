@@ -54,7 +54,7 @@ if (only) targets.splice(0, targets.findIndex((t) => t.startsWith('screens')) < 
       if (missing.length) problems.push('links to missing files: ' + missing.join(', '));
       console.log(`${w} ${t}: ${problems.length ? 'FAIL ' + problems.join('; ') : 'ok'}`);
       if (problems.length) bad++;
-      if (out) { fs.mkdirSync(out, { recursive: true }); await page.screenshot({ path: path.join(out, `${w}-${t.replace(/[\/?=]/g, '_')}.png`), fullPage: true }); }
+      if (out) { fs.mkdirSync(out, { recursive: true }); const full = await page.evaluate(() => document.documentElement.scrollHeight); await page.setViewportSize({ width: w, height: Math.max(h, full) }); await page.waitForTimeout(150); await page.screenshot({ path: path.join(out, `${w}-${t.replace(/[\/?=]/g, '_')}.png`), fullPage: false }); }
       await page.close();
     }
     await ctx.close();

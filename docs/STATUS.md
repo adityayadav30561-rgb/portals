@@ -17,8 +17,7 @@ price-per-sheet column); Charlie's own ledger of **38 sales to customers** (RSL-
 82 stock movements reconcile to 216 sheets on hand (opening 261); receipts use Bravo's actual delivery dates; reorder rule as for Bravo (60 sheets, ₹99,700 before GST, fits the credit left).
 Tables got `wrap tight` classes as in Phase 7; no shared screen or earlier generator output changed (all generators re-run, `screens/` diff empty apart from the new files).
 
-**Review gaps, stated plainly:** Phases 4 and 5 had no post-commit advisor review. The advisor reviewed the Phase 6, 7 and 8 plans, and the finished Phases 6 and 7. Phase 8's post-commit
-review is recorded below once done. Not yet checked in Firefox or Safari. Shared Bravo screens do not yet link Low Stock Overview or Incoming Stock for the Manager (the sidebar does).
+**Review gaps, stated plainly:** Phases 4 and 5 had no post-commit advisor review. The advisor reviewed the Phase 6, 7 and 8 plans, and the finished Phases 6, 7 and 8. The finished Phase 8 also had its post-commit review (fixes: Sales Executive My Inventory layout, legal name matching the GST number). Not yet checked in Firefox or Safari. Shared Bravo screens do not yet link Low Stock Overview or Incoming Stock for the Manager (the sidebar does).
 
 ## What exists
 
@@ -96,7 +95,7 @@ and the ticket description, which are user content).
 6. **Retailer targets** (Charlie ₹2,50,000; Kiran ₹2,20,000; Mehta ₹1,70,000) and the three pending retailer requests are placeholders.
 7. **Known point:** the Reorder Recommendations total (₹3,35,500, ₹3,95,890 with GST) is above Bravo's credit available after SAL-2026-3042 (₹2,46,180); the rule is unchanged, say if you want it to respect credit.
 8. **Phase 8 placeholders (new):** Charlie's own numbers RSL-2026-xxxx (sales to customers) and ADJ-2026-C000x (adjustments); the 25% selling-price rule (`crp()`); the 38 customer names
-   and payment modes; Charlie's stock levels and reorder levels; the offers OFR-2026-01 and 02 from Dealer Bravo; Store Profile legal name (Sheikh Laminate Mart), code RTL-0041, established 2018.
+   and payment modes; Charlie's stock levels and reorder levels; the offers OFR-2026-01 and 02 from Dealer Bravo; Store Profile legal name (Charlie Laminates Private Limited), code RTL-0041, established 2018.
 9. Earlier answers applied from my recommendations (change if you disagree): Marble Finish Launch Incentive 140 of 300; Dealer Lakshya not in
    Pending Dealer Requests; Financial Reports May to October; May to September tax split kept.
 

@@ -78,7 +78,7 @@ body = f'''  <div class="head">
     <dl class="kv left" style="grid-template-columns:auto auto;gap:.5rem 1.25rem"><dt>Retailer Code</dt><dd class="mono">RTL-0041</dd><dt>Customer Since</dt><dd>11 May 2021</dd></dl>
   </section>
   <div class="grid g-3" style="--cols:1.1fr 1.2fr 1.2fr">
-    {block('Business Details', [('Legal Name', 'Sheikh Laminate Mart'), ('GST Number', nw('27AAJCC4410E1ZK')), ('Business Type', 'Retailer'), ('Established', '2018')])}
+    {block('Business Details', [('Legal Name', 'Charlie Laminates Private Limited'), ('GST Number', nw('27AAJCC4410E1ZK')), ('Business Type', 'Retailer'), ('Established', '2018')])}
     {block('Address', [('Shop', 'Shop 12, MG Road, Camp, Pune, Postal Code 411001'), ('Area', 'Camp')])}
     {card('Commercial Terms', kv([('Supplier', 'Dealer Bravo'), ('Price Tier', 'Retailer Tier C'), ('Credit Limit', ML(CHR_LIMIT)), ('Outstanding Balance', ML(CHR_OWES)), ('Credit Used', f'<span class="inline-meter"><span class="meter ok"><i style="width:{CHR_USED}%"></i></span><b>{CHR_USED}%</b></span>'), ('Credit Period', '15 days')]))}
   </div>
@@ -183,7 +183,7 @@ item_rows = ''.join(f'<tr><td><div class="prod">{sw(s)}<div><b>{BY[s][1]}</b></d
 used_after = round((CHR_OWES + PEND_TOTAL) / CHR_LIMIT * 100)
 body = f'''  <div class="head">
     <h1>Order Builder</h1>
-    <div class="acts"><a class="btn" data-link="TER-ORD-03"><i data-icon="back"></i>Back to Products</a><button class="btn" type="button">Save Draft</button><a class="btn pri" data-link="TER-ORD-05" data-role="OWN">Submit Order</a><button class="btn pri" type="button" data-role="PUR">Submit Order</button></div>
+    <div class="acts"><a class="btn" data-link="TER-ORD-03"><i data-icon="back"></i>Back to Products</a><button class="btn" type="button">Save Draft</button><a class="btn pri" data-link="TER-ORD-05" data-role="OWN">Submit Order</a><a class="btn pri" data-link="TER-ORD-01" data-role="PUR">Submit Order</a></div>
   </div>
   {steps(2)}
   <div class="grid g-main-side" style="--side:18rem">

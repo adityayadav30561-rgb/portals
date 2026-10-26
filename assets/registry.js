@@ -243,6 +243,7 @@
   // Screens that exist as files today (sign-in screens; Phase 2: eleven Primary Owner screens; Phase 3: the Primary Owner's remaining screens). Add an ID here when its file is built.
   var BUILT = ['PRI-OWN-01', 'PRI-PRO-01', 'PRI-CAT-01', 'PRI-CAT-02', 'PRI-ORD-03', 'PRI-ORD-04', 'PRI-ORD-05', 'PRI-ORD-01', 'PRI-ORD-02', 'PRI-INV-01', 'PRI-INV-02',
     'PRI-DLR-01', 'PRI-DLR-02', 'PRI-DLR-03', 'PRI-SAL-01', 'PRI-SAL-02', 'PRI-SAL-03',
+    'PRI-BIL-01', 'PRI-BIL-02', 'PRI-BIL-03', 'PRI-BIL-04', 'PRI-SCH-01', 'PRI-SCH-02', 'PRI-RPT-01', 'PRI-RPT-02',
     'AUT-01', 'AUT-02', 'AUT-03', 'AUT-04', 'AUT-05', 'AUT-06', 'AUT-07', 'AUT-08', 'AUT-09'];
 
   function slug(text) { return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }

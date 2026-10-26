@@ -41,6 +41,14 @@ Applies to every screen, in every phase. `tools/verify.js` enforces what a machi
 | Minimum text size | 13px (0.8125rem), everywhere including chips, table headings, axis labels and avatars. |
 | Layout quality | Cards in a row have equal height; no dead space inside cards; no clipped values; tables never scroll sideways inside a card on desktop; every number has a label. |
 
+## Answered at the Phase 3 checkpoint (user, 2026-10-26)
+
+| Decision | Detail |
+|---|---|
+| ORD-2026-10398 | "Partly Paid" confirmed. |
+| Festive Volume Rebate | Target is **2,500 sheets**; progress 2,750 means target reached, the rebate applies to ORD-2026-10482. Applied to the Owner Dashboard, Schemes and Incentives, Scheme Details, notifications and DATA.md. |
+| Chart axis | Finer scale in `assets/charts.js` (smallest 1, 2, 2.5 or 5 step that reaches the peak in six intervals or fewer), for every chart. |
+
 ## Approved by the user (2026-10-26, "go with your recommendations")
 
 | Decision | Detail |

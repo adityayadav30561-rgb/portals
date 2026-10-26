@@ -22,6 +22,10 @@ MAVRO.AI logo only.
 - No text under page titles, no captions beside card titles, no helper sentences, nothing under 13px. Information is
   carried by titles, labels, values, chips, meters and tables (docs/DECISIONS.md, "Screen text rules"). Every screen
   must look finished: no redesign later.
+- No grey line under a name: SKU, city, role, date go in their own column, tag or labelled row (the top-bar user block and
+  the sidebar organisation block are the only exemption). Money: compact (₹33.53 lakh) in stat tiles, chart axes and
+  summaries; exact (₹9,49,752) in orders, invoices, prices and tables; one format per amount on a screen. Helpers in
+  `tools/author/data.py` (`M`, `ML`, `OPEN_ORDERS`); read docs/DATA.md.
 - Screens are written by the generator scripts in `tools/author/`; change the script, never the generated file.
 - Fictional laminates data only. Logo: `brand/mavro-logo.jpg` and `assets/brand/`, never redrawn or recoloured.
 - Verify in the browser at 1440, 1366 × 768 and 390 px before calling a phase done.

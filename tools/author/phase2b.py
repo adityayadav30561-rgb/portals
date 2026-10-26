@@ -78,7 +78,7 @@ body = f'''  <div class="head">
         <dl class="kv"><dt>Sheets</dt><dd>760</dd><dt>Subtotal</dt><dd>{M(sub)}</dd><dt>Festive Volume Rebate</dt><dd style="color:var(--ok)">−{M(rebate)}</dd><dt>Taxable Amount</dt><dd>{M(taxable)}</dd><dt>Central GST 9%</dt><dd>{M(gst)}</dd><dt>State GST 9%</dt><dd>{M(gst)}</dd><dt>Freight</dt><dd>{chip('Free','ok')}</dd></dl>
         <dl class="kv total"><dt>Total</dt><dd>{M(total)}</dd></dl></div></section>
       <section class="card"><header><h2>Credit</h2></header><div class="body">
-        <dl class="kv"><dt>Credit Limit</dt><dd>{ML(4000000)}</dd><dt>Outstanding Balance</dt><dd>{ML(1486320)}</dd><dt>This Order</dt><dd>{ML(total)}</dd></dl>
+        <dl class="kv"><dt>Credit Limit</dt><dd>{ML(4000000)}</dd><dt>Outstanding Balance</dt><dd>{ML(1486320)}</dd><dt>This Order</dt><dd>{M(total)}</dd></dl>
         <span class="meter ok" style="margin-top:1rem"><i style="width:61%"></i></span>
         <dl class="kv total"><dt>Credit Available</dt><dd>{ML(1563928)}</dd></dl></div></section>
     </div>

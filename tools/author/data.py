@@ -39,6 +39,20 @@ P = [
  ('LM-WNG-011','Wenge Dark Woodgrain Laminate','Woodgrain','1.0 mm',(1210,1170,1125),'wood','#3b2a22',False,560,130,430,0,250,'In Stock'),
  ('LM-SKY-012','Sky Blue Gloss Laminate','Gloss','0.8 mm',(870,840,805),'plain','#8fc1e3',True,345,95,250,0,150,'In Stock'),
 ]
+# Open orders (not yet delivered): the single source for every "on order" figure, so the stock tables, tiles and the
+# shipments list always agree. Expected = the date the order is expected or planned to arrive.
+OPEN_ORDERS = {
+    'ORD-2026-10447': ('27/10/2026', 'In Transit', [('LM-WNT-001',100),('LM-ARC-002',150),('LM-CHR-007',60),('LM-WNG-011',50)]),
+    'ORD-2026-10459': ('29/10/2026', 'Confirmed', [('LM-TEK-006',100),('LM-IVR-008',120),('LM-SKY-012',60)]),
+    'ORD-2026-10482': ('31/10/2026', 'Awaiting Confirmation', [('LM-WNT-001',200),('LM-ARC-002',300),('LM-CAL-003',80),('LM-OAK-004',120),('LM-SLT-005',60)]),
+}
+ON_ORDER, ARRIVAL = {}, {}
+for _o, (_d, _st, _lines) in OPEN_ORDERS.items():
+    for _s, _q in _lines:
+        ON_ORDER[_s] = ON_ORDER.get(_s, 0) + _q
+        ARRIVAL.setdefault(_s, _d)
+P = [p[:11] + (ON_ORDER.get(p[0], 0),) + p[12:] for p in P]
+OPEN_SHEETS = sum(ON_ORDER.values())
 BY = {p[0]: p for p in P}
 def prod(sku): return BY[sku]
 def slab(sku, qty):

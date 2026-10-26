@@ -37,7 +37,7 @@ Applies to every screen, in every phase. `tools/verify.js` enforces what a machi
 | Nothing beside a card title | Card header = title plus, at most, an action link or button on the right. No grey captions ("May to October 2026", "sheets on hand"). |
 | Stat tiles | Label, value, and at most one chip (change, status, or exception). No footnote sentences. A comparison period lives in the chip's tooltip, not in visible text. |
 | No helper sentences or banners | Status is carried by chips, icons, colours and meters (an alert banner with a sentence is replaced by a chip). Sentences are allowed only on state screens (confirmation, error) and for user content (notes, activity feed). |
-| Secondary lines | Only record attributes (SKU, city, date), never sentences. |
+| No lines under names | **No grey secondary line under a name, anywhere on a screen.** Each attribute is its own labelled column (SKU, City, Role, Date), a tag (SKU on cards, city beside a dealer name, PDF) or a key-value row. Exemption, by design: the frame, i.e. the top-bar user block (name, role) and the sidebar organisation block (organisation, portal name), the standard identity pattern. `tools/verify.js` fails on `<small>`/`.sub` lines inside tables, lists and cards. |
 | Minimum text size | 13px (0.8125rem), everywhere including chips, table headings, axis labels and avatars. |
 | Layout quality | Cards in a row have equal height; no dead space inside cards; no clipped values; tables never scroll sideways inside a card on desktop; every number has a label. |
 

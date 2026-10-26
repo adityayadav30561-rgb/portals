@@ -319,6 +319,8 @@ textarea.input { min-height: 5rem; padding: 0.625rem 0.875rem; resize: vertical;
   .tbl.stack-sm td:first-child { grid-column: 1 / -1; padding: 0; }
   .tbl.stack-sm td:last-child { padding: 0; }
   .tbl.stack-sm .num { text-align: left; }
+  .tbl.stack-sm tr { position: relative; }
+  .tbl.stack-sm td:has(.icon-btn) { position: absolute; top: 0.875rem; right: 1rem; }
   .kpi strong { font-size: 1.25rem; }
   .steps li + li::before { display: none; }
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }

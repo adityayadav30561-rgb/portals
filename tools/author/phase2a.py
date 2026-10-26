@@ -19,7 +19,7 @@ alert_rows = ''.join(f'<tr><td><div class="prod">{sw(s)}<div><b>{BY[s][1]}</b></
 def scheme(name, ends, done, goal, pct, cls):
     return f'''<li style="display:block"><div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap"><b style="flex:1;min-width:10rem">{name}</b><span class="chip plain">Ends {ends}</span></div>
           <span class="meter {cls}" style="margin-top:.75rem"><i style="width:{pct}%"></i></span>
-          <div style="display:flex;justify-content:space-between;margin-top:.5rem"><b>{N(done)} sheets</b><span class="sub">{N(goal)} sheets</span></div></li>'''
+          <div style="margin-top:.5rem"><b>{N(done)}</b> of {N(goal)} sheets</div></li>'''
 
 body = f'''  <div class="head">
     <h1>Dashboard</h1>
@@ -157,7 +157,7 @@ body = f'''  <div class="head">
         <div class="field" style="margin-top:1.25rem"><label>Sheets to Order</label>{qty(200)}</div>
         <dl class="kv total" style="margin-top:1.25rem"><dt>Amount</dt><dd>{M(200*p[4][2])}</dd></dl>
         <button class="btn pri block" type="button" style="margin-top:1rem"><i data-icon="plus"></i>Add to Order</button></section>
-      <section class="card"><header><h2>Your Stock</h2></header><div class="body"><dl class="kv"><dt>On Hand</dt><dd>1,240 sheets</dd><dt>Reserved for Dealers</dt><dd>310 sheets</dd><dt>Available</dt><dd><b>930 sheets</b></dd><dt>On Order</dt><dd>600 sheets</dd><dt>Arriving</dt><dd>30/10/2026</dd><dt>Reorder Level</dt><dd>400 sheets</dd></dl></div></section>
+      <section class="card"><header><h2>Your Stock</h2></header><div class="body"><dl class="kv"><dt>On Hand</dt><dd>1,240 sheets</dd><dt>Reserved for Dealers</dt><dd>310 sheets</dd><dt>Available</dt><dd><b>930 sheets</b></dd><dt>On Order</dt><dd>{N(p[11])} sheets</dd><dt>Arriving</dt><dd>{ARRIVAL[sku]}</dd><dt>Reorder Level</dt><dd>400 sheets</dd></dl></div></section>
       <section class="card"><header><h2>Crestline Availability</h2></header><div class="body"><dl class="kv"><dt>Plant Warehouse, Vapi</dt><dd>12,400 sheets</dd><dt>Dispatch Time</dt><dd>2 to 3 days</dd></dl></div></section>
     </div>
   </div>

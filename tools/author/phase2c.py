@@ -85,8 +85,8 @@ rows = ''.join(f'''<tr><td><div class="prod">{sw(p[0])}<div><a data-link="PRI-IN
 ''' for p in P)
 tabs = [('All Products',12,True),('In Stock',8,False),('Low Stock',3,False),('Out of Stock',1,False)]
 tabs_html = ''.join(f'<span class="{"on" if on else ""}">{t}<b>{n}</b></span>' for t,n,on in tabs)
-ship = [('DSP-2026-5521','ORD-2026-10447',360,'27/10/2026','In Transit'),('—','ORD-2026-10459',280,'29/10/2026','Confirmed'),('—','ORD-2026-10482',760,'31/10/2026','Awaiting Confirmation')]
-ship_rows = ''.join(f'<tr><td class="nowrap"><b>{o}</b></td><td class="num">{N(s)}</td><td>{e}</td><td>{chip(st)}</td></tr>' for d,o,s,e,st in ship)
+ship = [(o, sum(q for _, q in lines), d, st) for o,(d,st,lines) in OPEN_ORDERS.items()]
+ship_rows = ''.join(f'<tr><td class="nowrap"><b>{o}</b></td><td class="num">{N(q)}</td><td>{d}</td><td>{chip(st)}</td></tr>' for o,q,d,st in ship)
 body = f'''  <div class="head">
     <h1>Inventory Overview</h1>
     <div class="acts"><span class="sel"><small>Warehouse</small> All Warehouses <i data-icon="down"></i></span><button class="btn" type="button"><i data-icon="download"></i>Export Stock</button><a class="btn pri" data-link="PRI-ORD-03"><i data-icon="plus"></i>Place Order</a></div>
@@ -95,7 +95,7 @@ body = f'''  <div class="head">
     <div class="card kpi"><label>Sheets on Hand</label><strong>7,415</strong></div>
     <div class="card kpi"><label>Stock Value</label><strong>{ML(7842000)}</strong></div>
     <div class="card kpi"><label>Reserved for Dealers</label><strong>1,875 <small>sheets</small></strong></div>
-    <div class="card kpi"><label>Arriving From Crestline</label><strong>1,450 <small>sheets</small></strong></div>
+    <div class="card kpi"><label>Arriving From Crestline</label><strong>{N(OPEN_SHEETS)} <small>sheets</small></strong></div>
   </div>
   <div class="grid g-2" style="--cols:.8fr 1.2fr">
     <section class="card"><header><h2>Stock Health</h2></header><div class="body center">{chart('donut', series=[{'name':'In Stock','value':8,'color':'var(--ok)'},{'name':'Low Stock','value':3,'color':'#e0a030'},{'name':'Out of Stock','value':1,'color':'var(--bad)'}], center='12', caption='products')}</div></section>
@@ -124,7 +124,7 @@ body = f'''  <div class="head">
     <div class="card kpi"><label>On Hand</label><strong>215 <small>sheets</small></strong></div>
     <div class="card kpi"><label>Reserved for Dealers</label><strong>90 <small>sheets</small></strong></div>
     <div class="card kpi"><label>Available</label><strong>125 <small>sheets</small></strong><div class="foot"><span class="delta down">Below Reorder Level</span></div></div>
-    <div class="card kpi"><label>On Order</label><strong>300 <small>sheets</small></strong><div class="foot"><span class="delta flat">Arriving 30/10/2026</span></div></div>
+    <div class="card kpi"><label>On Order</label><strong>{N(p[11])} <small>sheets</small></strong><div class="foot"><span class="delta flat">Arriving {ARRIVAL[sku]}</span></div></div>
     <div class="card kpi"><label>Days of Cover</label><strong>9 <small>days</small></strong></div>
   </div>
   <div class="grid g-main-side" style="--side:19rem">

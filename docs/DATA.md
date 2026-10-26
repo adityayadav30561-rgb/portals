@@ -58,18 +58,20 @@ Specification details for Product Details: weight 6.1 kg per sheet (1.0 mm) or 5
 
 | SKU | On hand | Reserved for dealers | Available | On order | Reorder level | Status |
 |---|---|---|---|---|---|---|
-| LM-WNT-001 | 1,240 | 310 | 930 | 600 (arrives 30/10/2026) | 400 | In Stock |
-| LM-ARC-002 | 1,860 | 420 | 1,440 | 0 | 500 | In Stock |
-| LM-CAL-003 | 215 | 90 | 125 | 300 (arrives 30/10/2026) | 250 | Low Stock |
-| LM-OAK-004 | 640 | 150 | 490 | 0 | 300 | In Stock |
-| LM-SLT-005 | 410 | 120 | 290 | 0 | 200 | In Stock |
-| LM-TEK-006 | 880 | 200 | 680 | 0 | 300 | In Stock |
-| LM-CHR-007 | 120 | 60 | 60 | 200 | 200 | Low Stock |
-| LM-IVR-008 | 1,050 | 260 | 790 | 0 | 400 | In Stock |
-| LM-STN-009 | 0 | 0 | 0 | 250 | 150 | Out of Stock |
-| LM-CPR-010 | 95 | 40 | 55 | 100 | 100 | Low Stock |
-| LM-WNG-011 | 560 | 130 | 430 | 0 | 250 | In Stock |
-| LM-SKY-012 | 345 | 95 | 250 | 0 | 150 | In Stock |
+| LM-WNT-001 | 1,240 | 310 | 930 | 300 | 400 | In Stock |
+| LM-ARC-002 | 1,860 | 420 | 1,440 | 450 | 500 | In Stock |
+| LM-CAL-003 | 215 | 90 | 125 | 80 | 250 | Low Stock |
+| LM-OAK-004 | 640 | 150 | 490 | 120 | 300 | In Stock |
+| LM-SLT-005 | 410 | 120 | 290 | 60 | 200 | In Stock |
+| LM-TEK-006 | 880 | 200 | 680 | 100 | 300 | In Stock |
+| LM-CHR-007 | 120 | 60 | 60 | 60 | 200 | Low Stock |
+| LM-IVR-008 | 1,050 | 260 | 790 | 120 | 400 | In Stock |
+| LM-STN-009 | 0 | 0 | 0 | 0 | 150 | Out of Stock |
+| LM-CPR-010 | 95 | 40 | 55 | 0 | 100 | Low Stock |
+| LM-WNG-011 | 560 | 130 | 430 | 50 | 250 | In Stock |
+| LM-SKY-012 | 345 | 95 | 250 | 60 | 150 | In Stock |
+
+**On order is computed from the three open orders** (below; `OPEN_ORDERS` in `tools/author/data.py`), total **1,400 sheets**, so the stock tables, the Arriving tile and the Incoming Shipments list always agree. Open orders: ORD-2026-10447 (in transit, expected 27/10/2026): WNT 100, ARC 150, CHR 60, WNG 50; ORD-2026-10459 (confirmed, planned 29/10/2026): TEK 100, IVR 120, SKY 60; ORD-2026-10482 (awaiting confirmation, requested 31/10/2026): the five lines of the order flow.
 
 Total on hand **7,415 sheets**, stock value **₹78,42,000**. Warehouses: Bhiwandi Warehouse (main), Pune Warehouse.
 By finish: Matte 2,910; Woodgrain 2,680; Texture 640; Gloss 465; Suede 410; High Gloss 215; Metallic 95.

@@ -15,12 +15,13 @@ What the user asked for, liked and rejected. Read before any design change; neve
 | No filler text | No eyebrow labels, taglines or paragraphs that describe the screen. A line under the title appears only when it carries information (counts, dates, status). | 2026-10-26 |
 | Static prototype | HTML/CSS/small JavaScript. No backend, login, database, storage, real logic. Fictional data. | 2026-10-26 |
 | Design language | Light theme, deep navy text, blue accent, Inter, white cards on light grey, as in the MAVRO product screens; responsive (unlike the fixed-size MAVRO captures). | 2026-10-26 |
-| Branch | Develop on `claude/relaxed-cerf-p4czn7` (set by the session). The `main`-only rule belongs to `mavro-ai`, not this repository. If that changes, ask. | 2026-10-26 |
 
 ## Pending approval (asked 2026-10-26, see PLAN.md section 6)
 
 - Six merges of duplicate screens and the rename "Prototype Settings" to "Portal Settings".
 - 17 recommended additional screens; any of the 4 optional ones.
+- Branch: the session set `claude/relaxed-cerf-p4czn7`; the repository had no commits, so it is the only branch. The user insisted on `main` only in `mavro-ai`. Working on the session branch until answered.
+- Portal names in screen names: Company, Primary Customer, Secondary Customer, Tertiary Customer (brief's pattern); directory cards use the brief's card titles.
 - Whether stakeholders need a shareable link (for example GitHub Pages) or a zipped folder.
 
 ## Rejected

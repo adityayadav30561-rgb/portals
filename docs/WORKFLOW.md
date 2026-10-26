@@ -26,8 +26,8 @@ How the work is run so the session can be cleared after every phase and the next
 **Where to clear context:** after a phase is committed and documented; after a review round has been applied and
 recorded in DECISIONS.md; never in the middle of a multi-file change.
 
-## Reviews by an advisor
+## Advisor
 
-At the phase 1 and 2 checkpoints (foundations, first design approval) and at the end of the last phase, the work is
-reviewed by a second, stronger model before the user is asked to approve: coverage against the brief, naming rules,
-consistency of the design system. Findings are fixed or recorded in STATUS.md.
+The session has an `advisor` tool (a stronger model that sees the whole conversation). Call it before starting a
+phase's work (approach check) and again after the phase is committed, before telling the user it is done. Fix its
+findings or record them in STATUS.md.

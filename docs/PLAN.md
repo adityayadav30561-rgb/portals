@@ -12,11 +12,11 @@ and approve before the real application is built. No backend, login, database, s
 | Portal | Roles | Screen entries listed |
 |---|---|---|
 | Company Administration | Super Admin 27, Sales Manager 10, Operations Manager 12 | 49 |
-| Primary Distributor | Owner 31, Sales / Operations Manager 19, Accountant 14 | 64 |
+| Primary Distributor | Owner 31, Sales / Operations Manager 19, Accountant 15 | 65 |
 | Secondary Dealer | Owner 30, Sales / Inventory Manager 20 | 50 |
 | Tertiary Retailer | Owner 30, Sales Executive 13, Inventory / Purchasing Executive 14 | 57 |
 | Shared sign-in screens | | 9 |
-| **Total** | **11 roles** | **229** |
+| **Total** | **11 roles** | **230** |
 
 Many entries are the same screen seen by two or three roles (Product Catalogue, Order Details, My Profile).
 These are designed **once per portal** and listed under every role that uses them; each role still sees its
@@ -199,6 +199,11 @@ Exact figures are generated from the screen registry in Phase 1 and kept in `doc
 
 Plain HTML, CSS and a little JavaScript; opens by double-clicking `index.html` (no build step, no server).
 
+**`file://` constraint:** browsers block `type="module"` scripts and `fetch()` on `file://`, so the MAVRO shell
+pattern (ES module importing `.ts` from a dev server, fonts from `/node_modules/`) must not be copied. The registry
+and shell are classic `<script>` files that expose a global, with no imports and no fetch; fonts and images are
+bundled and referenced by relative paths.
+
 ```
 index.html                 Screen Directory: the four portal cards
 directory/<portal>.html    Portal screen directory: roles → screens (ID, name, role, description, Preview)
@@ -230,13 +235,19 @@ widths, the inventory regenerated, docs/STATUS.md updated, a commit and a push.
 | **2. Primary Owner, part 1** | Owner Dashboard, Company Profile, Product Catalogue, Product Details, Place Order, Order Builder, Order Confirmation, Order History, Order Details, Inventory Overview, Inventory Item Details | 11 | **Design checkpoint: you approve the look before the rest is built** |
 | **3. Primary Owner, part 2** | Dealer network, secondary sales, invoices and payments, schemes, reports, returns, support, users, profile, notifications | 24 | |
 | **4. Primary Manager and Accountant** | Both dashboards and their own screens | 17 | Primary Distributor complete (52) |
-| **5. Secondary Owner** | Owner screens (reusing Primary patterns, retailer network and tertiary sales instead of dealers and secondary sales) | 35 | |
-| **6. Secondary Manager** | Dashboard and the manager's own screens | 10 | Secondary Dealer complete (45) |
-| **7. Tertiary Retailer** | All three roles: Owner, Sales Executive, Inventory Executive | 39 | Tertiary Retailer complete |
-| **8. Company Super Admin, part 1** | Dashboard, customers, hierarchy explorer, users, products, orders | 13 | |
-| **9. Company Super Admin, part 2** | Dispatch, inventory, analytics and the four sales reports, invoices, schemes, support, territory, audit, settings, notifications | 18 | |
-| **10. Company Sales and Operations Managers** | Both dashboards and their own screens | 18 | Company Administration complete (49) |
-| **11. Review and hand-over** | Links between related screens, full responsive pass, README, screen inventory and counts, optional hosting for stakeholders | | Definition of Done in the brief met |
+| **5. Secondary Owner, part 1** | Dashboard, profile, catalogue, ordering, orders, inventory, retailer network | about 17 | |
+| **6. Secondary Owner, part 2** | Tertiary sales, invoices and payments, schemes, reports, returns, support, users, notifications | about 18 | |
+| **7. Secondary Manager** | Dashboard and the manager's own screens | 10 | Secondary Dealer complete (45) |
+| **8. Tertiary Retailer Owner, part 1** | Dashboard, store profile, catalogue, ordering, orders, inventory | about 15 | |
+| **9. Tertiary Retailer Owner, part 2** | Retail sales, invoices and payments, schemes, reports, returns, support, users, notifications | about 14 | |
+| **10. Tertiary Sales Executive and Inventory Executive** | Both dashboards and their own screens | about 10 | Tertiary Retailer complete (39) |
+| **11. Company Super Admin, part 1** | Dashboard, customers, hierarchy explorer, users, products, orders | 13 | |
+| **12. Company Super Admin, part 2** | Dispatch, inventory, analytics, the four sales reports, invoices, schemes, support, territory, audit, settings, notifications | 18 | |
+| **13. Company Sales and Operations Managers** | Both dashboards and their own screens | 18 | Company Administration complete (49) |
+| **14. Review and hand-over** | Links between related screens, full responsive pass, README, screen inventory and counts, optional hosting for stakeholders | | Definition of Done in the brief met |
+
+Portal naming: screen names use the brief's pattern with the portal as "Primary Customer", "Secondary Customer",
+"Tertiary Customer" and "Company"; the directory cards use the brief's card titles (Primary Distributor, and so on).
 
 ## 6. Open decisions
 
@@ -245,3 +256,5 @@ widths, the inventory regenerated, docs/STATUS.md updated, a commit and a push.
 3. ~~Brand~~ **Decided 2026-10-26: the official MAVRO.AI logo only**, in every sidebar and on the sign-in screens
    (see DECISIONS.md).
 4. **Sharing with stakeholders**: is a link needed (for example GitHub Pages), or is the zipped folder enough?
+5. **Branch**: this repository had no commits, so `claude/relaxed-cerf-p4czn7` is currently its only branch. Keep
+   working there, or put the work on `main` as in the website repository?

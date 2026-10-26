@@ -5,9 +5,6 @@ Design rule: no text under page titles, no captions beside card titles, no helpe
 from data import *
 
 SQ = chr(0x2212)
-SCH_FESTIVE = ('SCH-2026-07', 'Dealer Festive Volume Rebate', 690, 750, '30/11/2026')      # 480 sheets recorded + 210 on SAL-2026-3042
-SCH_MARBLE = ('SCH-2026-08', 'Marble Finish Dealer Incentive', 50, 100, '31/12/2026')       # 25 + 25 sheets of LM-CAL-003 since 01/10
-assert SCH_FESTIVE[2] == sum(s['sheets'] for s in BRV_SALES) + 210 and SCH_MARBLE[2] == sum(q for s in BRV_SALES for k, q in s['lines'] if k == 'LM-CAL-003')
 cp_used = round(BRV_OWES / BRV_LIMIT * 100)                                                 # 33
 
 def steps(now):
@@ -26,12 +23,7 @@ def sch_item(sc):
           <span class="meter {"ok" if pct >= 90 else ""}" style="margin-top:.75rem"><i style="width:{pct}%"></i></span>
           <div style="margin-top:.5rem"><b>{N(sc[2])}</b> of {N(sc[3])} sheets</div></li>'''
 
-# ---------- Orders of Dealer Bravo, newest first (the order number is the Distributor Alpha sale number and invoice number) ----------
-H = [(NEW_ORDER, '26/10/2026', 210, NEW_TOTAL, '30/10/2026', 'Awaiting Confirmation', 'Unpaid')]
-for s in BRV_SALES: H.append((s['number'], s['date'], s['sheets'], s['value'], s['expected'], s['status'], s['payment']))
-H += [('SAL-2026-3006', '30/09/2026', 95, 135500, '02/10/2026', 'Delivered', 'Paid'), ('SAL-2026-2999', '22/09/2026', 105, 148000, '24/09/2026', 'Delivered', 'Paid'),
-      ('SAL-2026-2990', '14/09/2026', 75, 106500, '16/09/2026', 'Delivered', 'Paid')]
-assert len(H) == 10 and sum(h[3] for h in H[1:7]) == 684000
+H = BRV_ORDERS
 STATUS_CHIP.update({'Sale to Retailer': 'blue'})
 
 # ---------- Dashboard ----------

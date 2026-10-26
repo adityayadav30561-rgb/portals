@@ -575,3 +575,123 @@ BCAL_SOLD = -sum(m['sheets'] for m in BCAL if m['sheets'] < 0)
 
 # ---- Bravo's retailer request (Add Retailer Request) and schemes from Distributor Alpha ----
 RETAILER_REQUEST = ('Retailer Dhruv Interiors', 'Wakad', 'Pune', 'Dhruv Patil', '27AAHFD6620L1Z8', 150000, 60)
+
+
+# =====================================================================================================================
+# Phase 6 data (docs/DATA.md: "Phase 6 data"). Dealer Bravo's invoices and payments (to Distributor Alpha), tertiary sale lines,
+# returns, tickets, users and schemes. Dealer-level documents issued by Distributor Alpha carry a "D" before the number
+# (PAY-2026-D0521, RTN-2026-D0508, TKT-2026-D0746) so they never collide with the Crestline series used by Distributor Alpha.
+# =====================================================================================================================
+SCH_FESTIVE = ('SCH-2026-07', 'Dealer Festive Volume Rebate', 690, 750, '30/11/2026')      # 480 sheets recorded + 210 on SAL-2026-3042
+SCH_MARBLE = ('SCH-2026-08', 'Marble Finish Dealer Incentive', 50, 100, '31/12/2026')       # 25 + 25 sheets of LM-CAL-003 since 01/10
+assert SCH_FESTIVE[2] == sum(s['sheets'] for s in BRV_SALES) + 210 and SCH_MARBLE[2] == sum(q for s in BRV_SALES for k, q in s['lines'] if k == 'LM-CAL-003')
+
+# Bravo's orders, newest first (the order number is the Distributor Alpha sale number and invoice number)
+BRV_ORDERS = [(NEW_ORDER, '26/10/2026', 210, NEW_TOTAL, '30/10/2026', 'Awaiting Confirmation', 'Unpaid')]
+for _s in BRV_SALES: BRV_ORDERS.append((_s['number'], _s['date'], _s['sheets'], _s['value'], _s['expected'], _s['status'], _s['payment']))
+BRV_ORDERS += [('SAL-2026-3006', '30/09/2026', 95, 135500, '02/10/2026', 'Delivered', 'Paid'), ('SAL-2026-2999', '22/09/2026', 105, 148000, '24/09/2026', 'Delivered', 'Paid'),
+               ('SAL-2026-2990', '14/09/2026', 75, 106500, '16/09/2026', 'Delivered', 'Paid')]
+assert len(BRV_ORDERS) == 10 and sum(o[3] for o in BRV_ORDERS[1:7]) == 684000
+
+# ---- Invoices from Distributor Alpha: number, order, issued, due (30 days), amount, paid ----
+BINV = []
+for _o in BRV_ORDERS[1:]:
+    _paid = _o[3] if _o[6] == 'Paid' else 0
+    BINV.append((_o[0], _o[0], _o[1], fd(pd(_o[1]) + datetime.timedelta(days=30)), _o[3], _paid))
+BOPEN = [i for i in BINV if i[4] > i[5]]
+assert [i[0] for i in BOPEN] == ['SAL-2026-3040', 'SAL-2026-3033'] and sum(i[4] - i[5] for i in BOPEN) == BRV_OWES == 260000
+assert all(pd(i[3]) >= TODAY for i in BOPEN)                                                  # nothing overdue
+B_ORDER_COUNT = dict(awaiting=1, transit=1, delivered=208, cancelled=2)
+B_INV_COUNT = B_ORDER_COUNT['transit'] + B_ORDER_COUNT['delivered']                             # 209 invoices: 2 open, 207 paid
+assert B_INV_COUNT == 209 and B_INV_COUNT - len(BOPEN) == 207
+
+# ---- Payments to Distributor Alpha (newest first): number, date, amount, mode, invoice ----
+BPAY = [('PAY-2026-D0521', '22/10/2026', 109500, 'Bank Transfer', 'SAL-2026-3029'), ('PAY-2026-D0517', '17/10/2026', 123000, 'Cheque', 'SAL-2026-3021'),
+        ('PAY-2026-D0511', '14/10/2026', 96000, 'Net Banking', 'SAL-2026-3017'), ('PAY-2026-D0506', '10/10/2026', 95500, 'Bank Transfer', 'SAL-2026-3010'),
+        ('PAY-2026-D0501', '06/10/2026', 135500, 'Cheque', 'SAL-2026-3006'), ('PAY-2026-D0494', '29/09/2026', 148000, 'Bank Transfer', 'SAL-2026-2999'),
+        ('PAY-2026-D0488', '24/09/2026', 106500, 'Net Banking', 'SAL-2026-2990'), ('PAY-2026-D0479', '15/09/2026', 184000, 'Bank Transfer', 'SAL-2026-2975'),
+        ('PAY-2026-D0471', '03/09/2026', 162000, 'Cheque', 'SAL-2026-2962'), ('PAY-2026-D0462', '28/08/2026', 210000, 'Net Banking', 'SAL-2026-2948')]
+for _i in BINV:
+    _got = sum(p[2] for p in BPAY if p[4] == _i[0]); assert _got == _i[5], (_i[0], _got, _i[5])
+_dates = [pd(p[1]) for p in BPAY]; assert _dates == sorted(_dates, reverse=True) and len({p[0] for p in BPAY}) == 10
+assert [p[0] for p in BPAY] == sorted((p[0] for p in BPAY), reverse=True)
+BPAY_OCT = [p for p in BPAY if p[1].endswith('/10/2026')]
+BPAID_OCT = sum(p[2] for p in BPAY_OCT)
+BMODE_OCT = {}
+for _p in BPAY_OCT: BMODE_OCT[_p[3]] = BMODE_OCT.get(_p[3], 0) + _p[2]
+assert len(BPAY_OCT) == 5 and BPAID_OCT == 559500 and BMODE_OCT == {'Bank Transfer': 205000, 'Cheque': 258500, 'Net Banking': 96000}
+BPAID_MONTH = [510000, 585000, 500000, 610000, 605000, BPAID_OCT]
+
+# ---- Tertiary sale lines: October sheets sold to retailers by product (CAL = the six quantities on Inventory Item Details) ----
+TSOLD = {'LM-WNT-001': 60, 'LM-ARC-002': 85, 'LM-CAL-003': 33, 'LM-OAK-004': 25, 'LM-SLT-005': 15, 'LM-TEK-006': 40, 'LM-CHR-007': 18, 'LM-IVR-008': 35,
+         'LM-STN-009': 0, 'LM-CPR-010': 7, 'LM-WNG-011': 30, 'LM-SKY-012': 22}
+assert sum(TSOLD.values()) == 370 and TSOLD['LM-CAL-003'] == BCAL_SOLD
+_w = {s: q * rp(s) for s, q in TSOLD.items()}
+TSOLD_VALUE = {s: round(630000 * w / sum(_w.values())) for s, w in _w.items()}
+_big = max(TSOLD_VALUE, key=TSOLD_VALUE.get); TSOLD_VALUE[_big] += 630000 - sum(TSOLD_VALUE.values())
+assert sum(TSOLD_VALUE.values()) == 630000
+_left = {s: q for s, q in TSOLD.items() if s != 'LM-CAL-003' and q}
+_queue = []
+while any(_left.values()):
+    for _k in _left:
+        if _left[_k]: _t = min(10, _left[_k]); _queue.append([_k, _t]); _left[_k] -= _t
+_qi = 0
+for _s in reversed(TSALES):                                                                   # oldest first
+    _c = _CAL_RETAIL.get(_s['number'], 0); _s['lines'] = [('LM-CAL-003', _c)] if _c else []
+    _need = _s['sheets'] - _c
+    while _need > 0:
+        _take = min(_need, _queue[_qi][1]); _same = [n for n, l in enumerate(_s['lines']) if l[0] == _queue[_qi][0]]
+        if _same: _s['lines'][_same[0]] = (_queue[_qi][0], _s['lines'][_same[0]][1] + _take)
+        else: _s['lines'].append((_queue[_qi][0], _take))
+        _queue[_qi][1] -= _take; _need -= _take
+        if _queue[_qi][1] == 0: _qi += 1
+assert all(q == 0 for _, q in _queue) and all(sum(q for _, q in s['lines']) == s['sheets'] for s in TSALES)
+_chk = {}
+for _s in TSALES:
+    for _k, _q in _s['lines']: _chk[_k] = _chk.get(_k, 0) + _q
+assert all(_chk.get(k, 0) == v for k, v in TSOLD.items())
+# Stock must be possible: on hand now - October receipts from delivered orders + October sales to retailers >= 0
+B_RECV = {}
+for _s in BRV_SALES:
+    if _s['status'] == 'Delivered':
+        for _k, _q in _s['lines']: B_RECV[_k] = B_RECV.get(_k, 0) + _q
+B_OPENING = {s: BSTOCK[s]['on_hand'] - B_RECV.get(s, 0) + TSOLD[s] for s in BSTOCK}
+assert all(v >= 0 for v in B_OPENING.values()) and B_OPENING['LM-CAL-003'] == BCAL_OPEN
+# Ageing of Bravo's stock (up to 30 days / 31 to 60 / over 60); everything received in October is in the youngest band
+def b_ageing(s):
+    on = BSTOCK[s]['on_hand']
+    if s == 'LM-CAL-003': return (25, 13, 0)                                                   # batches B-2610-19 (10/10) and B-2609-08 (12/09)
+    a = min(on, max(round(on * 0.62 / 5) * 5, B_RECV.get(s, 0))); b = min(round(on * 0.26 / 5) * 5, on - a)
+    return (a, b, on - a - b)
+BAGE = {s: b_ageing(s) for s in BSTOCK}
+assert all(sum(v) == BSTOCK[s]['on_hand'] and min(v) >= 0 and v[0] >= min(B_RECV.get(s, 0), BSTOCK[s]['on_hand']) for s, v in BAGE.items())
+
+# ---- Returns to Distributor Alpha: number, date, order, sku, sheets, reason, status. Credit (only once issued) = sheets x dealer price ----
+BRET = [('RTN-2026-D0508', '22/10/2026', 'SAL-2026-3033', 'LM-WNT-001', 6, 'Surface Defect', 'Under Review'), ('RTN-2026-D0503', '16/10/2026', 'SAL-2026-3029', 'LM-TEK-006', 4, 'Damaged in Transit', 'Approved'),
+        ('RTN-2026-D0494', '14/10/2026', 'SAL-2026-3021', 'LM-OAK-004', 3, 'Damaged in Transit', 'Credit Issued'), ('RTN-2026-D0486', '09/10/2026', 'SAL-2026-3017', 'LM-CPR-010', 2, 'Surface Defect', 'Credit Issued'),
+        ('RTN-2026-D0479', '04/10/2026', 'SAL-2026-3010', 'LM-ARC-002', 5, 'Shade Mismatch', 'Rejected')]
+_lines = {s['number']: dict(s['lines']) for s in BRV_SALES}
+assert all(r[3] in _lines[r[2]] and r[4] <= _lines[r[2]][r[3]] for r in BRET)
+BCREDIT = {r[0]: r[4] * dp(r[3]) for r in BRET if r[6] == 'Credit Issued'}
+assert BCREDIT == {'RTN-2026-D0494': 4095, 'RTN-2026-D0486': 4160} and sum(BCREDIT.values()) == 8255
+assert [pd(r[1]) for r in BRET] == sorted(pd(r[1]) for r in BRET)[::-1]
+
+# ---- Support tickets with Distributor Alpha: number, created, subject, category, priority, updated, status ----
+BTK = [('TKT-2026-D0746', '25/10/2026', 'Delivery Timing for SAL-2026-3040', 'Delivery', 'Medium', '26/10/2026', 'In Progress'),
+       ('TKT-2026-D0737', '23/10/2026', 'Price Tier Review Request', 'Account', 'Low', '23/10/2026', 'Open'),
+       ('TKT-2026-D0719', '18/10/2026', 'Surface Defect in SAL-2026-3033', 'Delivery', 'High', '22/10/2026', 'Resolved'),
+       ('TKT-2026-D0696', '10/10/2026', 'Invoice SAL-2026-3021 Amount Query', 'Billing', 'Medium', '13/10/2026', 'Closed'),
+       ('TKT-2026-D0661', '30/09/2026', 'Festive Scheme Eligibility', 'Schemes', 'Low', '01/10/2026', 'Closed')]
+assert [pd(t[1]) for t in BTK] == sorted((pd(t[1]) for t in BTK), reverse=True) and [t[0] for t in BTK] == sorted((t[0] for t in BTK), reverse=True)
+
+# ---- Users of Dealer Bravo (the portal has two roles: Owner, Sales and Inventory Manager): name, role, phone, last sign-in, status ----
+BUSERS = [('Sunita Rao', 'Owner', '31001', '26/10/2026 09:12', 'Active'), ('Arjun Nair', 'Sales and Inventory Manager', '31002', '26/10/2026 08:55', 'Active'),
+          ('Meena Kulkarni', 'Sales and Inventory Manager', '31004', 'Not yet', 'Invited'), ('Rohit Pawar', 'Sales and Inventory Manager', '31005', '30/06/2026', 'Inactive')]
+
+# ---- Dealer schemes issued by Distributor Alpha (Schemes and Incentives): number, name, type, start, end, status, done, goal, reward ----
+BSCH = [SCH_FESTIVE[:2] + ('Volume Rebate', '01/10/2026', '30/11/2026', 'Active', 690, 750, '1% rebate on order value'),
+        SCH_MARBLE[:2] + ('Product Incentive', '01/10/2026', '31/12/2026', 'Active', 50, 100, f'{M(750)} earned'),
+        ('SCH-2026-09', 'Winter Season Dealer Bonus', 'Volume Bonus', '01/12/2026', '31/01/2027', 'Upcoming', 0, 1400, '2% bonus'),
+        ('SCH-2026-03', 'Monsoon Dealer Incentive', 'Volume Incentive', '01/07/2026', '30/09/2026', 'Completed', 1310, 1200, f'{M(13100)} credited')]
+assert 50 * 15 == 750 and 1310 * 10 == 13100
+B_INCENTIVES = 750 + 13100

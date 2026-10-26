@@ -829,3 +829,153 @@ assert sum(r[6] for r in RREQUESTS) == 600000
 STATUS_CHIP.update({'Sent to Distributor Alpha': 'blue'})
 STATUS_CHIP.update({'Order Now': 'warn', 'Out at Distributor Alpha': 'bad', 'No Order Needed': 'plain', 'Receipt': 'ok', 'Sale to Retailer': 'blue',
                     'Stock Adjustment': 'warn', 'On Time': 'ok', 'Late': 'warn'})
+
+
+# =====================================================================================================================
+# Phase 8 data (docs/DATA.md: "Phase 8 data"). Tertiary Customer: Retailer Charlie, Camp, Pune (Owner Imran Sheikh); supplier Dealer Bravo.
+# Charlie's orders are Bravo's TSL sales; Charlie's own documents use their own series: retail sales to customers RSL-2026-0361 to 0398
+# (newest 0398), stock adjustments ADJ-2026-C0004 to C0006, offers from Dealer Bravo OFR-2026-01 and 02 (kept apart from SCH-2026-xx).
+# =====================================================================================================================
+def crp(sku):
+    """Charlie's selling price to a customer per sheet before GST: the Retailer Tier C price plus 25%, to the nearest rupee 5."""
+    return round(rp(sku) * 1.25 / 5) * 5
+CHR_LIMIT = RTL['CHR'][6]; CHR_OWES = RTL_OWES['CHR']
+CHR_USED = credit_pct(CHR_OWES, CHR_LIMIT); assert (CHR_LIMIT, CHR_OWES, CHR_USED) == (300000, 62000, 21)
+CHR_BUY_MONTH = RTL['CHR'][9]
+CHR_TS = [s for s in TSALES if s['retailer'] == 'CHR']                                   # newest first: 0412, 0409, 0406, 0404, 0401
+assert [s['number'] for s in CHR_TS] == ['TSL-2026-0412', 'TSL-2026-0409', 'TSL-2026-0406', 'TSL-2026-0404', 'TSL-2026-0401'] and sum(s['sheets'] for s in CHR_TS) == 155
+# Orders, newest first: number, date, sheets, value, expected delivery, status, payment
+CHR_ORDERS = [(PEND_ORDER['number'], PEND_ORDER['date'], PEND_SHEETS, PEND_TOTAL, PEND_ORDER['requested'], 'Awaiting Confirmation', 'Unpaid')]
+for _s in CHR_TS: CHR_ORDERS.append((_s['number'], _s['date'], _s['sheets'], _s['value'], _s['expected'], _s['fstatus'], _s['payment']))
+CHR_ORDERS += [('TSL-2026-0400', '29/09/2026', 35, 64000, '30/09/2026', 'Delivered', 'Paid'), ('TSL-2026-0397', '18/09/2026', 40, 66000, '19/09/2026', 'Delivered', 'Paid'),
+               ('TSL-2026-0394', '11/09/2026', 35, 58000, '12/09/2026', 'Delivered', 'Paid'), ('TSL-2026-0391', '04/09/2026', 30, 52000, '05/09/2026', 'Delivered', 'Paid')]
+assert len(CHR_ORDERS) == 10 and sum(o[3] for o in CHR_ORDERS[1:6]) == CHR_BUY_MONTH[-1] == 264000 and sum(o[3] for o in CHR_ORDERS[6:]) == CHR_BUY_MONTH[-2] == 240000
+assert [o[3] for o in CHR_ORDERS[1:6]] == [62000, 58000, 52000, 49000, 43000]
+C_ORDER_COUNT = dict(awaiting=1, packing=1, delivered=244, cancelled=2)               # 248 orders in all since 11/05/2021
+C_ORDER_TOTAL = sum(C_ORDER_COUNT.values()); assert C_ORDER_TOTAL == 248
+C_INV_COUNT = C_ORDER_COUNT['packing'] + C_ORDER_COUNT['delivered']                   # 245 invoices: 1 open (TSL-2026-0412, 62,000), 244 paid
+# TSL-2026-0412 (Order Details): the ledger value does not multiply out from lines, so the rule of Phase 4 applies: taxable amount allocated to the lines
+O12 = CHR_TS[0]
+O12_TAX = round(62000 / 1.18); O12_GST = round(O12_TAX * 0.09); assert O12_TAX + 2 * O12_GST == 62000 and (O12_TAX, O12_GST) == (52542, 4729)
+_w = {k: q * rp(k) for k, q in O12['lines']}
+O12_AMT = {k: round(O12_TAX * w / sum(_w.values())) for k, w in _w.items()}
+_big = max(O12_AMT, key=O12_AMT.get); O12_AMT[_big] += O12_TAX - sum(O12_AMT.values()); assert sum(O12_AMT.values()) == O12_TAX
+
+# ---- Charlie's stock (sheets): sku -> on hand, reserved for customers, reorder level, sheets sold to customers in October ----
+_CS = {'LM-WNT-001': (42, 6, 30, 38), 'LM-ARC-002': (38, 4, 30, 36), 'LM-CAL-003': (9, 2, 10, 14), 'LM-OAK-004': (11, 2, 10, 9), 'LM-SLT-005': (8, 0, 6, 4),
+       'LM-TEK-006': (24, 3, 15, 17), 'LM-CHR-007': (6, 1, 8, 7), 'LM-IVR-008': (30, 4, 20, 15), 'LM-STN-009': (0, 0, 6, 0), 'LM-CPR-010': (4, 0, 3, 2),
+       'LM-WNG-011': (26, 3, 15, 12), 'LM-SKY-012': (18, 2, 12, 9)}
+C_ON_ORDER = {}
+for _s_, _q_ in O12['lines'] + PEND_ORDER['lines']: C_ON_ORDER[_s_] = C_ON_ORDER.get(_s_, 0) + _q_
+assert C_ON_ORDER == {'LM-CAL-003': 11, 'LM-ARC-002': 59, 'LM-WNT-001': 20, 'LM-OAK-004': 10} and sum(C_ON_ORDER.values()) == 100
+CSTOCK = {}; CSOLD = {}
+for _s_, (_h, _r, _l, _so) in _CS.items():
+    _av = _h - _r; CSOLD[_s_] = _so
+    CSTOCK[_s_] = dict(on_hand=_h, reserved=_r, available=_av, on_order=C_ON_ORDER.get(_s_, 0), level=_l,
+                       status='Out of Stock' if _h == 0 else 'Low Stock' if _av < _l else 'In Stock')
+assert sum(b['on_hand'] for b in CSTOCK.values()) == 216 and sum(b['reserved'] for b in CSTOCK.values()) == 27 and sum(CSOLD.values()) == 163
+assert [s for s, b in CSTOCK.items() if b['status'] == 'Low Stock'] == ['LM-CAL-003', 'LM-OAK-004', 'LM-CHR-007'] and CSTOCK['LM-STN-009']['status'] == 'Out of Stock'
+CSTOCK_VALUE = sum(b['on_hand'] * rp(s) for s, b in CSTOCK.items())               # at Charlie's cost (retailer price)
+CFINISH = {}
+for _s_, _b_ in CSTOCK.items(): CFINISH[BY[_s_][2]] = CFINISH.get(BY[_s_][2], 0) + _b_['on_hand']
+# Receipts: the delivered orders, on Bravo's ACTUAL delivery date
+C_RECV_LINES = [(s['delivered'], s['number'], k, q) for s in CHR_TS if s['fstatus'] == 'Delivered' for k, q in s['lines']]
+C_RECV = {}
+for _d_, _n_, _k_, _q_ in C_RECV_LINES: C_RECV[_k_] = C_RECV.get(_k_, 0) + _q_
+assert sum(C_RECV.values()) == 120 and [s['delivered'] for s in CHR_TS if s['fstatus'] == 'Delivered'] == ['20/10/2026', '13/10/2026', '08/10/2026', '02/10/2026']
+CADJ = [('ADJ-2026-C0006', '22/10/2026', 'LM-SLT-005', 1, 'Count Correction'), ('ADJ-2026-C0005', '15/10/2026', 'LM-TEK-006', -2, 'Damaged in Handling'),
+        ('ADJ-2026-C0004', '07/10/2026', 'LM-WNG-011', -1, 'Damaged in Handling')]
+CADJUSTED = sum(a[3] for a in CADJ); assert CADJUSTED == -2
+C_OPENING = {s: CSTOCK[s]['on_hand'] - C_RECV.get(s, 0) + CSOLD[s] - sum(a[3] for a in CADJ if a[2] == s) for s in CSTOCK}
+assert all(v >= 0 for v in C_OPENING.values())
+
+# ---- Charlie's sales to customers in October: 38 sales, built deterministically (no random numbers) so every run gives the same ledger ----
+CCUST = ['Shirke Furniture Works', 'Anand Kulkarni', 'Mangesh Interiors', 'Vaibhav Deshpande', 'Rohini Modular Kitchens', 'Sachin Bhosale', 'Priya Wardrobe Studio', 'Ketan Shah',
+         'Sagar Carpentry Works', 'Nandini Patil', 'Omkar Furnishing', 'Deepak Ghorpade', 'Swati Home Decor', 'Prashant Jagtap', 'Lotus Interiors', 'Yogesh Salunkhe',
+         'Meghna Joshi', 'Ashok Bagade', 'Trimurti Furniture', 'Sneha Phadke', 'Vinod Chavan', 'Aarti Interiors', 'Harshad Gokhale', 'Tanvi Bhide', 'Sudhir Kadam',
+         'Pooja Furnishings', 'Rajendra Mane', 'Kavya Designers', 'Nitin Ranade', 'Shreya Home Studio', 'Balaji Wood Craft', 'Gauri Dhumal', 'Abhijit Kelkar',
+         'Manisha Tapkir', 'Samir Inamdar', 'Rutuja Interiors', 'Dattatray Pawale', 'Varsha Kulthe']
+CPAY = ['Cash', 'Card', 'Bank Transfer', 'Cash', 'Card', 'Cheque']
+assert len(CCUST) == len(set(CCUST)) == 38
+_NS = 38; _PAT = [1, 2, 1, 2, 3, 1, 2, 1, 2, 2]
+_nlines = [_PAT[i % 10] for i in range(_NS)]; _L = sum(_nlines)
+_skus = [s for s in CSOLD if CSOLD[s]]
+_tot = sum(CSOLD[s] for s in _skus)
+_slots = {s: max(1, round(_L * CSOLD[s] / _tot)) for s in _skus}
+while sum(_slots.values()) > _L: _slots[max((s for s in _slots if _slots[s] > 1), key=lambda s: _slots[s] / CSOLD[s])] -= 1
+while sum(_slots.values()) < _L: _slots[min(_slots, key=lambda s: _slots[s] / CSOLD[s])] += 1
+assert sum(_slots.values()) == _L and all(1 <= _slots[s] <= CSOLD[s] for s in _skus)
+_seq = []
+for _pi, s in enumerate(_skus):
+    n = _slots[s]; base, extra = divmod(CSOLD[s], n)
+    for j in range(n): _seq.append(((j + 0.5) / n + _pi * 0.0007, s, base + (1 if (j + _pi) % n < extra else 0)))
+_seq.sort()
+CSALES = []; _k = 0
+for i in range(_NS):
+    lines = {}
+    for _ in range(_nlines[i]):
+        _, s, q = _seq[_k]; _k += 1; lines[s] = lines.get(s, 0) + q
+    day = 1 + (i * 26) // _NS
+    sub = sum(q * crp(s) for s, q in lines.items()); gst = round(sub * 0.09)
+    CSALES.append(dict(number=f'RSL-2026-{361 + i:04d}', day=day, date=f'{day:02d}/10/2026', customer=CCUST[i], pay=CPAY[i % 6], lines=list(lines.items()),
+                       sheets=sum(lines.values()), sub=sub, gst=gst, total=sub + 2 * gst))
+CSALES.reverse()                                                                      # newest first
+assert len(CSALES) == 38 and CSALES[0]['number'] == 'RSL-2026-0398' and sum(s['sheets'] for s in CSALES) == 163
+_chk = {}
+for _s_ in CSALES:
+    for _k_, _q_ in _s_['lines']: _chk[_k_] = _chk.get(_k_, 0) + _q_
+assert _chk == {s: q for s, q in CSOLD.items() if q}
+CRETAIL_OCT = sum(s['total'] for s in CSALES)
+
+# ---- Every stock movement of October (newest first) ----
+CMOVES = []
+for _d_, _n_, _k_, _q_ in C_RECV_LINES: CMOVES.append(dict(date=_d_, type='Receipt', sku=_k_, who='Dealer Bravo', ref=_n_, sheets=_q_))
+for _s_ in CSALES:
+    for _k_, _q_ in _s_['lines']: CMOVES.append(dict(date=_s_['date'], type='Retail Sale', sku=_k_, who=_s_['customer'], ref=_s_['number'], sheets=-_q_))
+for _a in CADJ: CMOVES.append(dict(date=_a[1], type='Stock Adjustment', sku=_a[2], who=_a[4], ref=_a[0], sheets=_a[3]))
+_ord = {'Receipt': 0, 'Stock Adjustment': 1, 'Retail Sale': 2}
+CMOVES.sort(key=lambda m: (pd(m['date']), _ord[m['type']]), reverse=True)
+_run = dict(C_OPENING)                                                                # stock never goes negative at any point of the month
+for _m in reversed(CMOVES):
+    _run[_m['sku']] += _m['sheets']; assert _run[_m['sku']] >= 0, _m
+assert all(_run[s] == CSTOCK[s]['on_hand'] for s in CSTOCK)
+CMOVE_BY = {s: dict(received=0, sold=0, adjusted=0) for s in CSTOCK}
+for _m in CMOVES:
+    _d = CMOVE_BY[_m['sku']]
+    if _m['type'] == 'Receipt': _d['received'] += _m['sheets']
+    elif _m['type'] == 'Retail Sale': _d['sold'] -= _m['sheets']
+    else: _d['adjusted'] += _m['sheets']
+STATUS_CHIP.update({'Retail Sale': 'blue'})
+
+# ---- Reorder recommendations. Same rule as Dealer Bravo: recommended when available is below the reorder level; reorder quantity = 2.5 x level up to a multiple of 5
+#      (the pack multiple of the retailer); suggested quantity = reorder quantity, limited to what Dealer Bravo has available (multiples of 5); value at the retailer price ----
+def _up5(v): return -(-int(v) // 5) * 5
+CREORDER_QTY = {s: _up5(CSTOCK[s]['level'] * 2.5) for s in CSTOCK}
+CREC = {}
+for _s_, _b_ in CSTOCK.items():
+    if _b_['available'] < _b_['level']:
+        _q_ = min(CREORDER_QTY[_s_], BSTOCK[_s_]['available'] // 5 * 5)
+        CREC[_s_] = dict(qty=_q_, value=_q_ * rp(_s_), action='Order Now' if _q_ else 'Out at Dealer Bravo')
+    else: CREC[_s_] = dict(qty=0, value=0, action='No Order Needed')
+assert {s: r['qty'] for s, r in CREC.items() if r['action'] != 'No Order Needed'} == {'LM-CAL-003': 25, 'LM-OAK-004': 25, 'LM-CHR-007': 10, 'LM-STN-009': 0}
+CREC_SHEETS = sum(r['qty'] for r in CREC.values()); CREC_VALUE = sum(r['value'] for r in CREC.values())
+assert (CREC_SHEETS, CREC_VALUE) == (60, 99700) and round(CREC_VALUE * 1.18) <= CHR_LIMIT - CHR_OWES - PEND_TOTAL == 133216       # fits the credit left
+def c_cover(s): return None if not CSOLD[s] else CSTOCK[s]['available'] / (CSOLD[s] / 26)
+CLOW = [s for s, b in CSTOCK.items() if b['status'] in ('Low Stock', 'Out of Stock')]; CSHORT = sum(CSTOCK[s]['level'] - CSTOCK[s]['available'] for s in CLOW)
+STATUS_CHIP.update({'Out at Dealer Bravo': 'bad'})
+
+# ---- Purchases of October by product (Charlie's five October orders, 155 sheets, 2,64,000 incl GST): allocated like SOLD_VALUE ----
+CBOUGHT = {}
+for _s_ in CHR_TS:
+    for _k_, _q_ in _s_['lines']: CBOUGHT[_k_] = CBOUGHT.get(_k_, 0) + _q_
+_w = {s: q * rp(s) for s, q in CBOUGHT.items()}
+CBOUGHT_VALUE = {s: round(264000 * w / sum(_w.values())) for s, w in _w.items()}
+_big = max(CBOUGHT_VALUE, key=CBOUGHT_VALUE.get); CBOUGHT_VALUE[_big] += 264000 - sum(CBOUGHT_VALUE.values())
+assert sum(CBOUGHT.values()) == 155 and sum(CBOUGHT_VALUE.values()) == 264000
+
+# ---- Offers from Dealer Bravo to its retailers (placeholders): number, name, type, start, end, status, progress, goal, reward. Progress = recorded orders + the pending order ----
+COFFERS = [('OFR-2026-01', 'Retailer Festive Volume Rebate', 'Volume Rebate', '01/10/2026', '30/11/2026', 'Active', 155 + PEND_SHEETS, 250, '1.5% rebate'),
+           ('OFR-2026-02', 'Marble Finish Retailer Incentive', 'Product Incentive', '01/10/2026', '31/12/2026', 'Active', 8 + 6 + 5, 50, f'{M(140)} earned')]
+assert COFFERS[0][6] == 220 and COFFERS[1][6] == 19 and sum(q for s in CHR_TS for k, q in s['lines'] if k == 'LM-CAL-003') == 14
+CHR_RETAIL_MONTH = [245000, 270000, 230000, 295000, 305000, CRETAIL_OCT]         # Charlie's sales to customers by month, GST included (October is the ledger above)
+CHR_RETAIL_SEPT = CHR_RETAIL_MONTH[-2]

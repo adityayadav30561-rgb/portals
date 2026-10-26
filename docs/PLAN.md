@@ -243,8 +243,8 @@ widths, the inventory regenerated, docs/STATUS.md updated, a commit and a push.
 | **4. Primary Manager and Accountant** ✓ done 2026-10-26 | Both dashboards and their own screens | 17 | Primary Distributor complete (52) |
 | **5. Secondary Owner, part 1** ✓ done 2026-10-26 | Dashboard, profile, catalogue, ordering, orders, inventory, retailer network | 14 | |
 | **6. Secondary Owner, part 2** ✓ done 2026-10-26 | Tertiary sales, invoices and payments, schemes, reports, returns, support, users, notifications | 21 | |
-| **7. Secondary Manager** ✓ built 2026-10-26, awaiting approval | Dashboard and the manager's own screens | 10 | Secondary Dealer complete (45) |
-| **8. Tertiary Retailer Owner, part 1** | Dashboard, store profile, catalogue, ordering, orders, inventory | about 15 | |
+| **7. Secondary Manager** ✓ done 2026-10-26 | Dashboard and the manager's own screens | 10 | Secondary Dealer complete (45) |
+| **8. Tertiary Retailer Owner, part 1** ✓ built 2026-10-26, awaiting approval | Dashboard, store profile, catalogue, ordering, orders, inventory | about 15 | |
 | **9. Tertiary Retailer Owner, part 2** | Retail sales, invoices and payments, schemes, reports, returns, support, users, notifications | about 14 | |
 | **10. Tertiary Sales Executive and Inventory Executive** | Both dashboards and their own screens | about 10 | Tertiary Retailer complete (40) |
 | **11. Company Super Admin, part 1** | Dashboard, customers, hierarchy explorer, users, products, orders | 13 | |

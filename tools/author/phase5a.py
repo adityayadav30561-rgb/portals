@@ -124,7 +124,7 @@ page('secondary', 'product-catalogue', 'SEC-CAT-01', 'Secondary Customer — Own
 
 # ---------- Product Details (LM-WNT-001) ----------
 sku = 'LM-WNT-001'; p = BY[sku]; b = BSTOCK[sku]
-price_rows = ''.join(f'<tr><td>{a}</td><td class="num"><b>{M(v)}</b></td><td class="num">{M(v * 25)}</td></tr>' for a, v in [('Dealer Price', dp(sku)), ('Retailer Price', rp(sku))])
+price_rows = ''.join(f'<tr><td>{a}</td><td class="num"><b>{M(v)}</b></td><td class="num">{M(v * 25)}</td></tr>' for a, v in [('Dealer Price', dp(sku)), ('Dealer Price with GST', round(dp(sku) * 1.18)), ('Retailer Price', rp(sku)), ('Margin per Sheet', rp(sku) - dp(sku))])
 specs = [('SKU', sku), ('Finish', 'Woodgrain'), ('Thickness', '1.0 mm'), ('Sheet Size', '8 ft × 4 ft (2,440 mm × 1,220 mm)'), ('Weight per Sheet', '6.1 kg'), ('Grade', 'Decorative'), ('Pack Size', '25 sheets'), ('Colour Family', 'Brown')]
 related = ['LM-WNG-011', 'LM-TEK-006', 'LM-OAK-004', 'LM-SLT-005']
 rel = ''.join(f'<a class="card" data-link="SEC-CAT-02" style="overflow:hidden;color:inherit">{sw(r, "", "aspect-ratio:4/3;border-radius:0")}<div style="padding:.875rem 1rem"><b>{BY[r][1]}</b><div style="margin-top:.5rem;font-weight:620">{M(dp(r))} <span class="dim" style="font-weight:450">per sheet</span></div></div></a>' for r in related)
@@ -158,7 +158,7 @@ QTY = dict(NEW_LINES)
 rows = ''
 for p in P:
     s = p[0]; q = QTY.get(s, 0)
-    rows += (f'<tr><td><div class="prod">{sw(s)}<div><b>{p[1]}</b>{avail_chip(s)}</div></div></td><td class="mono nowrap">{s}</td>'
+    rows += (f'<tr><td><div class="prod">{sw(s)}<div><b>{p[1]}</b>{('<div style="margin-top:.25rem">' + avail_chip(s) + '</div>') if avail_chip(s) else ''}</div></div></td><td class="mono nowrap">{s}</td>'
              f'<td class="num">{M(dp(s))}</td><td>{qty(q)}</td><td class="num"><b>{M(q * dp(s)) if q else "—"}</b></td></tr>\n')
 draft = ''.join(f'<tr><td><b>{BY[s][1]}</b></td><td class="num">{N(q)}</td><td class="num"><b>{M(q * dp(s))}</b></td></tr>' for s, q in NEW_LINES)
 body = f'''  <div class="head">

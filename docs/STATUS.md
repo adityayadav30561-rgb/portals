@@ -14,8 +14,8 @@ Return Request; Support Ticket List, Create Support Ticket, Support Ticket Detai
 Notifications. Tertiary Sales Entry and History, both Returns screens, My Profile and Notifications are shared with the Manager (`?role=MGR`).
 Data: DATA.md, "Phase 6 data". Dealer-level documents carry a "D" (PAY-2026-D0521, RTN-2026-D0508, TKT-2026-D0746).
 
-**Review gaps, stated plainly:** the post-commit advisor review was not obtained for Phases 4 and 5 (the tool was unavailable after the Phase 4
-commit; Phase 5 skipped it). The advisor did review the Phase 6 plan before building.
+**Review gaps, stated plainly:** Phases 4 and 5 had no post-commit advisor review. The advisor reviewed the Phase 6 plan before building and
+the finished Phase 6 after the commit.
 
 ## What exists
 
@@ -47,11 +47,12 @@ commit; Phase 5 skipped it). The advisor did review the Phase 6 plan before buil
 
 ## Verified in Phase 6
 
-`node tools/verify.js <folder>` with no filter: ALL OK (every built screen and role at 1440, 1366 × 768 and 390 px over `file://`). Looked at in
-a 1440 screenshot: Tertiary Sales Overview and Entry, Invoice Details, Payments Overview, Schemes and Incentives, Inventory Reports,
-Support Ticket Details, Notifications and My Profile (as Manager) and Return Requests (as Manager); Tertiary Sales Entry also at 390. The rest only
-passed the automated checks. A search of `screens/secondary` for Crestline, Alpha's emails, Bhiwandi, Rajesh Menon, Suresh Iyer and the Crestline
-number series found only legitimate Distributor Alpha references. Not yet checked in Firefox or Safari.
+`node tools/verify.js <folder>` with no filter: ALL OK (every built screen and role at 1440, 1366 × 768 and 390 px over `file://`). Every one of the
+21 Phase 6 screens was looked at in a 1440 screenshot (the shared Return Requests, My Profile and Notifications also as Manager), as were the six
+Phase 5 screens not looked at before (Product Catalogue, Product Details, Place Order, Order Confirmation, Order History, Add Retailer Request);
+Tertiary Sales Entry, Invoice Details and Notifications were also looked at at 390. A search of `screens/secondary` for Crestline, Alpha's emails,
+Bhiwandi, Rajesh Menon, Suresh Iyer and the Crestline number series found only legitimate Distributor Alpha references. `ML()` now rounds halves up
+(₹1,35,500 is ₹1.36 lakh, ₹5,59,500 is ₹5.60 lakh); only three Secondary screens changed. Not yet checked in Firefox or Safari.
 
 ## Changes to Phase 2 and 3 screens made in Phase 4 (user's answers to the Phase 3 open items, 2026-10-26)
 

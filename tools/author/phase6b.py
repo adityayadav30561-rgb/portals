@@ -286,7 +286,7 @@ body = f'''  <div class="head">
 page('secondary', 'create-user', 'SEC-USR-02', 'Secondary Customer — Owner — Create User (SEC-USR-02)', body)
 
 # ---------- User Details (Arjun Nair) ----------
-act = [('26/10/2026 10:05', 'Placed order draft for SAL-2026-3042'), ('26/10/2026 08:55', 'Signed in'), ('25/10/2026 17:20', 'Recorded sale TSL-2026-0412'), ('22/10/2026 11:15', 'Raised return request RTN-2026-D0508'), ('21/10/2026 18:02', 'Recorded sale TSL-2026-0410')]
+act = [('26/10/2026 10:05', 'Viewed order SAL-2026-3040'), ('26/10/2026 08:55', 'Signed in'), ('25/10/2026 17:20', 'Recorded sale TSL-2026-0412'), ('22/10/2026 11:20', 'Raised return request RTN-2026-D0508'), ('21/10/2026 18:02', 'Recorded sale TSL-2026-0410')]
 arows = [f'<tr><td class="nowrap">{d}</td><td><b>{a}</b></td></tr>' for d, a in act]
 accrows = [f'<tr><td><b>{m[0]}</b></td><td class="c">{tick(m[2])}</td></tr>' for m in MODS]
 body = f'''  <div class="head">

@@ -174,7 +174,7 @@ body = f'''  <div class="head">
   <section class="card flush">
     {filters('Search by payment or invoice number', 'Search payments', ('Date Range', 'Last 90 days'), ('Mode', 'All'))}
     <div class="body">{table([('Payment Number', ''), ('Date', ''), ('Mode', ''), ('Invoice Number', ''), ('Amount', 'num'), ('Status', ''), ('', '')], [pay_rows])}
-      {pager('Showing 1 to 10 of 394 payments')}</div>
+      {pager(f'Showing 1 to 10 of {B_INV_COUNT - len(BOPEN)} payments')}</div>
   </section>
 '''
 page('secondary', 'payments-overview', 'SEC-BIL-03', 'Secondary Customer — Owner — Payments Overview (SEC-BIL-03)', body)

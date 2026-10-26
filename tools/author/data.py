@@ -15,6 +15,12 @@ def M(n):
         s = ','.join(parts) + ',' + tail
     return '₹' + s
 
+def ML(n):
+    """Compact money with full words, for stat tiles, charts and summaries: 3352882 -> ₹33.53 lakh"""
+    if n >= 10000000: return f'\u20b9{n/10000000:.2f} crore'
+    if n >= 100000: return f'\u20b9{n/100000:.2f} lakh'
+    return M(n)
+
 def N(n):
     return f'{int(n):,}'
 

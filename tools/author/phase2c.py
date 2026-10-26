@@ -42,7 +42,7 @@ page('primary','order-history','PRI-ORD-01','Primary Customer — Owner — Orde
 # ---------- Order Details (ORD-2026-10447) ----------
 L = [('LM-WNT-001',100,1140),('LM-ARC-002',150,905),('LM-CHR-007',60,1055),('LM-WNG-011',50,1170)]
 sub = sum(q*p for _,q,p in L); assert sub == 371550
-rows = ''.join(f'<tr><td><div class="prod">{sw(s)}<div><b>{BY[s][1]}</b><small>{s}</small></div></div></td><td class="num">{N(q)}</td><td class="num">{M(p)}</td><td class="num"><b>{M(q*p)}</b></td></tr>' for s,q,p in L)
+rows = ''.join(f'<tr><td><div class="prod">{sw(s)}<div><b>{BY[s][1]}</b></div></div></td><td class="mono nowrap">{s}</td><td class="num">{N(q)}</td><td class="num">{M(p)}</td><td class="num"><b>{M(q*p)}</b></td></tr>' for s,q,p in L)
 total = sub + 33440*2 + 4500; assert total == 442930, total
 body = f'''  <div class="head">
     <div class="title-row"><h1>ORD-2026-10447</h1>{chip('In Transit')}{chip('Unpaid')}</div>
@@ -54,15 +54,15 @@ body = f'''  <div class="head">
   <div class="grid g-main-side" style="--side:22rem">
     <div class="stack">
       <section class="card flush"><header><h2>Items</h2></header>
-        <div class="body"><div class="table-wrap"><table class="tbl"><thead><tr><th>Product</th><th class="num">Sheets</th><th class="num">Price per Sheet</th><th class="num">Amount</th></tr></thead><tbody>{rows}</tbody>
-          <tfoot><tr><td colspan="3">Subtotal</td><td class="num">{M(sub)}</td></tr></tfoot></table></div>
+        <div class="body"><div class="table-wrap"><table class="tbl"><thead><tr><th>Product</th><th>SKU</th><th class="num">Sheets</th><th class="num">Price per Sheet</th><th class="num">Amount</th></tr></thead><tbody>{rows}</tbody>
+          <tfoot><tr><td colspan="4">Subtotal</td><td class="num">{M(sub)}</td></tr></tfoot></table></div>
           <div style="padding:1rem 1.125rem"><dl class="kv" style="max-width:22rem;margin-left:auto"><dt>Central GST 9%</dt><dd>{M(33440)}</dd><dt>State GST 9%</dt><dd>{M(33440)}</dd><dt>Freight</dt><dd>{M(4500)}</dd></dl>
           <dl class="kv total" style="max-width:22rem;margin-left:auto"><dt>Total</dt><dd>{M(total)}</dd></dl></div></div></section>
-      <section class="card"><header><h2>Order Activity</h2></header><div class="body"><ul class="feed">
-        <li><span class="dot"><i data-icon="truck"></i></span><div><b>Shipment dispatched</b><span class="sub">Western Freight Carriers</span></div><time>24/10/2026 06:30</time></li>
-        <li><span class="dot"><i data-icon="cart"></i></span><div><b>Packing completed</b><span class="sub">Vapi plant warehouse</span></div><time>23/10/2026 17:05</time></li>
-        <li><span class="dot ok"><i data-icon="check"></i></span><div><b>Order confirmed</b><span class="sub">Crestline Laminates</span></div><time>20/10/2026 09:40</time></li>
-        <li><span class="dot"><i data-icon="doc"></i></span><div><b>Order placed</b><span class="sub">Rajesh Menon</span></div><time>19/10/2026 10:15</time></li></ul></div></section>
+      <section class="card flush"><header><h2>Order Activity</h2></header><div class="body"><div class="table-wrap"><table class="tbl"><thead><tr><th>Date</th><th>Event</th><th>By</th></tr></thead><tbody>
+        <tr><td class="nowrap">24/10/2026 06:30</td><td><b>Shipment dispatched</b></td><td>Western Freight Carriers</td></tr>
+        <tr><td class="nowrap">23/10/2026 17:05</td><td><b>Packing completed</b></td><td>Vapi plant warehouse</td></tr>
+        <tr><td class="nowrap">20/10/2026 09:40</td><td><b>Order confirmed</b></td><td>Crestline Laminates</td></tr>
+        <tr><td class="nowrap">19/10/2026 10:15</td><td><b>Order placed</b></td><td>Rajesh Menon</td></tr></tbody></table></div></div></section>
     </div>
     <div class="stack">
       <section class="card"><header><h2>Delivery</h2></header><div class="body"><dl class="kv"><dt>Dispatch Number</dt><dd class="mono">DSP-2026-5521</dd><dt>Deliver To</dt><dd>Bhiwandi Warehouse, Thane District</dd><dt>Expected</dt><dd>27/10/2026</dd><dt>Transporter</dt><dd>Western Freight Carriers</dd><dt>Vehicle</dt><dd>MH 04 KP 7712</dd><dt>Driver</dt><dd>Ramesh Pawar</dd><dt>Driver Phone</dt><dd>+91 90000 12345</dd></dl></div></section>
@@ -80,7 +80,7 @@ def stock_bar(p):
     pct = 0 if on == 0 else min(100, round(on / (lvl * 3) * 100))
     cls = 'bad' if p[13]=='Out of Stock' else 'warn' if p[13]=='Low Stock' else 'ok'
     return f'<span class="meter {cls}" style="width:6rem"><i style="width:{pct}%"></i></span>'
-rows = ''.join(f'''<tr><td><div class="prod">{sw(p[0])}<div><a data-link="PRI-INV-02"><b>{p[1]}</b></a><small>{p[0]} · {p[2]}, {p[3]}</small></div></div></td>
+rows = ''.join(f'''<tr><td><div class="prod">{sw(p[0])}<div><a data-link="PRI-INV-02"><b>{p[1]}</b></a></div></div></td><td class="mono nowrap">{p[0]}</td>
       <td class="num">{N(p[8])}</td><td class="num">{N(p[9])}</td><td class="num"><b>{N(p[10])}</b></td><td class="num">{N(p[11]) if p[11] else '—'}</td><td class="num">{N(p[12])}</td><td>{chip(p[13])}</td></tr>
 ''' for p in P)
 tabs = [('All Products',12,True),('In Stock',8,False),('Low Stock',3,False),('Out of Stock',1,False)]
@@ -93,7 +93,7 @@ body = f'''  <div class="head">
   </div>
   <div class="kpis">
     <div class="card kpi"><label>Sheets on Hand</label><strong>7,415</strong></div>
-    <div class="card kpi"><label>Stock Value</label><strong>{M(7842000)}</strong></div>
+    <div class="card kpi"><label>Stock Value</label><strong>{ML(7842000)}</strong></div>
     <div class="card kpi"><label>Reserved for Dealers</label><strong>1,875 <small>sheets</small></strong></div>
     <div class="card kpi"><label>Arriving From Crestline</label><strong>1,450 <small>sheets</small></strong></div>
   </div>
@@ -103,7 +103,7 @@ body = f'''  <div class="head">
   </div>
   <section class="card flush"><div style="padding:0 1.125rem"><div class="tabs">{tabs_html}</div></div>
     <div class="filters" style="padding:1rem 1.125rem 0"><label class="finder grow"><i data-icon="search"></i><input type="search" placeholder="Search by product name or SKU" aria-label="Search stock"></label><span class="sel"><small>Finish</small> All <i data-icon="down"></i></span><span class="sel"><small>Thickness</small> All <i data-icon="down"></i></span></div>
-    <div class="body"><div class="table-wrap"><table class="tbl"><thead><tr><th>Product</th><th class="num">On Hand</th><th class="num">Reserved</th><th class="num">Available</th><th class="num">On Order</th><th class="num">Reorder Level</th><th>Status</th></tr></thead><tbody>{rows}</tbody></table></div></div></section>
+    <div class="body"><div class="table-wrap"><table class="tbl"><thead><tr><th>Product</th><th>SKU</th><th class="num">On Hand</th><th class="num">Reserved</th><th class="num">Available</th><th class="num">On Order</th><th class="num">Reorder Level</th><th>Status</th></tr></thead><tbody>{rows}</tbody></table></div></div></section>
 '''
 page('primary','inventory-overview','PRI-INV-01','Primary Customer — Owner — Inventory Overview (PRI-INV-01)', body)
 
@@ -111,11 +111,11 @@ page('primary','inventory-overview','PRI-INV-01','Primary Customer — Owner —
 sku = 'LM-CAL-003'; p = BY[sku]
 dates = ['27/07/2026','03/08/2026','10/08/2026','17/08/2026','24/08/2026','31/08/2026','07/09/2026','14/09/2026','21/09/2026','28/09/2026','05/10/2026','12/10/2026','19/10/2026','26/10/2026']
 levels = [480,420,365,300,690,630,575,510,445,385,330,300,260,215]
-mv = [('26/10/2026','Sale to Dealer','Dealer Delta · DSP-2026-5534','−20',215),('24/10/2026','Sale to Dealer','Dealer Bravo · DSP-2026-5527','−25',235),
-      ('22/10/2026','Sale to Dealer','Dealer Foxtrot · DSP-2026-5519','−15',260),('19/10/2026','Sale to Dealer','Dealer Gopal · DSP-2026-5508','−30',275),
-      ('15/10/2026','Sale to Dealer','Dealer Harsh · DSP-2026-5496','−25',305),('12/10/2026','Stock Adjustment','Damaged in handling · ADJ-2026-0034','−5',330),
-      ('08/10/2026','Sale to Dealer','Dealer Bravo · DSP-2026-5471','−25',335),('03/10/2026','Sale to Dealer','Dealer Delta · DSP-2026-5452','−25',360)]
-mv_rows = ''.join(f'<tr><td>{d}</td><td>{chip(t, "warn" if t=="Stock Adjustment" else "blue")}</td><td>{r}</td><td class="num"><b>{q}</b></td><td class="num">{N(b)}</td></tr>' for d,t,r,q,b in mv)
+mv = [('26/10/2026','Sale to Dealer','Dealer Delta','DSP-2026-5534','\u221220',215),('24/10/2026','Sale to Dealer','Dealer Bravo','DSP-2026-5527','\u221225',235),
+      ('22/10/2026','Sale to Dealer','Dealer Foxtrot','DSP-2026-5519','\u221215',260),('19/10/2026','Sale to Dealer','Dealer Gopal','DSP-2026-5508','\u221230',275),
+      ('15/10/2026','Sale to Dealer','Dealer Harsh','DSP-2026-5496','\u221225',305),('12/10/2026','Stock Adjustment','Damaged in handling','ADJ-2026-0034','\u22125',330),
+      ('08/10/2026','Sale to Dealer','Dealer Bravo','DSP-2026-5471','\u221225',335),('03/10/2026','Sale to Dealer','Dealer Delta','DSP-2026-5452','\u221225',360)]
+mv_rows = ''.join(f'<tr><td>{d}</td><td>{chip(t, "warn" if t=="Stock Adjustment" else "blue")}</td><td>{who}</td><td class="mono nowrap">{ref}</td><td class="num"><b>{q}</b></td><td class="num">{N(b)}</td></tr>' for d,t,who,ref,q,b in mv)
 body = f'''  <div class="head">
     <div class="title-row"><h1>{p[1]}</h1>{chip('Low Stock')}</div>
     <div class="acts"><a class="btn" data-link="PRI-CAT-02"><i data-icon="box"></i>View Product</a><a class="btn pri" data-link="PRI-ORD-03"><i data-icon="plus"></i>Reorder</a></div>
@@ -127,12 +127,12 @@ body = f'''  <div class="head">
     <div class="card kpi"><label>On Order</label><strong>300 <small>sheets</small></strong><div class="foot"><span class="delta flat">Arriving 30/10/2026</span></div></div>
     <div class="card kpi"><label>Days of Cover</label><strong>9 <small>days</small></strong></div>
   </div>
-  <div class="grid g-main-side" style="--side:22rem">
+  <div class="grid g-main-side" style="--side:19rem">
     <div class="stack">
       <section class="card"><header><h2>Stock Level</h2></header>
         <div class="body">{chart('line', dates, [{'name':'Sheets on hand','values':levels,'color':'var(--accent)'},{'name':'Reorder level','values':[250]*14,'color':'var(--bad)','dots':False}], area=True)}</div></section>
       <section class="card flush"><header><h2>Stock Movements</h2><a class="more" data-link="PRI-INV-01">Inventory overview</a></header>
-        <div class="body"><div class="table-wrap"><table class="tbl"><thead><tr><th>Date</th><th>Type</th><th>Reference</th><th class="num">Sheets</th><th class="num">Balance</th></tr></thead><tbody>{mv_rows}</tbody></table></div></div></section>
+        <div class="body"><div class="table-wrap"><table class="tbl"><thead><tr><th>Date</th><th>Type</th><th>Dealer or Reason</th><th>Reference</th><th class="num">Sheets</th><th class="num">Balance</th></tr></thead><tbody>{mv_rows}</tbody></table></div></div></section>
     </div>
     <div class="stack">
       <section class="card pad" style="display:grid;gap:1rem">{sw(sku,'lg','aspect-ratio:16/9')}<dl class="kv"><dt>SKU</dt><dd class="mono">{sku}</dd><dt>Finish</dt><dd>{p[2]}</dd><dt>Thickness</dt><dd>{p[3]}</dd><dt>Sheet Size</dt><dd>8 ft × 4 ft</dd></dl></section>

@@ -16,6 +16,12 @@
     return n;
   };
   var fmt = function (n) { return Number(n).toLocaleString('en-IN'); };
+  // Compact money for axis labels: 2500000 -> "₹25 lakh", 12500000 -> "₹1.25 crore"; tooltips keep the exact figure.
+  var trim = function (n) { return String(+n.toFixed(2)); };
+  var moneyLabel = function (v) {
+    if (v === 0) return '₹0';
+    return v >= 10000000 ? '₹' + trim(v / 10000000) + ' crore' : v >= 100000 ? '₹' + trim(v / 100000) + ' lakh' : '₹' + fmt(v);
+  };
   var nice = function (max) {
     var exp = Math.pow(10, Math.floor(Math.log10(max || 1))), f = max / exp;
     return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * exp;
@@ -24,8 +30,11 @@
   function axes(box, svg, W, H, labels, series, money) {
     var all = [];
     series.forEach(function (s) { s.values.forEach(function (v) { all.push(v); }); });
-    var top = nice(Math.max.apply(null, all)), ticks = 4;
-    var leftPad = (money ? 2 : 0) + fmt(top).length * 6.4 + 14;
+    var top = nice(Math.max.apply(null, all)), ticks = money ? 5 : 4;
+    var tickLabel = function (v) { return money ? moneyLabel(v) : fmt(v); };
+    var widest = 0;
+    for (var t = 0; t <= ticks; t++) widest = Math.max(widest, tickLabel((top * t) / ticks).length);
+    var leftPad = widest * 7.2 + 14;
     var maxLabel = Math.max.apply(null, labels.map(function (l) { return l.length; }));
     var plotW = W - leftPad - 8;
     var slot = plotW / labels.length;
@@ -35,7 +44,7 @@
     for (var i = 0; i <= ticks; i++) {
       var y = 8 + plotH - (plotH * i) / ticks;
       svg.appendChild(el('line', { x1: leftPad, x2: W - 8, y1: y, y2: y, stroke: '#e7e9ee', 'stroke-width': 1 }));
-      svg.appendChild(el('text', { x: leftPad - 8, y: y + 3.5, 'text-anchor': 'end' }, (money ? '₹' : '') + fmt((top * i) / ticks)));
+      svg.appendChild(el('text', { x: leftPad - 8, y: y + 3.5, 'text-anchor': 'end' }, tickLabel((top * i) / ticks)));
     }
     var every = Math.ceil(labels.length > 8 ? labels.length / 7 : 1);
     labels.forEach(function (l, i) {

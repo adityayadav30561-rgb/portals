@@ -17,6 +17,16 @@ What the user asked for, liked and rejected. Read before any design change; neve
 | Static prototype | HTML/CSS/small JavaScript. No backend, login, database, storage, real logic. Fictional data. | 2026-10-26 |
 | Design language | Light theme, deep navy text, blue accent, Inter, white cards on light grey, as in the MAVRO product screens; responsive (unlike the fixed-size MAVRO captures). | 2026-10-26 |
 
+## Answered at the Phase 2 checkpoint (user, 2026-10-26)
+
+| Decision | Detail |
+|---|---|
+| Look approved | Sidebar, cards, colours, swatches and charts. |
+| Managers can order | Primary and Secondary Managers are tagged onto Order Builder, Order Confirmation and Inventory Item Details (no new screens). |
+| Money format | Compact, with full words: ₹33.53 lakh, ₹1.25 crore. Used in stat tiles, chart axes and summary cards (credit, balances). Exact figures (₹9,49,752) stay in orders, invoices, price lists and tables, where the precise amount is the point. Under ₹1 lakh always exact. Never "L", "Cr", "K". |
+| Date format | 26/10/2026 in tables, "26 October 2026" in text (not objected to). |
+| Lines under names | **No grey secondary line under a name anywhere.** Each attribute is its own labelled column (SKU, City, Role, Date), a tag (SKU on cards, city beside a dealer name, PDF) or a key-value row. Chosen by Claude on the user's instruction "whichever is more qualified to be in our portal". |
+
 ## Screen text rules (user, 2026-10-26, after the Phase 2 review: "every block, every phrase, every text should look like a finished product, no redesign later")
 
 Applies to every screen, in every phase. `tools/verify.js` enforces what a machine can.
@@ -51,15 +61,6 @@ Applies to every screen, in every phase. `tools/verify.js` enforces what a machi
 - (was) **Tertiary Payment Details.** Tertiary Payments Overview has nothing to open; add Payment Details (Tertiary 40, total 195)?
 - **Screen name pattern:** DONE: three-part kept.
 - (was) **Screen name pattern:** three-part (above) or the brief's two-part examples ("Primary Customer — Product Catalogue")? One-line change.
-
-## Raised at the Phase 2 design checkpoint, waiting for the user
-
-- **Secondary lines under names** (SKU, city, job title, "PDF · date"): keep for record details, or move into own columns or tags?
-
-- Approval of the application look (sidebar, top bar, cards, colours, laminate swatches, charts).
-- **Manager ordering dead end:** Place Order is shared by Owner and Manager but Order Builder, Order Confirmation and Inventory Item Details are Owner only; tag the Managers onto them (no new screens)? Same for the Secondary Manager.
-- **Date format:** 26/10/2026 in tables, "26 October 2026" in text; no three-letter month names (the no-abbreviations rule).
-- **Money format:** full figures with Indian grouping (₹33,52,882). Alternative within the rule: ₹33.53 lakh (a full word).
 
 ## Rejected
 

@@ -23,10 +23,10 @@ A screen used by several roles is designed once and listed under each role; it c
 | Company Administration | Sales Manager | 12 |
 | Company Administration | Operations Manager | 15 |
 | Primary Distributor | Owner | 35 |
-| Primary Distributor | Sales and Operations Manager | 23 |
+| Primary Distributor | Sales and Operations Manager | 26 |
 | Primary Distributor | Accountant | 16 |
 | Secondary Dealer | Owner | 35 |
-| Secondary Dealer | Sales and Inventory Manager | 24 |
+| Secondary Dealer | Sales and Inventory Manager | 27 |
 | Tertiary Retailer | Retailer Owner | 35 |
 | Tertiary Retailer | Sales Executive | 15 |
 | Tertiary Retailer | Inventory and Purchasing Executive | 15 |
@@ -158,9 +158,12 @@ A screen used by several roles is designed once and listed under each role; it c
 | PRI-CAT-01 | Primary Customer — Sales and Operations Manager — Product Catalogue | Products | Built | Laminates with image, SKU, finish, thickness, price and availability |
 | PRI-CAT-02 | Primary Customer — Sales and Operations Manager — Product Details | Products | Built | One product: images, specifications, price tiers and stock |
 | PRI-ORD-03 | Primary Customer — Sales and Operations Manager — Place Order | Orders | Built | Pick products and quantities to start a new order to the company |
+| PRI-ORD-04 | Primary Customer — Sales and Operations Manager — Order Builder | Orders | Built | Order lines with delivery address, requested date, schemes applied and totals |
+| PRI-ORD-05 | Primary Customer — Sales and Operations Manager — Order Confirmation | Orders | Built | Confirmation of the submitted order with its number and expected delivery |
 | PRI-ORD-01 | Primary Customer — Sales and Operations Manager — Order History | Orders | Built | Past and current orders with status, value and delivery date |
 | PRI-ORD-02 | Primary Customer — Sales and Operations Manager — Order Details | Orders | Built | One order: items, status timeline, invoice and delivery |
 | PRI-INV-01 | Primary Customer — Sales and Operations Manager — Inventory Overview | Inventory and Dispatch | Built | Stock held by product with sheets available, reserved and on order |
+| PRI-INV-02 | Primary Customer — Sales and Operations Manager — Inventory Item Details | Inventory and Dispatch | Built | One product’s stock by location, movement and reorder level |
 | PRI-INV-03 | Primary Customer — Sales and Operations Manager — Low Stock Overview | Inventory and Dispatch | Planned | Products below their reorder level with suggested order quantity |
 | PRI-INV-04 | Primary Customer — Sales and Operations Manager — Stock Movement History | Inventory and Dispatch | Planned | Receipts, sales to dealers and adjustments by product and date |
 | PRI-DSP-01 | Primary Customer — Sales and Operations Manager — Dispatch Overview | Inventory and Dispatch | Planned | Incoming shipments from the company and outgoing deliveries to dealers |
@@ -249,9 +252,12 @@ A screen used by several roles is designed once and listed under each role; it c
 | SEC-CAT-01 | Secondary Customer — Sales and Inventory Manager — Product Catalogue | Products | Planned | Laminates with image, SKU, finish, thickness, price and availability |
 | SEC-CAT-02 | Secondary Customer — Sales and Inventory Manager — Product Details | Products | Planned | One product: images, specifications, price tiers and stock |
 | SEC-ORD-03 | Secondary Customer — Sales and Inventory Manager — Place Order | Orders | Planned | Pick products and quantities to start a new order to your distributor |
+| SEC-ORD-04 | Secondary Customer — Sales and Inventory Manager — Order Builder | Orders | Planned | Order lines with delivery address, requested date, schemes applied and totals |
+| SEC-ORD-05 | Secondary Customer — Sales and Inventory Manager — Order Confirmation | Orders | Planned | Confirmation of the submitted order with its number and expected delivery |
 | SEC-ORD-01 | Secondary Customer — Sales and Inventory Manager — Order History | Orders | Planned | Past and current orders with status, value and delivery date |
 | SEC-ORD-02 | Secondary Customer — Sales and Inventory Manager — Order Details | Orders | Planned | One order: items, status timeline, invoice and delivery |
 | SEC-INV-01 | Secondary Customer — Sales and Inventory Manager — Inventory Overview | Inventory and Dispatch | Planned | Stock held by product with sheets available, reserved and on order |
+| SEC-INV-02 | Secondary Customer — Sales and Inventory Manager — Inventory Item Details | Inventory and Dispatch | Planned | One product’s stock by location, movement and reorder level |
 | SEC-INV-03 | Secondary Customer — Sales and Inventory Manager — Low Stock Overview | Inventory and Dispatch | Planned | Products below their reorder level with suggested order quantity |
 | SEC-INV-04 | Secondary Customer — Sales and Inventory Manager — Stock Movement History | Inventory and Dispatch | Planned | Receipts, sales to retailers and adjustments by product and date |
 | SEC-INV-05 | Secondary Customer — Sales and Inventory Manager — Incoming Stock | Inventory and Dispatch | Planned | Shipments on their way from your distributor with expected arrival |

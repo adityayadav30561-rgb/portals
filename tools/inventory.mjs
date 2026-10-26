@@ -40,7 +40,7 @@ const ADDITIONS = new Set([
   'PRI-RET-01', 'PRI-RET-02', 'SEC-RET-01', 'SEC-RET-02', 'TER-RET-01', 'TER-RET-02', 'CMP-BIL-02', 'CMP-SCH-03', 'SEC-BIL-04',
   'CMP-PRO-02', 'TER-BIL-05' // added on 2026-10-26 at the user's request after the Phase 1 review
 ]);
-const EXTRA_ROLE_TAGS = new Set(['PRI-PRO-02@MGR', 'SEC-PRO-02@MGR']);
+const EXTRA_ROLE_TAGS = new Set(['PRI-PRO-02@MGR', 'SEC-PRO-02@MGR', 'PRI-ORD-04@MGR', 'PRI-ORD-05@MGR', 'PRI-INV-02@MGR', 'SEC-ORD-04@MGR', 'SEC-ORD-05@MGR', 'SEC-INV-02@MGR']);
 const PINNED = { 'PRI-OWN-01': 'Dashboard', 'PRI-MGR-01': 'Dashboard', 'PRI-ACC-01': 'Dashboard', 'PRI-ORD-01': 'Order History', 'PRI-ORD-02': 'Order Details', 'PRI-INV-01': 'Inventory Overview' };
 const EXPECTED = { company: 50, primary: 52, secondary: 45, tertiary: 40, authentication: 9 };
 const BANNED = /\b(Qty|Amt|Mgr|Acct|Inv\.|No\.|Ref\.|Dept|Cust|Dist|Approx|Misc)\b/;

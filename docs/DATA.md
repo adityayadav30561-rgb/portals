@@ -11,7 +11,7 @@ building a screen; add to it whenever a screen introduces data another screen wi
 | Dates in text | 26 October 2026 |
 | Dates in tables and compact places | 26/10/2026 (day/month/year). Time as 11:42 (24-hour). |
 | Months | Full names everywhere, including chart axes. No three-letter month names. |
-| Money | ₹ with Indian grouping and no abbreviation: ₹9,49,752 (never "9.5 L", "Cr", "K"). |
+| Money | Exact: ₹ with Indian grouping, ₹9,49,752 (orders, invoices, prices, tables). Compact with full words in stat tiles, chart axes and summaries: ₹33.53 lakh, ₹1.25 crore (two decimals; helper `ML()` in tools/author/data.py). Under ₹1 lakh always exact. Never "L", "Cr", "K". |
 | Quantities | Whole sheets: "760 sheets". Never "pcs", "Qty". |
 | Units allowed | mm, ft, kg, %, SKU, GST, PDF. |
 | Words to avoid (the checks scan for them) | Qty, Amt, Mgr, Acct, Dept, Cust, Dist, Approx, Misc, YTD, MTD, FY, ETA, PO, CGST, SGST, vs, L / Cr / K after a number, three-letter months, UPI, PAN, GSTIN, PIN. Write "Central GST", "State GST", "Postal Code", "Permanent Account Number", "compared with". |

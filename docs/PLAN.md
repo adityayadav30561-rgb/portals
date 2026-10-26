@@ -1,6 +1,6 @@
 # Laminates Customer Portal: screen prototype plan
 
-_Drafted 2026-10-26. Status: **waiting for approval** (open decisions at the end)._
+_Drafted 2026-10-26. Status: **waiting for approval** of the merges and additions (open decisions at the end). Live status: [STATUS.md](STATUS.md)._
 
 A static, clickable HTML prototype of every proposed screen in the four portals, for stakeholders to review
 and approve before the real application is built. No backend, login, database, storage or business logic.
@@ -242,6 +242,6 @@ widths, the inventory regenerated, docs/STATUS.md updated, a commit and a push.
 
 1. **Merges** in section 1: approve all six and the rename to Portal Settings?
 2. **Additions**: the 17 recommended ones; any of the optional ones?
-3. **Brand**: what goes in the sidebar logo slot: a fictional laminates manufacturer (name?), MAVRO, or a
-   neutral "Your Logo" placeholder?
+3. ~~Brand~~ **Decided 2026-10-26: the official MAVRO.AI logo only**, in every sidebar and on the sign-in screens
+   (see DECISIONS.md).
 4. **Sharing with stakeholders**: is a link needed (for example GitHub Pages), or is the zipped folder enough?

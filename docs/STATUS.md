@@ -50,6 +50,15 @@ None. Phase 3 can start. (Raise anything new at the end of Phase 3.)
 
 ## Next
 
-Phase 3: Dealer Network, Dealer Details, Add Dealer Request, Secondary Sales Overview/Entry/History,
-Invoices and Payments (4), Schemes (2), Sales Reports, Inventory Reports, Return Requests (2), Support (3), User
-Management (3), My Profile, Notifications. Call the advisor before starting and after committing.
+**Phase 3: Primary Owner, part 2.** Start of the session: read CLAUDE.md, this file, DECISIONS.md (especially "Screen
+text rules" and "Answered at the Phase 2 checkpoint"), DATA.md, then PLAN.md section 5. Write the screens as
+`tools/author/phase3a.py` (and b, c) using `from data import *` (`P`, `BY`, `sw`, `chip`, `qty`, `chart`, `M`, `ML`,
+`N`, `OPEN_ORDERS`, `page`); copy the structure of `phase2a.py`. Then add the IDs to `BUILT` in `assets/registry.js`,
+run `node tools/inventory.mjs` and `node tools/verify.js <folder> PRI` and look at the screenshots yourself.
+
+Screens: Dealer Network, Dealer Details, Add Dealer Request, Secondary Sales Overview/Entry/History, Invoices
+Overview, Invoice Details, Payments Overview, Payment Details, Schemes and Incentives, Scheme Details, Sales Reports,
+Inventory Reports, Return Requests, Create Return Request, Support Ticket List, Create Support Ticket, Support Ticket
+Details, User Management, Create User, User Details, My Profile, Notifications (24). Data needed that DATA.md does not
+yet have (dealers' details, invoices, payments, tickets, users): add it to DATA.md first. Call the advisor before
+starting and after committing.

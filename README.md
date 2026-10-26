@@ -21,6 +21,7 @@ All data on the screens is fictional.
 | Path | What |
 |---|---|
 | `index.html`, `directory/` | Screen Directory pages (drawn from the registry) |
+| `screen-map.html` | Screen Map: a tree from Sign In through the portals and roles to every screen, built and planned (drawn from the registry) |
 | `screens/<portal>/` | One HTML file per screen |
 | `assets/registry.js` | The list of every screen: ID, name, roles, menu section, description |
 | `assets/styles.css`, `assets/fonts.css` | Design system; Inter embedded so pages work from disk |

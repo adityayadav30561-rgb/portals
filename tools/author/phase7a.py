@@ -26,7 +26,7 @@ rec_rows = ''.join(f'<tr><td>{prod_cell(s, "SEC-INV-02")}</td><td class="mono no
                    f'<td class="num">{N(BREC[s]["qty"]) if BREC[s]["qty"] else "—"}</td><td>{chip(BREC[s]["action"])}</td></tr>' for s in ORDER_NOW)
 inc_rows_full = ''.join(f'<tr><td>{link("SEC-ORD-02", i[0])}</td><td class="mono nowrap">{i[1]}</td><td class="num">{N(i[2])}</td><td class="num"><b>{M(i[3])}</b></td><td>{i[4]}</td><td>{chip(i[5])}</td></tr>' for i in INCOMING)
 ful_donut = chart('donut', series=[{'name': 'Delivered', 'value': RSTATUS_COUNT['Delivered'], 'color': 'var(--ok)'}, {'name': 'In Transit', 'value': RSTATUS_COUNT['In Transit'], 'color': 'var(--accent)'},
-                                   {'name': 'Being Packed', 'value': RSTATUS_COUNT['Being Packed'], 'color': '#e0a030'}, {'name': 'Awaiting Confirmation', 'value': 1, 'color': '#c9ccd3'}], center='13', caption='orders')
+                                   {'name': 'Being Packed', 'value': RSTATUS_COUNT['Being Packed'], 'color': '#e0a030'}], center='12', caption='orders')
 body = f'''  <div class="head">
     <h1>Dashboard</h1>
     <div class="acts"><span class="sel"><small>Period</small> October 2026 <i data-icon="down"></i></span><a class="btn pri" data-link="SEC-ORD-03"><i data-icon="plus"></i>Place Order</a></div>
@@ -166,7 +166,7 @@ shortest = min((s for s in BSTOCK if TSOLD[s]), key=b_cover)
 assert shortest == 'LM-CHR-007'
 body = f'''  <div class="head">
     <h1>Reorder Recommendations</h1>
-    <div class="acts"><button class="btn" type="button"><i data-icon="download"></i>Export Recommendations</button><a class="btn pri" data-link="SEC-ORD-04"><i data-icon="plus"></i>Create Order From Recommendations</a></div>
+    <div class="acts"><button class="btn" type="button"><i data-icon="download"></i>Export Recommendations</button><a class="btn pri" data-link="SEC-ORD-03"><i data-icon="plus"></i>Place Order</a></div>
   </div>
   <div class="kpis">
     {kpi('Products to Reorder', str(sum(1 for r in BREC.values() if r['action'] == 'Order Now')), chip('1 Not Available', 'bad'))}

@@ -16,7 +16,7 @@ one day late: 8 of 10 on time); 67 stock movements reconcile to 1,058 sheets; a 
 Changes outside the Manager screens: `assets/charts.js` never gives counts a fractional axis step; `assets/app.css` gained `.tbl.wrap` (headings may wrap) and
 `.tbl.tight`; `data.py` now has adjustments in `B_OPENING` (1,061 at the start of October) and two CPR lines of retail sales swapped between sales (no earlier screen shows them).
 
-**Review gaps, stated plainly:** Phases 4 and 5 had no post-commit advisor review. The advisor reviewed the Phase 6 plan and the finished Phase 6, and the Phase 7 plan.
+**Review gaps, stated plainly:** Phases 4 and 5 had no post-commit advisor review. The advisor reviewed the Phase 6 plan and the finished Phase 6, and the Phase 7 plan and the finished Phase 7 (all earlier generators re-run: `screens/` unchanged).
 Not yet checked in Firefox or Safari. Shared screens were not changed in Phase 7: Inventory Overview and Order History do not link the Manager's new screens
 (Low Stock Overview, Incoming Stock) yet; the sidebar does.
 
@@ -94,7 +94,8 @@ and the ticket description, which are user content).
    ADJ-2026-B0011 to B0015. Say if you prefer another format.
 5. **Retailer order TSL-2026-0413** (Charlie, awaiting confirmation) is both the Phase 6 Tertiary Sales Entry example and the order the Tertiary portal will show; confirm.
 6. **Retailer targets** (Charlie ₹2,50,000; Kiran ₹2,20,000; Mehta ₹1,70,000) and the three pending retailer requests are placeholders.
-7. Earlier answers applied from my recommendations (change if you disagree): Marble Finish Launch Incentive 140 of 300; Dealer Lakshya not in
+7. **Known point:** the Reorder Recommendations total (₹3,35,500, ₹3,95,890 with GST) is above Bravo's credit available after SAL-2026-3042 (₹2,46,180); the rule is unchanged, say if you want it to respect credit.
+8. Earlier answers applied from my recommendations (change if you disagree): Marble Finish Launch Incentive 140 of 300; Dealer Lakshya not in
    Pending Dealer Requests; Financial Reports May to October; May to September tax split kept.
 
 ## Next

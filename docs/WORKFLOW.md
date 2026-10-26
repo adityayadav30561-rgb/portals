@@ -11,12 +11,13 @@ How the work is run so the session can be cleared after every phase and the next
    (read only).
 
 **During**
+- Read [DATA.md](DATA.md) before building screens: the products, prices, people, number series and formats every screen must reuse.
+- Authoring aids for generating screen HTML are in `tools/author/` (shared data and helpers, one script per phase). The generated HTML is the source of truth afterwards.
 - One phase per session. Content and screens come from the registry (`assets/registry.js`), never duplicated.
 - When the user states a preference, add it to DECISIONS.md immediately.
 
 **End of a phase (checkpoint)**
-1. Check every new screen in the browser at 1440 px, 1366 × 768 and 390 px widths: no horizontal page scroll, no
-   console errors, no abbreviations or filler text.
+1. Run `node tools/verify.js <screenshot folder> <ID prefix>`: opens every built screen for every role over `file://` at 1440, 1366 × 768 and 390 px and fails on console errors, horizontal scroll, tables scrolling inside cards on desktop, dead or `#` links, missing font, abbreviations in the rendered text. Then look at the screenshots yourself.
 2. Regenerate `docs/SCREEN-INVENTORY.md` from the registry (once it exists, Phase 1) and mark the phase's screens
    as Built.
 3. Update [STATUS.md](STATUS.md): what was done, what is next, open items; tick the phase in PLAN.md.

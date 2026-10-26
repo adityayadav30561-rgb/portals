@@ -235,3 +235,5 @@ tbody tr:first-child td { border-top: 0; }
   .review .title { order: 3; flex-basis: 100%; }
   .review .pager { margin-left: auto; }
 }
+
+a[aria-disabled='true']:not(.btn) { color: var(--ink-3); pointer-events: none; text-decoration: none; cursor: default; }

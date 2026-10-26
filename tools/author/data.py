@@ -1,0 +1,90 @@
+"""Authoring aid (not needed to run the prototype): shared data and helpers for generating screen HTML.
+Values come from docs/DATA.md. The generated HTML files are the source of truth afterwards; edit them directly."""
+import json
+
+def M(n):
+    """Money with Indian digit grouping: 949752 -> ₹9,49,752"""
+    s = str(int(round(n)))
+    if len(s) > 3:
+        head, tail = s[:-3], s[-3:]
+        parts = []
+        while len(head) > 2:
+            parts.insert(0, head[-2:]); head = head[:-2]
+        if head: parts.insert(0, head)
+        s = ','.join(parts) + ',' + tail
+    return '₹' + s
+
+def N(n):
+    return f'{int(n):,}'
+
+# sku, name, finish, thickness, slabs, kind, colour, gloss, on_hand, reserved, available, on_order, reorder, status
+P = [
+ ('LM-WNT-001','Walnut Woodgrain Laminate','Woodgrain','1.0 mm',(1180,1140,1095),'wood','#5a3a22',False,1240,310,930,600,400,'In Stock'),
+ ('LM-ARC-002','Arctic White Matte Laminate','Matte','1.0 mm',(940,905,870),'plain','#f3f5f7',False,1860,420,1440,0,500,'In Stock'),
+ ('LM-CAL-003','Calacatta Marble Finish Laminate','High Gloss','1.0 mm',(1560,1510,1450),'marble','#eceeef',True,215,90,125,300,250,'Low Stock'),
+ ('LM-OAK-004','Natural Oak Texture Laminate','Texture','1.0 mm',(1240,1200,1150),'wood','#b98a55',False,640,150,490,0,300,'In Stock'),
+ ('LM-SLT-005','Slate Grey Suede Laminate','Suede','1.0 mm',(1320,1275,1225),'plain','#5b6470',False,410,120,290,0,200,'In Stock'),
+ ('LM-TEK-006','Classic Teak Woodgrain Laminate','Woodgrain','0.8 mm',(1020,985,950),'wood','#9a6a3a',False,880,200,680,0,300,'In Stock'),
+ ('LM-CHR-007','Charcoal Black Gloss Laminate','Gloss','1.0 mm',(1090,1055,1010),'plain','#23262b',True,120,60,60,200,200,'Low Stock'),
+ ('LM-IVR-008','Ivory Cream Matte Laminate','Matte','0.8 mm',(810,780,750),'plain','#efe6d2',False,1050,260,790,0,400,'In Stock'),
+ ('LM-STN-009','Carrara Stone Finish Laminate','Texture','1.0 mm',(1480,1430,1375),'stone','#c9ccd0',False,0,0,0,250,150,'Out of Stock'),
+ ('LM-CPR-010','Brushed Copper Metallic Laminate','Metallic','1.0 mm',(1890,1830,1760),'metal','#b4764a',False,95,40,55,100,100,'Low Stock'),
+ ('LM-WNG-011','Wenge Dark Woodgrain Laminate','Woodgrain','1.0 mm',(1210,1170,1125),'wood','#3b2a22',False,560,130,430,0,250,'In Stock'),
+ ('LM-SKY-012','Sky Blue Gloss Laminate','Gloss','0.8 mm',(870,840,805),'plain','#8fc1e3',True,345,95,250,0,150,'In Stock'),
+]
+BY = {p[0]: p for p in P}
+def prod(sku): return BY[sku]
+def slab(sku, qty):
+    s = BY[sku][4]
+    return s[2] if qty >= 200 else s[1] if qty >= 50 else s[0]
+
+def sw(sku, cls='', extra=''):
+    p = BY[sku]
+    return f'<div class="sw {p[5]}{" gloss" if p[7] else ""} {cls}" style="--a:{p[6]};{extra}" role="img" aria-label="{p[1]} swatch"></div>'
+
+STATUS_CHIP = {'In Stock':'ok','Low Stock':'warn','Out of Stock':'bad',
+  'Awaiting Confirmation':'warn','Confirmed':'blue','In Transit':'blue','Delivered':'ok','Cancelled':'bad',
+  'Paid':'ok','Partly Paid':'warn','Unpaid':'plain','Not Applicable':'plain'}
+def chip(text, cls=None):
+    c = cls or STATUS_CHIP.get(text, '')
+    return f'<span class="chip {c}">{text}</span>'
+
+def qty(v):
+    return f'<span class="qty"><span>−</span><input value="{v}" aria-label="Sheets" inputmode="numeric"><span>+</span></span>'
+
+def chart(kind, labels=None, series=None, money=False, height=260, area=False, center=None, caption=None):
+    a = f' data-type="{kind}"'
+    if labels is not None: a += f" data-labels='{json.dumps(labels)}'"
+    a += f" data-series='{json.dumps(series)}'"
+    if money: a += ' data-money="true"'
+    if area: a += ' data-area="true"'
+    if center: a += f' data-center="{center}"'
+    if caption: a += f' data-caption="{caption}"'
+    return f'<div class="chart"{a} data-height="{height}"></div>'
+
+def page(portal_folder, filename, sid, title, body):
+    html = f'''<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title}</title>
+<link rel="stylesheet" href="../../assets/fonts.css">
+<link rel="stylesheet" href="../../assets/styles.css">
+<link rel="stylesheet" href="../../assets/app.css">
+</head>
+<body data-screen="{sid}" data-layout="app">
+<main>
+{body}</main>
+<script src="../../assets/registry.js"></script>
+<script src="../../assets/shell.js"></script>
+<script src="../../assets/chrome.js"></script>
+<script src="../../assets/charts.js"></script>
+</body>
+</html>
+'''
+    path = f'/home/user/portals/screens/{portal_folder}/{filename}.html'
+    import os
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    open(path, 'w').write(html)
+    return path

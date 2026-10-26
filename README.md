@@ -26,6 +26,9 @@ All data on the screens is fictional.
 | `assets/styles.css`, `assets/fonts.css` | Design system; Inter embedded so pages work from disk |
 | `assets/shell.js`, `assets/directory.js` | Review bar and directory pages |
 | `docs/` | Plan, status, decisions, generated `SCREEN-INVENTORY.md` |
+| `assets/app.css`, `assets/chrome.js`, `assets/charts.js` | Application layout, sidebar and top bar, charts |
 | `tools/inventory.mjs` | Optional (needs Node): checks the registry against the brief and rewrites the inventory |
+| `tools/verify.js` | Optional (needs Playwright): opens every built screen from disk at three sizes and checks it |
+| `tools/author/` | Optional (Python): helpers used to generate screen HTML |
 
 Progress and next steps: `docs/STATUS.md`.

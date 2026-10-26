@@ -24,10 +24,10 @@
   var p = found.p, s = found.s;
 
   var params = new URLSearchParams(location.search);
+  var withKeep = function (h) { return h + (params.get('review') === 'off' ? (h.indexOf('?') >= 0 ? '&review=off' : '?review=off') : ''); };
   var role = params.get('role');
   if (s.roles.indexOf(role) < 0) role = s.roles[0];
   var off = params.get('review') === 'off';
-  var keep = off ? '?review=off' : '';
 
   P.current = { portal: p, screen: s, role: role };
   document.title = P.fullName(p, s, role) + ' (' + s.id + ')';
@@ -36,11 +36,26 @@
   //   data-link="PRI-ORD-02"  that screen (in the same portal as this page when the ID has no prefix, see P.find)
   //   data-signin="primary"   the portal's first role dashboard once built, otherwise the portal's directory
   //   data-directory="index"  the Screen Directory
-  var keepQuery = off ? '?review=off' : '';
-  var withKeep = function (h) { return h + (off ? (h.indexOf('?') >= 0 ? '&review=off' : keepQuery) : ''); };
+  // The one place that decides whether a link is live. A link is live when the target is built and, inside the
+  // same portal, available to the signed-in role; otherwise it is shown inert (no href, muted, with a reason) so
+  // nobody lands on a missing file and a link never changes who is signed in.
+  P.setLink = function (a, target) {
+    var sameRole = target.portal !== p.id || target.screen.roles.indexOf(role) >= 0;
+    var ok = target.screen.built && sameRole;
+    if (ok) {
+      var r = target.portal === p.id ? role : target.screen.roles[0];
+      a.setAttribute('href', withKeep(P.href(root, target.screen, r)));
+      a.removeAttribute('aria-disabled'); a.removeAttribute('title');
+    } else {
+      a.removeAttribute('href');
+      a.setAttribute('aria-disabled', 'true');
+      a.setAttribute('title', target.screen.built ? 'Not available for this role' : 'This screen is not built yet');
+    }
+    return ok;
+  };
   Array.prototype.forEach.call(document.querySelectorAll('[data-link]'), function (a) {
     var t = P.find(a.getAttribute('data-link'));
-    if (t) a.setAttribute('href', withKeep(P.href(root, t.screen, t.screen.roles.indexOf(role) >= 0 ? role : t.screen.roles[0])));
+    if (t) P.setLink(a, t); else console.error('shell.js: data-link to unknown screen ' + a.getAttribute('data-link'));
   });
   Array.prototype.forEach.call(document.querySelectorAll('[data-signin]'), function (a) {
     var tp = P.portal(a.getAttribute('data-signin'));
@@ -57,15 +72,12 @@
       i.type = i.type === 'password' ? 'text' : 'password';
     });
   });
-  if (off) return;
+  if (off) { document.documentElement.style.setProperty('--review-h', '0px'); return; }
 
   // Previous and next built screen for this role, in the order of the directory.
   var list = P.forRole(p, role).filter(function (x) { return x.built; });
   var at = list.indexOf(s);
-  var link = function (x) {
-    var h = P.href(root, x, role);
-    return h + (keep ? (h.indexOf('?') >= 0 ? '&review=off' : keep) : '');
-  };
+  var link = function (x) { return withKeep(P.href(root, x, role)); };
   var prev = at > 0 ? list[at - 1] : null;
   var next = at >= 0 && at < list.length - 1 ? list[at + 1] : null;
 

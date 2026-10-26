@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Primary Customer — Owner — Place Order (PRI-ORD-03)</title>
+<link rel="stylesheet" href="../../assets/fonts.css">
+<link rel="stylesheet" href="../../assets/styles.css">
+<link rel="stylesheet" href="../../assets/app.css">
+</head>
+<body data-screen="PRI-ORD-03" data-layout="app">
+<main>
+  <div class="head">
+    <div><h1>Place Order</h1><p>Step 1 of 3 · prices per sheet before GST</p></div>
+    <div class="acts"><span class="sel"><i data-icon="repeat"></i>Reorder from a Previous Order <i data-icon="down"></i></span></div>
+  </div>
+  <ol class="steps" aria-label="Order steps"><li class="now"><i>1</i>Select Products</li><li class=""><i>2</i>Order Details</li><li class=""><i>3</i>Confirmation</li></ol>
+  <div class="grid g-main-side" style="--side:22rem">
+    <section class="card flush">
+      <header><h2>Products</h2><span class="meta">12 products</span>
+        <label class="finder" style="margin-left:auto;min-width:18rem"><i data-icon="search"></i><input type="search" placeholder="Search by name or SKU" aria-label="Search products"></label></header>
+      <div class="body"><div class="table-wrap"><table class="tbl stack-sm"><thead><tr><th>Product</th><th class="num">Price per Sheet</th><th>Sheets</th><th class="num">Amount</th></tr></thead><tbody><tr><td><div class="prod"><div class="sw wood " style="--a:#5a3a22;" role="img" aria-label="Walnut Woodgrain Laminate swatch"></div><div><b>Walnut Woodgrain Laminate</b><small>LM-WNT-001 · Woodgrain, 1.0 mm</small></div></div></td>
+      <td class="num">₹1,095<small>slab applied</small></td><td><span class="qty"><span>−</span><input value="200" aria-label="Sheets" inputmode="numeric"><span>+</span></span></td><td class="num"><b>₹2,19,000</b></td></tr>
+<tr><td><div class="prod"><div class="sw plain " style="--a:#f3f5f7;" role="img" aria-label="Arctic White Matte Laminate swatch"></div><div><b>Arctic White Matte Laminate</b><small>LM-ARC-002 · Matte, 1.0 mm</small></div></div></td>
+      <td class="num">₹870<small>slab applied</small></td><td><span class="qty"><span>−</span><input value="300" aria-label="Sheets" inputmode="numeric"><span>+</span></span></td><td class="num"><b>₹2,61,000</b></td></tr>
+<tr><td><div class="prod"><div class="sw marble gloss " style="--a:#eceeef;" role="img" aria-label="Calacatta Marble Finish Laminate swatch"></div><div><b>Calacatta Marble Finish Laminate</b><small>LM-CAL-003 · High Gloss, 1.0 mm</small></div></div></td>
+      <td class="num">₹1,510<small>slab applied</small></td><td><span class="qty"><span>−</span><input value="80" aria-label="Sheets" inputmode="numeric"><span>+</span></span></td><td class="num"><b>₹1,20,800</b></td></tr>
+<tr><td><div class="prod"><div class="sw wood " style="--a:#b98a55;" role="img" aria-label="Natural Oak Texture Laminate swatch"></div><div><b>Natural Oak Texture Laminate</b><small>LM-OAK-004 · Texture, 1.0 mm</small></div></div></td>
+      <td class="num">₹1,200<small>slab applied</small></td><td><span class="qty"><span>−</span><input value="120" aria-label="Sheets" inputmode="numeric"><span>+</span></span></td><td class="num"><b>₹1,44,000</b></td></tr>
+<tr><td><div class="prod"><div class="sw plain " style="--a:#5b6470;" role="img" aria-label="Slate Grey Suede Laminate swatch"></div><div><b>Slate Grey Suede Laminate</b><small>LM-SLT-005 · Suede, 1.0 mm</small></div></div></td>
+      <td class="num">₹1,275<small>slab applied</small></td><td><span class="qty"><span>−</span><input value="60" aria-label="Sheets" inputmode="numeric"><span>+</span></span></td><td class="num"><b>₹76,500</b></td></tr>
+<tr><td><div class="prod"><div class="sw wood " style="--a:#9a6a3a;" role="img" aria-label="Classic Teak Woodgrain Laminate swatch"></div><div><b>Classic Teak Woodgrain Laminate</b><small>LM-TEK-006 · Woodgrain, 0.8 mm</small></div></div></td>
+      <td class="num">₹1,020<small>per sheet</small></td><td><span class="qty"><span>−</span><input value="0" aria-label="Sheets" inputmode="numeric"><span>+</span></span></td><td class="num"><b>—</b></td></tr>
+<tr><td><div class="prod"><div class="sw plain gloss " style="--a:#23262b;" role="img" aria-label="Charcoal Black Gloss Laminate swatch"></div><div><b>Charcoal Black Gloss Laminate</b><small>LM-CHR-007 · Gloss, 1.0 mm</small></div></div></td>
+      <td class="num">₹1,090<small>per sheet</small></td><td><span class="qty"><span>−</span><input value="0" aria-label="Sheets" inputmode="numeric"><span>+</span></span></td><td class="num"><b>—</b></td></tr>
+<tr><td><div class="prod"><div class="sw plain " style="--a:#efe6d2;" role="img" aria-label="Ivory Cream Matte Laminate swatch"></div><div><b>Ivory Cream Matte Laminate</b><small>LM-IVR-008 · Matte, 0.8 mm</small></div></div></td>
+      <td class="num">₹810<small>per sheet</small></td><td><span class="qty"><span>−</span><input value="0" aria-label="Sheets" inputmode="numeric"><span>+</span></span></td><td class="num"><b>—</b></td></tr>
+<tr><td><div class="prod"><div class="sw stone " style="--a:#c9ccd0;" role="img" aria-label="Carrara Stone Finish Laminate swatch"></div><div><b>Carrara Stone Finish Laminate</b><small>LM-STN-009 · Texture, 1.0 mm</small><span class="chip warn">Low Stock</span></div></div></td>
+      <td class="num">₹1,480<small>per sheet</small></td><td><span class="qty"><span>−</span><input value="0" aria-label="Sheets" inputmode="numeric"><span>+</span></span></td><td class="num"><b>—</b></td></tr>
+<tr><td><div class="prod"><div class="sw metal " style="--a:#b4764a;" role="img" aria-label="Brushed Copper Metallic Laminate swatch"></div><div><b>Brushed Copper Metallic Laminate</b><small>LM-CPR-010 · Metallic, 1.0 mm</small></div></div></td>
+      <td class="num">₹1,890<small>per sheet</small></td><td><span class="qty"><span>−</span><input value="0" aria-label="Sheets" inputmode="numeric"><span>+</span></span></td><td class="num"><b>—</b></td></tr>
+<tr><td><div class="prod"><div class="sw wood " style="--a:#3b2a22;" role="img" aria-label="Wenge Dark Woodgrain Laminate swatch"></div><div><b>Wenge Dark Woodgrain Laminate</b><small>LM-WNG-011 · Woodgrain, 1.0 mm</small></div></div></td>
+      <td class="num">₹1,210<small>per sheet</small></td><td><span class="qty"><span>−</span><input value="0" aria-label="Sheets" inputmode="numeric"><span>+</span></span></td><td class="num"><b>—</b></td></tr>
+<tr><td><div class="prod"><div class="sw plain gloss " style="--a:#8fc1e3;" role="img" aria-label="Sky Blue Gloss Laminate swatch"></div><div><b>Sky Blue Gloss Laminate</b><small>LM-SKY-012 · Gloss, 0.8 mm</small></div></div></td>
+      <td class="num">₹870<small>per sheet</small></td><td><span class="qty"><span>−</span><input value="0" aria-label="Sheets" inputmode="numeric"><span>+</span></span></td><td class="num"><b>—</b></td></tr>
+</tbody></table></div></div>
+    </section>
+    <aside class="card" style="align-self:start;position:sticky;top:calc(var(--review-h) + 4.5rem)"><header><h2>Order Draft</h2><span class="meta">5 products · 760 sheets</span></header>
+      <div class="body"><ul class="list" style="margin-top:-.5rem"><li><div class="grow"><b>Walnut Woodgrain Laminate</b><span class="sub">200 sheets × ₹1,095</span></div><b>₹2,19,000</b></li><li><div class="grow"><b>Arctic White Matte Laminate</b><span class="sub">300 sheets × ₹870</span></div><b>₹2,61,000</b></li><li><div class="grow"><b>Calacatta Marble Finish Laminate</b><span class="sub">80 sheets × ₹1,510</span></div><b>₹1,20,800</b></li><li><div class="grow"><b>Natural Oak Texture Laminate</b><span class="sub">120 sheets × ₹1,200</span></div><b>₹1,44,000</b></li><li><div class="grow"><b>Slate Grey Suede Laminate</b><span class="sub">60 sheets × ₹1,275</span></div><b>₹76,500</b></li></ul>
+        <dl class="kv total" style="margin-top:.25rem"><dt>Subtotal</dt><dd>₹8,21,300</dd></dl>
+        <div class="alert ok" style="margin-top:.875rem"><i data-icon="check"></i><span>Free delivery applies above ₹5,00,000</span></div>
+        <a class="btn pri block" data-link="PRI-ORD-04" style="margin-top:1rem">Continue to Order Details<i data-icon="arrow"></i></a>
+        <button class="btn block" type="button" style="margin-top:.5rem">Save Draft</button></div></aside>
+  </div>
+</main>
+<script src="../../assets/registry.js"></script>
+<script src="../../assets/shell.js"></script>
+<script src="../../assets/chrome.js"></script>
+<script src="../../assets/charts.js"></script>
+</body>
+</html>

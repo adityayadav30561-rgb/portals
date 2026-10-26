@@ -22,7 +22,7 @@ Many entries are the same screen seen by two or three roles (Product Catalogue, 
 These are designed **once per portal** and listed under every role that uses them; each role still sees its
 own sidebar, name and role in the top bar. Every role's dashboard is its own design.
 
-That leaves **177 distinct screens** (after the merges below), plus the recommended additions: **194**.
+That leaves **177 distinct screens** (after the merges below), plus the approved additions: **196** (see DECISIONS.md: 19 additions).
 
 ### Entries that are the same screen under two names (recommend merging)
 
@@ -62,7 +62,7 @@ order rules, notification rules). "Prototype Settings" reads as a setting of the
 
 ✓ = role sees this screen. **New** = recommended addition.
 
-### Company Administration: 45 + 4 new = 49
+### Company Administration: 45 + 5 new = 50 (My Profile added 2026-10-26)
 
 | Screen | Super Admin | Sales Manager | Operations Manager |
 |---|---|---|---|
@@ -136,7 +136,7 @@ order rules, notification rules). "Prototype Settings" reads as a setting of the
 | User Management, Create User, User Details, My Profile | ✓ | |
 | Notifications **New** | ✓ | ✓ |
 
-### Tertiary Retailer: 35 + 4 new = 39
+### Tertiary Retailer: 35 + 5 new = 40 (Payment Details added 2026-10-26)
 
 | Screen | Owner | Sales Executive | Inventory Executive |
 |---|---|---|---|
@@ -165,12 +165,12 @@ Forgot Password, Password Reset Confirmation, Access Denied, Not Found.
 
 | | Distinct screens | Of which new |
 |---|---|---|
-| Company Administration | 49 | 4 |
+| Company Administration | 50 | 5 |
 | Primary Distributor | 52 | 4 |
 | Secondary Dealer | 45 | 5 |
-| Tertiary Retailer | 39 | 4 |
+| Tertiary Retailer | 40 | 5 |
 | Shared sign-in | 9 | |
-| **Total** | **194** | **17** |
+| **Total** | **196** | **19** |
 
 Exact figures are generated from the screen registry in Phase 1 and kept in `docs/SCREEN-INVENTORY.md`.
 
@@ -237,8 +237,8 @@ widths, the inventory regenerated, docs/STATUS.md updated, a commit and a push.
 
 | Phase | Scope | Screens | Done when |
 |---|---|---|---|
-| **1. Foundations** ✓ done 2026-10-26 | Design system, registry with all 194 screens (including menu group and parent screen), review bar, Screen Directory and the four portal directories, shared sign-in screens, coverage check | 9 | Directory lists every screen; sign-in screens done; check passes |
-| **2. Primary Owner, part 1** | Application sidebar and top bar, Owner Dashboard, Company Profile, Product Catalogue, Product Details, Place Order, Order Builder, Order Confirmation, Order History, Order Details, Inventory Overview, Inventory Item Details | 11 | **Design checkpoint: you approve the look before the rest is built** |
+| **1. Foundations** ✓ done 2026-10-26 | Design system, registry with all 196 screens (including menu group and parent screen), review bar, Screen Directory and the four portal directories, shared sign-in screens, coverage check | 9 | Directory lists every screen; sign-in screens done; check passes |
+| **2. Primary Owner, part 1** ✓ done 2026-10-26 | Application sidebar and top bar, Owner Dashboard, Company Profile, Product Catalogue, Product Details, Place Order, Order Builder, Order Confirmation, Order History, Order Details, Inventory Overview, Inventory Item Details | 11 (design checkpoint: waiting for the user) | **Design checkpoint: you approve the look before the rest is built** |
 | **3. Primary Owner, part 2** | Dealer network, secondary sales, invoices and payments, schemes, reports, returns, support, users, profile, notifications | 24 | |
 | **4. Primary Manager and Accountant** | Both dashboards and their own screens | 17 | Primary Distributor complete (52) |
 | **5. Secondary Owner, part 1** | Dashboard, profile, catalogue, ordering, orders, inventory, retailer network | about 17 | |
@@ -246,10 +246,10 @@ widths, the inventory regenerated, docs/STATUS.md updated, a commit and a push.
 | **7. Secondary Manager** | Dashboard and the manager's own screens | 10 | Secondary Dealer complete (45) |
 | **8. Tertiary Retailer Owner, part 1** | Dashboard, store profile, catalogue, ordering, orders, inventory | about 15 | |
 | **9. Tertiary Retailer Owner, part 2** | Retail sales, invoices and payments, schemes, reports, returns, support, users, notifications | about 14 | |
-| **10. Tertiary Sales Executive and Inventory Executive** | Both dashboards and their own screens | about 10 | Tertiary Retailer complete (39) |
+| **10. Tertiary Sales Executive and Inventory Executive** | Both dashboards and their own screens | about 10 | Tertiary Retailer complete (40) |
 | **11. Company Super Admin, part 1** | Dashboard, customers, hierarchy explorer, users, products, orders | 13 | |
 | **12. Company Super Admin, part 2** | Dispatch, inventory, analytics, the four sales reports, invoices, schemes, support, territory, audit, settings, notifications | 18 | |
-| **13. Company Sales and Operations Managers** | Both dashboards and their own screens | 18 | Company Administration complete (49) |
+| **13. Company Sales and Operations Managers** | Both dashboards and their own screens | 18 | Company Administration complete (50) |
 | **14. Review and hand-over** | Links between related screens, full responsive pass, README, screen inventory and counts, optional hosting for stakeholders | | Definition of Done in the brief met |
 
 Portal naming: screen names use the brief's pattern with the portal as "Primary Customer", "Secondary Customer",

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Primary Customer — Owner — Dashboard (PRI-OWN-01)</title>
+<link rel="stylesheet" href="../../assets/fonts.css">
+<link rel="stylesheet" href="../../assets/styles.css">
+<link rel="stylesheet" href="../../assets/app.css">
+</head>
+<body data-screen="PRI-OWN-01" data-layout="app">
+<main>
+  <div class="head">
+    <div><h1>Dashboard</h1><p>Distributor Alpha · 1 October to 26 October 2026</p></div>
+    <div class="acts"><span class="sel"><small>Period</small> October 2026 <i data-icon="down"></i></span>
+      <button class="btn" type="button"><i data-icon="download"></i>Download Report</button>
+      <a class="btn pri" data-link="PRI-ORD-03"><i data-icon="plus"></i>Place Order</a></div>
+  </div>
+
+  <div class="kpis">
+    <div class="card kpi"><label>Purchases This Month</label><strong>₹33,52,882</strong><div class="foot"><span class="delta up">+38.0%</span><span>compared with September</span></div></div>
+    <div class="card kpi"><label>Sales to Dealers This Month</label><strong>₹31,20,000</strong><div class="foot"><span class="delta up">+11.8%</span><span>compared with September</span></div></div>
+    <div class="card kpi"><label>Outstanding Balance</label><strong>₹14,86,320</strong><div class="foot"><span class="delta down">₹3,18,400 overdue</span><span>37% of credit limit used</span></div></div>
+    <div class="card kpi"><label>Stock on Hand</label><strong>7,415 <small>sheets</small></strong><div class="foot"><span class="delta flat">₹78,42,000</span><span>3 products low</span></div></div>
+  </div>
+
+  <div class="grid g-chart">
+    <section class="card"><header><h2>Purchases and Sales to Dealers</h2><span class="meta">May to October 2026</span></header>
+      <div class="body"><div class="chart" data-type="bars" data-labels='["May", "June", "July", "August", "September", "October"]' data-series='[{"name": "Purchases from Crestline", "values": [2210000, 2560000, 1980000, 2740000, 2430000, 3352882], "color": "var(--accent)"}, {"name": "Sales to Dealers", "values": [2480000, 2810000, 2240000, 3060000, 2790000, 3120000], "color": "var(--teal)"}]' data-money="true" data-height="260"></div></div></section>
+    <section class="card"><header><h2>Stock by Finish</h2><span class="meta">sheets on hand</span></header>
+      <div class="body"><div class="chart" data-type="donut" data-series='[{"name": "Matte", "value": 2910, "color": "#0a48fd"}, {"name": "Woodgrain", "value": 2680, "color": "#0b8fa8"}, {"name": "Texture", "value": 640, "color": "#7a36fb"}, {"name": "Gloss", "value": 465, "color": "#e0a030"}, {"name": "Suede", "value": 410, "color": "#0c9b6a"}, {"name": "High Gloss", "value": 215, "color": "#d43a2f"}, {"name": "Metallic", "value": 95, "color": "#8b93a3"}]' data-center="7,415" data-caption="sheets" data-height="260"></div></div></section>
+  </div>
+
+  <div class="grid g-main-side">
+    <section class="card flush"><header><h2>Recent Orders</h2><a class="more" data-link="PRI-ORD-01">View all orders</a></header>
+      <div class="body"><div class="table-wrap"><table class="tbl"><thead><tr><th>Order Number</th><th>Date</th><th class="num">Sheets</th><th class="num">Value</th><th>Status</th></tr></thead><tbody><tr><td><a data-link="PRI-ORD-02"><b>ORD-2026-10482</b></a></td><td>26/10/2026</td><td class="num">760</td><td class="num">₹9,49,752</td><td><span class="chip warn">Awaiting Confirmation</span></td></tr><tr><td><a data-link="PRI-ORD-02"><b>ORD-2026-10459</b></a></td><td>23/10/2026</td><td class="num">280</td><td class="num">₹3,36,500</td><td><span class="chip blue">Confirmed</span></td></tr><tr><td><a data-link="PRI-ORD-02"><b>ORD-2026-10447</b></a></td><td>19/10/2026</td><td class="num">360</td><td class="num">₹4,42,930</td><td><span class="chip blue">In Transit</span></td></tr><tr><td><a data-link="PRI-ORD-02"><b>ORD-2026-10431</b></a></td><td>15/10/2026</td><td class="num">520</td><td class="num">₹6,18,400</td><td><span class="chip ok">Delivered</span></td></tr><tr><td><a data-link="PRI-ORD-02"><b>ORD-2026-10398</b></a></td><td>08/10/2026</td><td class="num">430</td><td class="num">₹5,24,100</td><td><span class="chip ok">Delivered</span></td></tr></tbody></table></div></div></section>
+    <section class="card"><header><h2>Top Dealers This Month</h2><a class="more" data-link="PRI-DLR-01">All dealers</a></header>
+      <div class="body"><ul class="list"><li><div class="grow"><b>Dealer Bravo</b><span class="sub">Pune</span><span class="meter" style="margin-top:.375rem"><i style="width:100%"></i></span></div><b>₹6,84,000</b></li><li><div class="grow"><b>Dealer Delta</b><span class="sub">Nashik</span><span class="meter" style="margin-top:.375rem"><i style="width:87%"></i></span></div><b>₹5,92,000</b></li><li><div class="grow"><b>Dealer Foxtrot</b><span class="sub">Thane</span><span class="meter" style="margin-top:.375rem"><i style="width:70%"></i></span></div><b>₹4,76,000</b></li><li><div class="grow"><b>Dealer Gopal</b><span class="sub">Kolhapur</span><span class="meter" style="margin-top:.375rem"><i style="width:60%"></i></span></div><b>₹4,11,000</b></li><li><div class="grow"><b>Dealer Harsh</b><span class="sub">Nagpur</span><span class="meter" style="margin-top:.375rem"><i style="width:49%"></i></span></div><b>₹3,38,000</b></li></ul></div></section>
+  </div>
+
+  <div class="grid g-2">
+    <section class="card"><header><h2>Stock Alerts</h2><a class="more" data-link="PRI-INV-01">Inventory overview</a></header>
+      <div class="body"><ul class="list">
+        <li><div class="sw stone " style="--a:#c9ccd0;width:2.5rem;flex:none" role="img" aria-label="Carrara Stone Finish Laminate swatch"></div><div class="grow"><b>Carrara Stone Finish Laminate</b><span class="sub">LM-STN-009 · 250 sheets on order</span></div><span class="chip bad">Out of Stock</span></li>
+        <li><div class="sw plain gloss " style="--a:#23262b;width:2.5rem;flex:none" role="img" aria-label="Charcoal Black Gloss Laminate swatch"></div><div class="grow"><b>Charcoal Black Gloss Laminate</b><span class="sub">LM-CHR-007 · 60 available, reorder level 200</span></div><span class="chip warn">Low Stock</span></li>
+        <li><div class="sw marble gloss " style="--a:#eceeef;width:2.5rem;flex:none" role="img" aria-label="Calacatta Marble Finish Laminate swatch"></div><div class="grow"><b>Calacatta Marble Finish Laminate</b><span class="sub">LM-CAL-003 · 125 available, reorder level 250</span></div><span class="chip warn">Low Stock</span></li>
+      </ul></div></section>
+    <section class="card"><header><h2>Active Schemes</h2><a class="more" data-link="PRI-SCH-01">All schemes</a></header>
+      <div class="body"><ul class="list">
+        <li><div class="grow"><b>Festive Volume Rebate</b><span class="sub">2% rebate on 3,000 sheets across October and November · ends 30 November 2026</span>
+          <span class="meter ok" style="margin-top:.5rem"><i style="width:92%"></i></span><span class="sub" style="margin-top:.25rem">2,750 of 3,000 sheets</span></div></li>
+        <li><div class="grow"><b>Marble Finish Launch Incentive</b><span class="sub">₹25 per sheet of Calacatta Marble Finish · ends 31 December 2026</span>
+          <span class="meter" style="margin-top:.5rem"><i style="width:60%"></i></span><span class="sub" style="margin-top:.25rem">180 of 300 sheets</span></div></li>
+      </ul></div></section>
+  </div>
+</main>
+<script src="../../assets/registry.js"></script>
+<script src="../../assets/shell.js"></script>
+<script src="../../assets/chrome.js"></script>
+<script src="../../assets/charts.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Primary Customer — Owner — Order Confirmation (PRI-ORD-05)</title>
+<link rel="stylesheet" href="../../assets/fonts.css">
+<link rel="stylesheet" href="../../assets/styles.css">
+<link rel="stylesheet" href="../../assets/app.css">
+</head>
+<body data-screen="PRI-ORD-05" data-layout="app">
+<main>
+  <div class="head"><div><h1>Order Confirmation</h1></div></div>
+  <ol class="steps" aria-label="Order steps"><li class="done"><i><i data-icon="check"></i></i>Select Products</li><li class="done"><i><i data-icon="check"></i></i>Order Details</li><li class="done"><i><i data-icon="check"></i></i>Confirmation</li></ol>
+  <div class="grid g-main-side" style="--side:24rem">
+    <div class="stack">
+      <section class="card pad" style="display:grid;justify-items:center;gap:1rem;text-align:center;padding:2rem 1.5rem">
+        <div class="state" style="padding:0;gap:.75rem"><div class="badge"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
+          <h2 style="font-size:1.375rem">Order submitted</h2>
+          <p>Order <b class="mono">ORD-2026-10482</b> was placed on 26 October 2026 at 11:42 and is waiting for confirmation from Crestline Laminates.</p></div>
+        <div class="actions" style="display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center"><a class="btn pri" data-link="PRI-ORD-02">View Order Details</a><a class="btn" data-link="PRI-ORD-03">Place Another Order</a><button class="btn" type="button"><i data-icon="download"></i>Download Order Copy</button></div>
+      </section>
+      <section class="card"><header><h2>What Happens Next</h2></header><div class="body">
+        <ol class="track"><li class="done"><i></i><b>Order Placed</b><span>26/10/2026 11:42</span></li><li class="now"><i></i><b>Confirmation</b><span>within 1 working day</span></li><li class="todo"><i></i><b>Packing</b><span>planned 28/10/2026</span></li><li class="todo"><i></i><b>Dispatch</b><span>planned 29/10/2026</span></li><li class="todo"><i></i><b>Delivery</b><span>requested 31/10/2026</span></li></ol></div></section>
+    </div>
+    <div class="stack">
+      <section class="card"><header><h2>Order Summary</h2></header><div class="body"><ul class="list" style="margin-top:-.5rem"><li><div class="grow"><b>Walnut Woodgrain Laminate</b><span class="sub">200 sheets</span></div><b>₹2,19,000</b></li><li><div class="grow"><b>Arctic White Matte Laminate</b><span class="sub">300 sheets</span></div><b>₹2,61,000</b></li><li><div class="grow"><b>Calacatta Marble Finish Laminate</b><span class="sub">80 sheets</span></div><b>₹1,20,800</b></li><li><div class="grow"><b>Natural Oak Texture Laminate</b><span class="sub">120 sheets</span></div><b>₹1,44,000</b></li><li><div class="grow"><b>Slate Grey Suede Laminate</b><span class="sub">60 sheets</span></div><b>₹76,500</b></li></ul>
+        <dl class="kv total"><dt>Total</dt><dd>₹9,49,752</dd></dl>
+        <p class="sub" style="margin-top:.375rem;text-align:right">760 sheets · including Central GST and State GST</p></div></section>
+      <section class="card"><header><h2>Delivery</h2></header><div class="body"><dl class="kv"><dt>Location</dt><dd>Bhiwandi Warehouse</dd><dt>Requested Date</dt><dd>31/10/2026</dd><dt>Transport</dt><dd>Company Transport</dd><dt>Payment Terms</dt><dd>45 days from invoice</dd></dl></div></section>
+    </div>
+  </div>
+</main>
+<script src="../../assets/registry.js"></script>
+<script src="../../assets/shell.js"></script>
+<script src="../../assets/chrome.js"></script>
+<script src="../../assets/charts.js"></script>
+</body>
+</html>

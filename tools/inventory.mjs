@@ -34,14 +34,15 @@ const ALIAS = {
   'Order Details and Processing': 'Order Details', 'Dispatch Overview@company': 'Dispatch Management', 'Support Ticket Queue': 'Support Ticket Management',
   'Invoice List': 'Invoices Overview', 'Payment History': 'Payments Overview', 'Prototype Settings': 'Portal Settings'
 };
-// Not in the brief: the 17 approved additions, plus My Profile for two roles that had none (flagged to the user).
+// Not in the brief: the 19 approved additions, plus My Profile for two roles that had none (flagged to the user).
 const ADDITIONS = new Set([
   'CMP-NTF-01', 'PRI-NTF-01', 'SEC-NTF-01', 'TER-NTF-01', 'CMP-SUP-02', 'PRI-SUP-03', 'SEC-SUP-03', 'TER-SUP-03',
-  'PRI-RET-01', 'PRI-RET-02', 'SEC-RET-01', 'SEC-RET-02', 'TER-RET-01', 'TER-RET-02', 'CMP-BIL-02', 'CMP-SCH-03', 'SEC-BIL-04'
+  'PRI-RET-01', 'PRI-RET-02', 'SEC-RET-01', 'SEC-RET-02', 'TER-RET-01', 'TER-RET-02', 'CMP-BIL-02', 'CMP-SCH-03', 'SEC-BIL-04',
+  'CMP-PRO-02', 'TER-BIL-05' // added on 2026-10-26 at the user's request after the Phase 1 review
 ]);
 const EXTRA_ROLE_TAGS = new Set(['PRI-PRO-02@MGR', 'SEC-PRO-02@MGR']);
 const PINNED = { 'PRI-OWN-01': 'Dashboard', 'PRI-MGR-01': 'Dashboard', 'PRI-ACC-01': 'Dashboard', 'PRI-ORD-01': 'Order History', 'PRI-ORD-02': 'Order Details', 'PRI-INV-01': 'Inventory Overview' };
-const EXPECTED = { company: 49, primary: 52, secondary: 45, tertiary: 39, authentication: 9 };
+const EXPECTED = { company: 50, primary: 52, secondary: 45, tertiary: 40, authentication: 9 };
 const BANNED = /\b(Qty|Amt|Mgr|Acct|Inv\.|No\.|Ref\.|Dept|Cust|Dist|Approx|Misc)\b/;
 
 // ---------- Registry checks ----------
@@ -91,7 +92,7 @@ for (const p of P.portals) for (const s of p.screens) for (const r of s.roles) {
   if (!matched.has(k) && !ADDITIONS.has(s.id) && !EXTRA_ROLE_TAGS.has(k)) fail(`${k} "${s.name}" is not in the brief and is not an approved addition`);
 }
 for (const id of ADDITIONS) if (!byId.has(id)) fail(`approved addition ${id} is missing`);
-if (ADDITIONS.size !== 17) fail('expected 17 additions');
+if (ADDITIONS.size !== 19) fail('expected 19 additions');
 
 // ---------- Files ----------
 for (const s of byId.values()) {

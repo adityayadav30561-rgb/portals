@@ -4,47 +4,50 @@ _Last updated: 2026-10-26. Update at the end of every task and phase._
 
 ## Where we are
 
-**Phase 1 (Foundations) is done. Next: Phase 2, Primary Owner part 1** (PLAN.md section 5): the application
-sidebar and top bar, then Owner Dashboard, Company Profile, Product Catalogue, Product Details, Place Order, Order
-Builder, Order Confirmation, Order History, Order Details, Inventory Overview, Inventory Item Details. **The user
-approves the look after this phase**, before the rest is built.
+**Phase 2 (Primary Owner, part 1) is built and waiting for the user's design approval. Do not start Phase 3 until
+the user has approved the look** (or sent changes; record them in DECISIONS.md first). Next after approval:
+Phase 3, Primary Owner part 2 (PLAN.md section 5).
 
-9 of 194 screens are built (the shared sign-in screens). Everything opens by double-click from disk.
+20 of 196 screens are built: the 9 sign-in screens and the 11 Primary Owner screens: Dashboard, Company Profile,
+Product Catalogue, Product Details, Place Order, Order Builder, Order Confirmation, Order History, Order Details,
+Inventory Overview, Inventory Item Details. All open by double-click from disk.
 
 ## What exists
 
-- `assets/registry.js`: all 194 screens (ID, full name parts, roles, menu section, kind, parent, description,
-  built flag). A screen is marked built by adding its ID to `BUILT` at the bottom of the file.
-- `assets/shell.js`: the review bar, plus link helpers any screen can use: `data-link="PRI-ORD-02"`,
-  `data-signin="primary"` (role dashboard once built, else the portal directory), `data-directory="index"`,
-  `data-toggle-password="<input id>"`. Role comes from `?role=MGR`, default the screen's first role.
-- `assets/directory.js`, `index.html`, `directory/*.html`: Screen Directory with search and a built-only filter.
-- `assets/styles.css`: tokens, buttons, chips, forms, cards, tables, review bar, directory, authentication. The
-  application chrome (sidebar, top bar, page header, KPI cards, charts) is **not** written yet: Phase 2.
-- `assets/fonts.css`: Inter embedded as base64 (Firefox blocks fonts from a parent folder over `file://`).
-- `tools/inventory.mjs`: `node tools/inventory.mjs` checks the registry against the brief's 11 role lists (with the
-  approved merges and additions), pinned IDs, unique IDs and files, banned abbreviations and browser storage in
-  built screens, and rewrites `docs/SCREEN-INVENTORY.md`. Run it at the end of every phase.
-- Screen files live in `screens/<portal id>/<slug>.html` (portal ids: company, primary, secondary, tertiary,
-  authentication). A screen needs `<body data-screen="PRI-ORD-02">`, the stylesheet links and the two scripts
-  (copy `screens/authentication/company-login.html` for the pattern).
+- `assets/registry.js`: all 196 screens (ID, name, roles, menu section, kind, parent, description, built flag), plus
+  each portal's organisation, portal name and each role's person. A screen is built when its ID is in `BUILT`.
+- `assets/shell.js`: review bar; link helper `P.setLink` (a link is live only if the target is built and, within the
+  portal, available to the signed-in role; otherwise it is inert, muted, with a reason). Use `data-link="PRI-ORD-02"`,
+  `data-signin`, `data-directory`.
+- `assets/chrome.js`: sidebar (menu sections from the registry, unbuilt items muted), top bar (breadcrumbs from the
+  parent chain, search, notification bell, profile menu), mobile drawer, `<i data-icon="plus"></i>` icons.
+- `assets/charts.js`: bars, line, donut from data attributes (month names written in full).
+- `assets/app.css`: application layout and components (cards, KPI tiles, tables, filters, tabs, steps, track, swatches,
+  product cards, quantity stepper, forms, alert, feed). `assets/styles.css`: tokens, buttons, chips, forms, review
+  bar, directory, authentication.
+- `docs/DATA.md`: products, prices, stock, people, number series, the order flow and formats. **Read before building.**
+- `tools/author/`: Python helpers used to generate screen HTML (`data.py` shared data, `phase2a/b/c.py`). Not needed to
+  run the prototype. `tools/inventory.mjs`: registry check and `docs/SCREEN-INVENTORY.md`. `tools/verify.js`: browser
+  check over `file://` (needs Playwright).
+- To add a screen: write it (copy a generated file), add its ID to `BUILT`, run `node tools/inventory.mjs` and
+  `node tools/verify.js <folder> <ID prefix>`.
 
-## Verified in Phase 1
+## Verified in Phase 2
 
-Opened over `file://` in Chromium at 1440, 1366 × 768 and 390 px: no console errors, no horizontal scroll, Inter
-loaded, directory search, built-only filter, Preview, Previous and Next, back link and `?review=off` working.
-Not yet checked in Firefox or Safari.
+`node tools/verify.js` passes for all 11 screens (and the Manager role versions of the shared ones) over `file://` at
+1440, 1366 × 768 and 390 px. All 11 were looked at in screenshots at 1440; the dashboard, Place Order and Order
+Builder were also looked at at 1366 and 390. Not yet checked in Firefox or Safari.
 
-## Open questions for the user (DECISIONS.md)
+## Open items for the user (also at the design checkpoint)
 
-1. Company roles have no My Profile screen (the top bar has a profile menu): add one (+1 screen)?
-2. Tertiary Payments Overview has nothing to open: add Payment Details (Tertiary 40, total 195)?
-3. Screen names: three-part ("Primary Customer — Owner — Order Details", used now) or the brief's two-part
-   examples ("Primary Customer — Product Catalogue")? One-line change in `registry.js`.
+1. **Manager ordering dead end.** Place Order is shared by Owner and Manager but Order Builder, Order Confirmation
+   and Inventory Item Details are Owner only, so for the Manager those links are inert. Same shape as My Profile:
+   tag the Manager onto them (no new screens)? Secondary Manager has the same gap.
+2. Whether the look is approved (sidebar, cards, colours, swatches, charts). Record changes in DECISIONS.md.
+3. In Order History every row opens Order Details for ORD-2026-10447 (documented in DATA.md).
 
 ## Next
 
-Phase 2: write the application chrome (sidebar from the registry grouped by menu section, top bar with
-breadcrumbs, search, notifications bell, user and role, profile menu; page header; KPI cards; table patterns; a
-real laminate swatch component for product images), build the 11 Primary Owner screens, then ask the user to
-approve the design. Call the advisor before starting and after committing.
+Phase 3 after approval: Dealer Network, Dealer Details, Add Dealer Request, Secondary Sales Overview/Entry/History,
+Invoices and Payments (4), Schemes (2), Sales Reports, Inventory Reports, Return Requests (2), Support (3), User
+Management (3), My Profile, Notifications. Call the advisor before starting and after committing.

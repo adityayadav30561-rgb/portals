@@ -22,18 +22,21 @@ What the user asked for, liked and rejected. Read before any design change; neve
 | Decision | Detail |
 |---|---|
 | Six merges + rename | Company Operations Manager's Order Details and Processing, Dispatch Overview, Support Ticket Queue, Inventory Overview are the Super Admin's screens; Primary Accountant's Invoice List and Payment History are Invoices Overview and Payments Overview. "Prototype Settings" is named **Portal Settings**. |
-| 17 additions | Notifications and Support Ticket Details in all four portals; Return Requests and Create Return Request in Primary, Secondary, Tertiary; Company Invoice Details and Create Scheme; Secondary Payment Details. None of the 4 optional ones. |
+| 19 additions | (17 on 2026-10-26, plus Company My Profile and Tertiary Payment Details after the Phase 1 review.) Notifications and Support Ticket Details in all four portals; Return Requests and Create Return Request in Primary, Secondary, Tertiary; Company Invoice Details and Create Scheme; Secondary Payment Details; Company My Profile; Tertiary Payment Details. None of the 4 optional ones. **Total 196 screens** (Company 50, Primary 52, Secondary 45, Tertiary 40, sign-in 9). |
 | Sharing | Folder or zip now; hosting (GitHub Pages) is decided in the last phase. |
 | Branch | Stay on `claude/relaxed-cerf-p4czn7`. The `main`-only rule belongs to `mavro-ai`. |
 | Screen name pattern | Three parts, generated from portal, role and screen name: "Primary Customer — Owner — Order Details". Portal labels: Company Administration, Primary Customer, Secondary Customer, Tertiary Customer. Directory cards use the brief's titles (Primary Distributor, Secondary Dealer, Tertiary Retailer). |
 | Role labels | Words, not slashes: Super Admin, Sales Manager, Operations Manager; Owner, Sales and Operations Manager, Accountant; Owner, Sales and Inventory Manager; Retailer Owner, Sales Executive, Inventory and Purchasing Executive. |
 | No localStorage | The brief bans it, including for review-bar settings; use URL parameters only. |
 
-## Raised in Phase 1, waiting for the user
+## Raised in Phase 1, answered 2026-10-26 ("go with your recommendations")
 
-- **My Profile for roles without one.** Primary and Secondary Managers were tagged onto the existing My Profile screen (no new screen). The three Company roles have none; add a Company My Profile (+1 screen)?
-- **Tertiary Payment Details.** Tertiary Payments Overview has nothing to open; add Payment Details (Tertiary 40, total 195)?
-- **Screen name pattern:** three-part (above) or the brief's two-part examples ("Primary Customer — Product Catalogue")? One-line change.
+- **My Profile for roles without one.** DONE: add a Company My Profile (Company 50); Primary and Secondary Managers use the existing My Profile.
+- (was) **My Profile for roles without one.** Primary and Secondary Managers were tagged onto the existing My Profile screen (no new screen). The three Company roles have none; add a Company My Profile (+1 screen)?
+- **Tertiary Payment Details.** DONE: added (Tertiary 40, total 196).
+- (was) **Tertiary Payment Details.** Tertiary Payments Overview has nothing to open; add Payment Details (Tertiary 40, total 195)?
+- **Screen name pattern:** DONE: three-part kept.
+- (was) **Screen name pattern:** three-part (above) or the brief's two-part examples ("Primary Customer — Product Catalogue")? One-line change.
 
 ## Rejected
 

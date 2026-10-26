@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Primary Customer — Owner — Inventory Item Details (PRI-INV-02)</title>
+<link rel="stylesheet" href="../../assets/fonts.css">
+<link rel="stylesheet" href="../../assets/styles.css">
+<link rel="stylesheet" href="../../assets/app.css">
+</head>
+<body data-screen="PRI-INV-02" data-layout="app">
+<main>
+  <div class="head">
+    <div><div class="title-row"><h1>Calacatta Marble Finish Laminate</h1><span class="chip warn">Low Stock</span></div><p class="mono">LM-CAL-003 · High Gloss, 1.0 mm</p></div>
+    <div class="acts"><a class="btn" data-link="PRI-CAT-02"><i data-icon="box"></i>View Product</a><a class="btn pri" data-link="PRI-ORD-03"><i data-icon="plus"></i>Reorder</a></div>
+  </div>
+  <div class="alert"><i data-icon="warn"></i><span>Available stock of 125 sheets is below the reorder level of 250 sheets. 300 sheets are on order and arrive on 30/10/2026.</span></div>
+  <div class="kpis">
+    <div class="card kpi"><label>On Hand</label><strong>215</strong><div class="foot"><span>sheets in two batches</span></div></div>
+    <div class="card kpi"><label>Reserved for Dealers</label><strong>90</strong><div class="foot"><span>5 open dealer orders</span></div></div>
+    <div class="card kpi"><label>Available</label><strong>125</strong><div class="foot"><span class="delta down">below reorder level</span></div></div>
+    <div class="card kpi"><label>On Order</label><strong>300</strong><div class="foot"><span>arriving 30/10/2026</span></div></div>
+    <div class="card kpi"><label>Days of Cover</label><strong>9</strong><div class="foot"><span>14 sheets sold a day</span></div></div>
+  </div>
+  <div class="grid g-main-side" style="--side:22rem">
+    <div class="stack">
+      <section class="card"><header><h2>Stock Level</h2><span class="meta">weekly, 27 July to 26 October 2026</span></header>
+        <div class="body"><div class="chart" data-type="line" data-labels='["27/07/2026", "03/08/2026", "10/08/2026", "17/08/2026", "24/08/2026", "31/08/2026", "07/09/2026", "14/09/2026", "21/09/2026", "28/09/2026", "05/10/2026", "12/10/2026", "19/10/2026", "26/10/2026"]' data-series='[{"name": "Sheets on hand", "values": [480, 420, 365, 300, 690, 630, 575, 510, 445, 385, 330, 300, 260, 215], "color": "var(--accent)"}, {"name": "Reorder level", "values": [250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250], "color": "var(--bad)", "dots": false}]' data-area="true" data-height="260"></div></div></section>
+      <section class="card flush"><header><h2>Stock Movements</h2><a class="more" data-link="PRI-INV-01">Inventory overview</a></header>
+        <div class="body"><div class="table-wrap"><table class="tbl"><thead><tr><th>Date</th><th>Type</th><th>Reference</th><th class="num">Sheets</th><th class="num">Balance</th></tr></thead><tbody><tr><td>26/10/2026</td><td><span class="chip blue">Sale to Dealer</span></td><td>Dealer Delta · DSP-2026-5534</td><td class="num"><b>−20</b></td><td class="num">215</td></tr><tr><td>24/10/2026</td><td><span class="chip blue">Sale to Dealer</span></td><td>Dealer Bravo · DSP-2026-5527</td><td class="num"><b>−25</b></td><td class="num">235</td></tr><tr><td>22/10/2026</td><td><span class="chip blue">Sale to Dealer</span></td><td>Dealer Foxtrot · DSP-2026-5519</td><td class="num"><b>−15</b></td><td class="num">260</td></tr><tr><td>19/10/2026</td><td><span class="chip blue">Sale to Dealer</span></td><td>Dealer Gopal · DSP-2026-5508</td><td class="num"><b>−30</b></td><td class="num">275</td></tr><tr><td>15/10/2026</td><td><span class="chip blue">Sale to Dealer</span></td><td>Dealer Harsh · DSP-2026-5496</td><td class="num"><b>−25</b></td><td class="num">305</td></tr><tr><td>12/10/2026</td><td><span class="chip warn">Stock Adjustment</span></td><td>Damaged in handling · ADJ-2026-0034</td><td class="num"><b>−5</b></td><td class="num">330</td></tr><tr><td>08/10/2026</td><td><span class="chip blue">Sale to Dealer</span></td><td>Dealer Bravo · DSP-2026-5471</td><td class="num"><b>−25</b></td><td class="num">335</td></tr><tr><td>03/10/2026</td><td><span class="chip blue">Sale to Dealer</span></td><td>Dealer Delta · DSP-2026-5452</td><td class="num"><b>−25</b></td><td class="num">360</td></tr></tbody></table></div></div></section>
+    </div>
+    <div class="stack">
+      <section class="card pad" style="display:grid;gap:.75rem"><div class="sw marble gloss lg" style="--a:#eceeef;aspect-ratio:16/9" role="img" aria-label="Calacatta Marble Finish Laminate swatch"></div><dl class="kv"><dt>Finish</dt><dd>High Gloss</dd><dt>Thickness</dt><dd>1.0 mm</dd><dt>Sheet Size</dt><dd>8 ft × 4 ft</dd></dl></section>
+      <section class="card flush"><header><h2>Batches</h2></header><div class="body"><div class="table-wrap"><table class="tbl"><thead><tr><th>Batch</th><th>Received</th><th class="num">Sheets</th><th>Rack</th></tr></thead><tbody>
+        <tr><td class="mono">B-2608-07</td><td>24/08/2026</td><td class="num">160</td><td>B-04</td></tr><tr><td class="mono">B-2606-11</td><td>14/06/2026</td><td class="num">55</td><td>B-05</td></tr></tbody></table></div></div></section>
+      <section class="card"><header><h2>Reorder Settings</h2><button class="btn sm" type="button" style="margin-left:auto"><i data-icon="edit"></i>Edit</button></header><div class="body"><dl class="kv"><dt>Reorder Level</dt><dd>250 sheets</dd><dt>Reorder Quantity</dt><dd>400 sheets</dd><dt>Lead Time</dt><dd>6 days</dd><dt>Preferred Warehouse</dt><dd>Bhiwandi Warehouse</dd></dl></div></section>
+    </div>
+  </div>
+</main>
+<script src="../../assets/registry.js"></script>
+<script src="../../assets/shell.js"></script>
+<script src="../../assets/chrome.js"></script>
+<script src="../../assets/charts.js"></script>
+</body>
+</html>

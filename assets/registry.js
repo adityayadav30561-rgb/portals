@@ -13,16 +13,16 @@
  */
 (function () {
   var PORTALS = [
-    { id: 'company', code: 'CMP', label: 'Company Administration', card: 'Company Administration', directory: 'Company Administration',
-      roles: [['ADM', 'Super Admin'], ['SAL', 'Sales Manager'], ['OPS', 'Operations Manager']] },
-    { id: 'primary', code: 'PRI', label: 'Primary Customer', card: 'Primary Distributor', directory: 'Primary Distributor',
-      roles: [['OWN', 'Owner'], ['MGR', 'Sales and Operations Manager'], ['ACC', 'Accountant']] },
-    { id: 'secondary', code: 'SEC', label: 'Secondary Customer', card: 'Secondary Dealer', directory: 'Secondary Dealer',
-      roles: [['OWN', 'Owner'], ['MGR', 'Sales and Inventory Manager']] },
-    { id: 'tertiary', code: 'TER', label: 'Tertiary Customer', card: 'Tertiary Retailer', directory: 'Tertiary Retailer',
-      roles: [['OWN', 'Retailer Owner'], ['SLS', 'Sales Executive'], ['PUR', 'Inventory and Purchasing Executive']] },
-    { id: 'authentication', code: 'AUT', label: 'Shared Authentication', card: 'Shared Sign-In Screens', directory: 'Shared Sign-In Screens',
-      roles: [['ALL', 'All Users']] }
+    { id: 'company', code: 'CMP', label: 'Company Administration', card: 'Company Administration', directory: 'Company Administration', org: 'Crestline Laminates', portalName: 'Company Administration',
+      roles: [['ADM', 'Super Admin', 'Anita Deshmukh'], ['SAL', 'Sales Manager', 'Vikram Chopra'], ['OPS', 'Operations Manager', 'Neha Kulkarni']] },
+    { id: 'primary', code: 'PRI', label: 'Primary Customer', card: 'Primary Distributor', directory: 'Primary Distributor', org: 'Distributor Alpha', portalName: 'Primary Customer Portal',
+      roles: [['OWN', 'Owner', 'Rajesh Menon'], ['MGR', 'Sales and Operations Manager', 'Kavita Joshi'], ['ACC', 'Accountant', 'Suresh Iyer']] },
+    { id: 'secondary', code: 'SEC', label: 'Secondary Customer', card: 'Secondary Dealer', directory: 'Secondary Dealer', org: 'Dealer Bravo', portalName: 'Secondary Customer Portal',
+      roles: [['OWN', 'Owner', 'Sunita Rao'], ['MGR', 'Sales and Inventory Manager', 'Arjun Nair']] },
+    { id: 'tertiary', code: 'TER', label: 'Tertiary Customer', card: 'Tertiary Retailer', directory: 'Tertiary Retailer', org: 'Retailer Charlie', portalName: 'Tertiary Customer Portal',
+      roles: [['OWN', 'Retailer Owner', 'Imran Sheikh'], ['SLS', 'Sales Executive', 'Pooja Verma'], ['PUR', 'Inventory and Purchasing Executive', 'Faisal Khan']] },
+    { id: 'authentication', code: 'AUT', label: 'Shared Authentication', card: 'Shared Sign-In Screens', directory: 'Shared Sign-In Screens', org: '', portalName: '',
+      roles: [['ALL', 'All Users', '']] }
   ];
 
   var S = {};
@@ -58,6 +58,7 @@
     ['TER-01', 'Territory Management', 'ADM', 'Administration', 'm', 'Sales territories with assigned customers and managers'],
     ['AUD-01', 'Audit Activity', 'ADM', 'Administration', 'm', 'Chronological record of who changed what, with filters by user and area'],
     ['SET-01', 'Portal Settings', 'ADM', 'Administration', 'm', 'Customer tiers, order rules, tax settings and notification rules'],
+    ['PRO-02', 'My Profile', 'ADM SAL OPS', 'Account', 'd', 'Your name, contact details, password and notification preferences'],
     ['NTF-01', 'Notifications', 'ADM SAL OPS', 'Account', 'd', 'Alerts and updates for the signed-in user, grouped by day'],
 
     ['SAL-01', 'Dashboard', 'SAL', 'Overview', 'm', 'Sales against target, top regions and products, and customers needing attention'],
@@ -208,6 +209,7 @@
     ['BIL-01', 'Invoices Overview', 'OWN', 'Invoices and Payments', 'm', 'Invoices from your dealer with amount, due date and payment status'],
     ['BIL-02', 'Invoice Details', 'OWN', 'Invoices and Payments', 'd', 'One invoice: line items, taxes, payments made and balance due', 'BIL-01'],
     ['BIL-03', 'Payments Overview', 'OWN', 'Invoices and Payments', 'm', 'Payments made to your dealer with date, mode and invoices covered'],
+    ['BIL-05', 'Payment Details', 'OWN', 'Invoices and Payments', 'd', 'One payment: mode, reference, date and the invoices it settled', 'BIL-03'],
     ['BIL-04', 'Purchase History', 'OWN PUR', { OWN: 'Invoices and Payments', PUR: 'Orders' }, 'm', 'Purchases from your dealer by month, product and invoice'],
     ['SCH-01', 'Schemes and Offers', 'OWN', 'Offers', 'm', 'Active offers with your progress towards each reward'],
     ['SCH-02', 'Scheme Details', 'OWN', 'Offers', 'd', 'One offer: rules, eligible products, validity and your progress', 'SCH-01'],
@@ -238,8 +240,9 @@
     ['09', 'Not Found', 'ALL', 'Errors', 'm', 'Shown when the requested page does not exist']
   ];
 
-  // Screens that exist as files today (Phase 1: the nine sign-in screens). Add an ID here when its file is built.
-  var BUILT = ['AUT-01', 'AUT-02', 'AUT-03', 'AUT-04', 'AUT-05', 'AUT-06', 'AUT-07', 'AUT-08', 'AUT-09'];
+  // Screens that exist as files today (sign-in screens; Phase 2: eleven Primary Owner screens). Add an ID here when its file is built.
+  var BUILT = ['PRI-OWN-01', 'PRI-PRO-01', 'PRI-CAT-01', 'PRI-CAT-02', 'PRI-ORD-03', 'PRI-ORD-04', 'PRI-ORD-05', 'PRI-ORD-01', 'PRI-ORD-02', 'PRI-INV-01', 'PRI-INV-02',
+    'AUT-01', 'AUT-02', 'AUT-03', 'AUT-04', 'AUT-05', 'AUT-06', 'AUT-07', 'AUT-08', 'AUT-09'];
 
   function slug(text) { return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
   function pick(value, role) { return value && typeof value === 'object' ? value[role] : value; }
@@ -256,9 +259,13 @@
         file: 'screens/' + p.id + '/' + (row[1] === 'Dashboard' ? slug(roleName[roles[0]]) + '-dashboard' : slug(row[1])) + '.html'
       };
     });
-    return { id: p.id, code: p.code, label: p.label, card: p.card, directory: p.directory, roles: p.roles.map(function (r) { return { code: r[0], label: r[1] }; }), screens: screens };
+    return { id: p.id, code: p.code, label: p.label, card: p.card, directory: p.directory, org: p.org, portalName: p.portalName, roles: p.roles.map(function (r) { return { code: r[0], label: r[1], person: r[2] }; }), screens: screens };
   });
 
+  function P_parent(p, s, role) {
+    var code = pick(s.parent, role);
+    return code ? p.screens.filter(function (x) { return x.code === code; })[0] : null;
+  }
   function portal(id) { return portals.filter(function (p) { return p.id === id; })[0]; }
   function roleLabel(p, role) { return p.roles.filter(function (r) { return r.code === role; })[0].label; }
 
@@ -279,6 +286,19 @@
     },
     // Link from a page whose root folder is `root` (a URL ending in "/"). The role is added only when it is not the screen's default.
     href: function (root, s, role) { return root + s.file + (role && role !== s.roles[0] && role !== 'ALL' ? '?role=' + role : ''); },
+    // Screens from the top of the parent chain down to s (loop-safe).
+    chain: function (p, s, role) {
+      var out = [s], seen = { };
+      seen[s.id] = true;
+      for (var up = P_parent(p, s, role); up && !seen[up.id] && out.length < 8; up = P_parent(p, up, role)) { seen[up.id] = true; out.unshift(up); }
+      return out;
+    },
+    // The sidebar item that stands for s: the nearest screen up the chain that appears in the menu.
+    menuScreen: function (p, s, role) {
+      var c = this.chain(p, s, role);
+      for (var i = c.length - 1; i >= 0; i--) if (c[i].kind === 'm') return c[i];
+      return s;
+    },
     // Finds a screen by its full ID, for example PRI-ORD-02.
     find: function (id) {
       for (var i = 0; i < portals.length; i++) for (var j = 0; j < portals[i].screens.length; j++)

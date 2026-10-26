@@ -4,20 +4,20 @@ _Last updated: 2026-10-26. Update at the end of every task and phase._
 
 ## Where we are
 
-**Phase 8 (Tertiary Retailer Owner, part 1) is built and verified; waiting for the user's approval before Phase 9** (Retail sales, invoices and payments, offers, reports,
-returns, support, users, notifications). "START NEXT PHASE" (2026-10-26) was taken as approval of Phase 7; the Phase 7 open items stay as my recommendations until the
-user answers. **120 of 196 screens are built:** 9 sign-in screens, Primary Distributor (52), Secondary Dealer (45) and 14 of the 40 Tertiary Retailer screens.
+**Phase 9 (Tertiary Retailer Owner, part 2) is built and verified; waiting for the user's approval before Phase 10** (Sales Executive and Inventory and Purchasing Executive dashboards and their own screens).
+"START NEXT" (2026-10-26) was taken as approval of Phase 8; the Phase 7 and Phase 8 open items stay as my recommendations until the user answers.
+**141 of 196 screens are built:** 9 sign-in screens, Primary Distributor (52), Secondary Dealer (45) and 35 of the 40 Tertiary Retailer screens.
 
-Phase 8 screens (14; generators `tools/author/phase8a.py` and `phase8b.py`; Retailer Charlie, Owner Imran Sheikh): Dashboard (`retailer-owner-dashboard.html`), Store Profile,
-Product Catalogue, Product Details, Place Order, Order Builder, Order Confirmation, Order History, Order Details, My Inventory, Inventory Item Details, Stock Movement History,
-Reorder Recommendations, Purchase History. Product Catalogue, Product Details, My Inventory and Inventory Item Details are shared with both Executives (`?role=SLS`, `?role=PUR`; the
-Sales Executive sees no ordering buttons); the other orders and inventory screens are shared with the Inventory and Purchasing Executive. Data: DATA.md, "Phase 8 data".
-Highlights: the order flow is **TSL-2026-0413** (awaiting confirmation, ₹1,04,784, credit left ₹1,33,216); Order Details is TSL-2026-0412 (Being Packed, amounts allocated, no
-price-per-sheet column); Charlie's own ledger of **38 sales to customers** (RSL-2026-0361 to 0398, 163 sheets, ₹3,27,557) is built without random numbers and priced by one rule (`crp()`);
-82 stock movements reconcile to 216 sheets on hand (opening 261); receipts use Bravo's actual delivery dates; reorder rule as for Bravo (60 sheets, ₹99,700 before GST, fits the credit left).
-Tables got `wrap tight` classes as in Phase 7; no shared screen or earlier generator output changed (all generators re-run, `screens/` diff empty apart from the new files).
+Phase 9 screens (21; generators `tools/author/phase9a.py` and `phase9b.py`; Retailer Charlie): Record Retail Sale, Retail Sales History, Retail Sale Details (shared with the Sales Executive), Invoices Overview,
+Invoice Details, Payments Overview, Payment Details, Schemes and Offers, Scheme Details, Sales Reports, Inventory Reports, Return Requests, Create Return Request, Support Ticket List, Create Support Ticket,
+Support Ticket Details (the three support screens shared with the Sales Executive), User Management, Create User, User Details, My Profile and Notifications (shared with both Executives; three unread each).
+Data: DATA.md, "Phase 9 data". Highlights: invoices are Bravo's TSL sales (245, 1 open: TSL-2026-0412, ₹62,000, due 09/11); payments by Charlie reconcile (₹12,47,000 over six months = purchases ₹13,09,000 − ₹62,000, carry-in 0);
+Sales Reports state their basis (sales including GST ₹3,27,557; tables before GST ₹2,77,595); no profit or margin total anywhere; documents Dealer Bravo issues to retailers carry a "B" (PAY-2026-B0388, RTN-2026-B0214, TKT-2026-B0452).
+**Changes to Phase 8 made in Phase 9:** the last three sales to customers (RSL-2026-0396 to 0398) are dated today (26/10), every sale has a time and a recorder (rule in DATA.md), the dashboard line is now "Earned on Active Offers".
+All earlier generators re-run: `screens/` differs only in those two Phase 8 screens (dashboard, Stock Movement History).
 
-**Review gaps, stated plainly:** Phases 4 and 5 had no post-commit advisor review. The advisor reviewed the Phase 6, 7 and 8 plans, and the finished Phases 6, 7 and 8. The finished Phase 8 also had its post-commit review (fixes: Sales Executive My Inventory layout, legal name matching the GST number). Not yet checked in Firefox or Safari. Shared Bravo screens do not yet link Low Stock Overview or Incoming Stock for the Manager (the sidebar does).
+**Review gaps, stated plainly:** Phases 4 and 5 had no post-commit advisor review. The advisor reviewed the plans of Phases 6 to 9 and the finished Phases 6, 7 and 8; the finished Phase 9 review is recorded once done. Not yet checked in Firefox or Safari.
+Shared Bravo screens do not yet link Low Stock Overview or Incoming Stock for the Manager (the sidebar does).
 
 ## What exists
 
@@ -96,13 +96,12 @@ and the ticket description, which are user content).
 7. **Known point:** the Reorder Recommendations total (₹3,35,500, ₹3,95,890 with GST) is above Bravo's credit available after SAL-2026-3042 (₹2,46,180); the rule is unchanged, say if you want it to respect credit.
 8. **Phase 8 placeholders (new):** Charlie's own numbers RSL-2026-xxxx (sales to customers) and ADJ-2026-C000x (adjustments); the 25% selling-price rule (`crp()`); the 38 customer names
    and payment modes; Charlie's stock levels and reorder levels; the offers OFR-2026-01 and 02 from Dealer Bravo; Store Profile legal name (Charlie Laminates Private Limited), code RTL-0041, established 2018.
-9. Earlier answers applied from my recommendations (change if you disagree): Marble Finish Launch Incentive 140 of 300; Dealer Lakshya not in
+9. **Phase 9 placeholders (new):** the letter "B" for documents Bravo issues to retailers; Charlie's payments, returns and tickets; the offers OFR-2026-03 (Monsoon, ₹1,880) and 04 (Winter); the five users (Mohit Gawande invited, Sneha Ranpise inactive); the 13-area access matrix.
+10. Earlier answers applied from my recommendations (change if you disagree): Marble Finish Launch Incentive 140 of 300; Dealer Lakshya not in
    Pending Dealer Requests; Financial Reports May to October; May to September tax split kept.
 
 ## Next
 
-**Phase 9: Tertiary Retailer Owner, part 2** (PLAN.md; about 14 screens): Record Retail Sale, Retail Sales History, Retail Sale Details (shared with the Sales Executive), Invoices Overview,
-Invoice Details, Payments Overview, Payment Details, Schemes and Offers, Scheme Details, Sales Reports, Inventory Reports, Return Requests, Create Return Request, Support Ticket List,
-Create Support Ticket, Support Ticket Details, User Management, Create User, User Details, My Profile, Notifications (check PLAN.md for the exact list and which roles share which). Build on the
-Phase 8 ledger: `CSALES` (sales to customers; the next number is RSL-2026-0399), `CHR_ORDERS`/`CHR_BUY_MONTH` (invoices are Bravo's TSL sales: 245, 1 open), `COFFERS`. Add the Phase 9 data
-(payments by Charlie to Bravo, returns, tickets, users, notifications) to DATA.md first. Call the advisor before starting and after committing.
+**Phase 10: Tertiary Sales Executive and Inventory and Purchasing Executive** (PLAN.md; 5 screens): Sales Executive Dashboard, Low Stock Overview, Recent Transactions; Inventory and Purchasing Executive Dashboard, Incoming Deliveries.
+Both roles already see the shared screens built in Phases 8 and 9. Build on: `CSALES` (today's three sales at 10:30, 13:10, 15:50), `CSTOCK`/`CREC`, `INCOMING`-style shipments (TSL-2026-0412 Being Packed expected 27/10; TSL-2026-0413 awaiting confirmation),
+the notifications already shown to each role. Add the Phase 10 data to DATA.md first. Then Tertiary Retailer is complete (40). Call the advisor before starting and after committing.

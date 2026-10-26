@@ -915,10 +915,23 @@ for i in range(_NS):
     lines = {}
     for _ in range(_nlines[i]):
         _, s, q = _seq[_k]; _k += 1; lines[s] = lines.get(s, 0) + q
-    day = 1 + (i * 26) // _NS
+    day = 1 + (i * 26) // _NS if i < 35 else 26                                       # the last three sales are today's
     sub = sum(q * crp(s) for s, q in lines.items()); gst = round(sub * 0.09)
     CSALES.append(dict(number=f'RSL-2026-{361 + i:04d}', day=day, date=f'{day:02d}/10/2026', customer=CCUST[i], pay=CPAY[i % 6], lines=list(lines.items()),
                        sheets=sum(lines.values()), sub=sub, gst=gst, total=sub + 2 * gst))
+# Sale times (shop hours) and who recorded each sale: the sales of a day are spaced through the day (10:30 to 18:30, a fixed offset by day; today's three at 10:30, 13:10 and 15:50,
+# before the order placed at 16:05 on Bravo's side); recorded by Pooja Verma, except every fourth sale (index 3, 7, 11 ...) by Imran Sheikh
+_perday = {}
+for _s_ in CSALES: _perday[_s_['day']] = _perday.get(_s_['day'], 0) + 1
+_seen = {}
+for _i_, _s_ in enumerate(CSALES):
+    n = _perday[_s_['day']]; j = _seen.get(_s_['day'], 0); _seen[_s_['day']] = j + 1
+    off = 0 if _s_['day'] == 26 else (_s_['day'] * 37) % 45
+    mins = 630 + j * (480 // n) + off - (0 if n > 1 else 0)
+    if _s_['day'] == 26: mins = [630, 790, 950][j]
+    _s_['time'] = f'{mins // 60:02d}:{mins % 60:02d}'; _s_['by'] = 'Imran Sheikh' if _i_ % 4 == 3 else 'Pooja Verma'
+    _s_['phone'] = f'+91 98900 {40000 + _i_ * 37:05d}'
+assert [s['time'] for s in CSALES if s['day'] == 26] == ['10:30', '13:10', '15:50'] and all(s['time'] <= '18:59' for s in CSALES)
 CSALES.reverse()                                                                      # newest first
 assert len(CSALES) == 38 and CSALES[0]['number'] == 'RSL-2026-0398' and sum(s['sheets'] for s in CSALES) == 163
 _chk = {}
@@ -979,3 +992,91 @@ COFFERS = [('OFR-2026-01', 'Retailer Festive Volume Rebate', 'Volume Rebate', '0
 assert COFFERS[0][6] == 220 and COFFERS[1][6] == 19 and sum(q for s in CHR_TS for k, q in s['lines'] if k == 'LM-CAL-003') == 14
 CHR_RETAIL_MONTH = [245000, 270000, 230000, 295000, 305000, CRETAIL_OCT]         # Charlie's sales to customers by month, GST included (October is the ledger above)
 CHR_RETAIL_SEPT = CHR_RETAIL_MONTH[-2]
+
+
+# =====================================================================================================================
+# Phase 9 data (docs/DATA.md: "Phase 9 data"). Retailer Charlie's invoices and payments (to Dealer Bravo), offers, reports, returns, tickets, users.
+# Documents Dealer Bravo issues to its retailers carry a "B" before the number (PAY-2026-B0388, RTN-2026-B0214, TKT-2026-B0452); Charlie's own are RSL and ADJ-2026-C.
+# =====================================================================================================================
+# ---- Invoices from Dealer Bravo: number (= order number), issued, due (15 days), amount, paid, sheets. The last two are older ones shown on the payment list. ----
+CINV = []
+for _o in CHR_ORDERS[1:] + [('TSL-2026-0385', '28/08/2026', 35, 58000, '29/08/2026', 'Delivered', 'Paid'), ('TSL-2026-0379', '18/08/2026', 30, 54000, '19/08/2026', 'Delivered', 'Paid')]:
+    CINV.append((_o[0], _o[1], fd(pd(_o[1]) + datetime.timedelta(days=15)), _o[3], _o[3] if _o[6] == 'Paid' else 0, _o[2]))
+CINV_BY = {i[0]: i for i in CINV}
+COPEN = [i for i in CINV if i[3] > i[4]]
+assert [i[0] for i in COPEN] == ['TSL-2026-0412'] and sum(i[3] - i[4] for i in COPEN) == CHR_OWES == 62000 and pd(COPEN[0][2]) >= TODAY and (pd(COPEN[0][2]) - TODAY).days == 14
+assert COPEN[0][2] == '09/11/2026'
+# ---- Payments by Retailer Charlie to Dealer Bravo (newest first): number, date, amount, mode, invoice; one payment settles one paid invoice ----
+CPAY_L = [('PAY-2026-B0388', '22/10/2026', 58000, 'Bank Transfer', 'TSL-2026-0409'), ('PAY-2026-B0381', '14/10/2026', 52000, 'Cheque', 'TSL-2026-0406'),
+          ('PAY-2026-B0376', '10/10/2026', 49000, 'Net Banking', 'TSL-2026-0404'), ('PAY-2026-B0369', '05/10/2026', 43000, 'Bank Transfer', 'TSL-2026-0401'),
+          ('PAY-2026-B0364', '03/10/2026', 64000, 'Cheque', 'TSL-2026-0400'), ('PAY-2026-B0348', '22/09/2026', 66000, 'Bank Transfer', 'TSL-2026-0397'),
+          ('PAY-2026-B0341', '15/09/2026', 58000, 'Net Banking', 'TSL-2026-0394'), ('PAY-2026-B0333', '08/09/2026', 52000, 'Cheque', 'TSL-2026-0391'),
+          ('PAY-2026-B0326', '02/09/2026', 58000, 'Bank Transfer', 'TSL-2026-0385'), ('PAY-2026-B0319', '25/08/2026', 54000, 'Net Banking', 'TSL-2026-0379')]
+for _p in CPAY_L:
+    _i = CINV_BY[_p[4]]; assert _p[2] == _i[4] and pd(_p[1]) >= pd(_i[1]), _p
+assert [pd(p[1]) for p in CPAY_L] == sorted((pd(p[1]) for p in CPAY_L), reverse=True) and [p[0] for p in CPAY_L] == sorted((p[0] for p in CPAY_L), reverse=True)
+CPAY_OCT = [p for p in CPAY_L if p[1].endswith('/10/2026')]
+CPAID_OCT = sum(p[2] for p in CPAY_OCT)
+CMODE_OCT = {}
+for _p in CPAY_OCT: CMODE_OCT[_p[3]] = CMODE_OCT.get(_p[3], 0) + _p[2]
+assert len(CPAY_OCT) == 5 and CPAID_OCT == 266000 and CMODE_OCT == {'Bank Transfer': 101000, 'Cheque': 116000, 'Net Banking': 49000}
+# monthly payments = purchases of the month + unpaid at the start - unpaid at the end of the month (nothing unpaid before May 2026: carry-in 0 at 1 May is the first unpaid figure below)
+_UNPAID_END = [50000, 52000, 55000, 58000, 64000, 62000]                              # unpaid invoices at the end of May ... October (one invoice or so)
+CPAID_MONTH = [CHR_BUY_MONTH[m] + (_UNPAID_END[m - 1] if m else 0) - _UNPAID_END[m] for m in range(6)]
+assert CPAID_MONTH == [140000, 208000, 172000, 227000, 234000, 266000] and sum(CPAID_MONTH) == sum(CHR_BUY_MONTH) - CHR_OWES == 1247000 and CPAID_MONTH[-1] == CPAID_OCT
+assert CPAID_MONTH[-2] == 58000 + 52000 + 58000 + 66000 and CHR_BUY_MONTH[-1] + 64000 - 62000 == CPAID_OCT
+C_PAY_COUNT = C_INV_COUNT - len(COPEN); assert (C_INV_COUNT, C_PAY_COUNT) == (245, 244)
+
+# ---- Offers from Dealer Bravo to its retailers: number, name, type, start, end, status, progress, goal, reward ----
+# Monsoon: sheets bought July 102 + August 134 (value / the usual 1,714 per sheet) + September 140 (the four September orders) = 376 of 350, Rs 5 a sheet
+_MONSOON = 102 + 134 + 140
+assert 30 + 35 + 40 + 35 == 140 and _MONSOON == 376 and abs(175000 / 1714 - 102) < 1 and abs(230000 / 1714 - 134) < 1
+COFFERS_ALL = COFFERS + [('OFR-2026-04', 'Winter Season Retailer Bonus', 'Volume Bonus', '01/12/2026', '31/01/2027', 'Upcoming', 0, 400, '2% bonus'),
+                         ('OFR-2026-03', 'Monsoon Retailer Incentive', 'Volume Incentive', '01/07/2026', '30/09/2026', 'Completed', _MONSOON, 350, f'{M(_MONSOON * 5)} credited')]
+C_INCENTIVES = 140 + _MONSOON * 5; assert C_INCENTIVES == 2020
+C_FESTIVE_ORDERS = [(o[0], o[1], o[2], o[5]) for o in CHR_ORDERS[:6]]
+assert sum(f[2] for f in C_FESTIVE_ORDERS) == COFFERS[0][6] == 220
+
+# ---- Reports: sales to customers (before GST = sheets x crp, exact) ----
+CSOLD_SUB = {s: q * crp(s) for s, q in CSOLD.items() if q}
+assert sum(CSOLD_SUB.values()) == sum(s['sub'] for s in CSALES)
+CSUB_TOTAL = sum(CSOLD_SUB.values())
+CFIN_SUB = {}
+for _s_, _v_ in CSOLD_SUB.items(): CFIN_SUB[BY[_s_][2]] = CFIN_SUB.get(BY[_s_][2], 0) + _v_
+CWEEK_VALUE = [sum(s['total'] for s in CSALES if a <= s['day'] <= b_) for _, a, b_ in WEEKS]
+assert sum(CWEEK_VALUE) == CRETAIL_OCT
+CMODE_SALES = {}
+for _s_ in CSALES:
+    _d = CMODE_SALES.setdefault(_s_['pay'], [0, 0]); _d[0] += 1; _d[1] += _s_['total']
+assert sum(v[0] for v in CMODE_SALES.values()) == 38 and sum(v[1] for v in CMODE_SALES.values()) == CRETAIL_OCT
+# ageing of Charlie's stock (up to 30 days / 31 to 60 / over 60): CAL = batches B-2610-31 (13/10, 8) and B-2609-26 (30/09, 1): all within 30 days
+def c_ageing(s):
+    on = CSTOCK[s]['on_hand']
+    if s == 'LM-CAL-003': return (9, 0, 0)
+    a = min(on, max(round(on * 0.62 / 5) * 5, C_RECV.get(s, 0))); b = min(round(on * 0.26 / 5) * 5, on - a)
+    return (a, b, on - a - b)
+CAGE = {s: c_ageing(s) for s in CSTOCK}
+assert all(sum(v) == CSTOCK[s]['on_hand'] and min(v) >= 0 and v[0] >= min(C_RECV.get(s, 0), CSTOCK[s]['on_hand']) for s, v in CAGE.items())
+
+# ---- Returns to Dealer Bravo: number, date, order, sku, sheets, reason, status. Credit (only once issued) = sheets x the retailer price; returns are not stock movements ----
+CRET = [('RTN-2026-B0214', '25/10/2026', 'TSL-2026-0409', 'LM-WNG-011', 3, 'Surface Defect', 'Under Review'), ('RTN-2026-B0208', '21/10/2026', 'TSL-2026-0406', 'LM-CHR-007', 2, 'Damaged in Transit', 'Approved'),
+        ('RTN-2026-B0199', '14/10/2026', 'TSL-2026-0404', 'LM-SKY-012', 2, 'Shade Mismatch', 'Credit Issued'), ('RTN-2026-B0186', '08/10/2026', 'TSL-2026-0401', 'LM-OAK-004', 1, 'Surface Defect', 'Credit Issued')]
+_ol = {s['number']: dict(s['lines']) for s in CHR_TS}
+assert all(r[3] in _ol[r[2]] and r[4] <= _ol[r[2]][r[3]] and pd(r[1]) >= pd(next(s['date'] for s in CHR_TS if s['number'] == r[2])) for r in CRET)
+CCREDIT = {r[0]: r[4] * rp(r[3]) for r in CRET if r[6] == 'Credit Issued'}
+assert CCREDIT == {'RTN-2026-B0199': 2140, 'RTN-2026-B0186': 1530} and sum(CCREDIT.values()) == 3670
+assert [pd(r[1]) for r in CRET] == sorted((pd(r[1]) for r in CRET), reverse=True)
+# ---- Support tickets with Dealer Bravo (agent Arjun Nair): number, created, subject, category, priority, updated, status ----
+CTK = [('TKT-2026-B0452', '25/10/2026', 'Delivery Timing for TSL-2026-0412', 'Delivery', 'Medium', '26/10/2026', 'In Progress'),
+       ('TKT-2026-B0447', '23/10/2026', 'Price Tier Review Request', 'Account', 'Low', '23/10/2026', 'Open'),
+       ('TKT-2026-B0441', '20/10/2026', 'Surface Defect in TSL-2026-0409', 'Delivery', 'High', '22/10/2026', 'Resolved'),
+       ('TKT-2026-B0430', '12/10/2026', 'Invoice TSL-2026-0406 Amount Query', 'Billing', 'Medium', '14/10/2026', 'Closed'),
+       ('TKT-2026-B0412', '01/10/2026', 'Festive Offer Eligibility', 'Schemes', 'Low', '03/10/2026', 'Closed')]
+assert [pd(t[1]) for t in CTK] == sorted((pd(t[1]) for t in CTK), reverse=True) and [t[0] for t in CTK] == sorted((t[0] for t in CTK), reverse=True)
+# ---- Users of Retailer Charlie (three roles): name, role, phone, last sign-in, status ----
+CUSERS = [('Imran Sheikh', 'Retailer Owner', '51001', '26/10/2026 09:02', 'Active'), ('Pooja Verma', 'Sales Executive', '51002', '26/10/2026 09:40', 'Active'),
+          ('Faisal Khan', 'Inventory and Purchasing Executive', '51003', '26/10/2026 09:15', 'Active'), ('Mohit Gawande', 'Sales Executive', '51004', 'Not yet', 'Invited'),
+          ('Sneha Ranpise', 'Inventory and Purchasing Executive', '51005', '31/07/2026', 'Inactive')]
+_names = {u[0] for u in CUSERS} | set(CCUST)
+assert len(_names) == 5 + 38
+STATUS_CHIP.update({'Cash': 'plain'})

@@ -54,7 +54,7 @@ body = f'''  <div class="head">
     <section class="card flush"><header><h2>Stock Alerts</h2><a class="more" data-link="TER-INV-01">My inventory</a></header>
       <div class="body">{table([('Product', ''), ('SKU', ''), ('Available', 'num'), ('Reorder Level', 'num'), ('Status', '')], [alert_rows], 'wrap')}</div></section>
     <section class="card"><header><h2>Active Offers</h2><a class="more" data-link="TER-SCH-01">All offers</a></header>
-      <div class="body"><ul class="list">{offer_item(COFFERS[0])}{offer_item(COFFERS[1])}</ul>{kv([('Incentive Earned', M(140))], 'total')}</div></section>
+      <div class="body"><ul class="list">{offer_item(COFFERS[0])}{offer_item(COFFERS[1])}</ul>{kv([('Earned on Active Offers', M(140))], 'total')}</div></section>
   </div>
 '''
 page('tertiary', 'retailer-owner-dashboard', 'TER-OWN-01', 'Tertiary Customer — Retailer Owner — Dashboard (TER-OWN-01)', body)

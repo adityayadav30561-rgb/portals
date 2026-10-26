@@ -13,6 +13,7 @@ What the user asked for, liked and rejected. Read before any design change; neve
 | Four portals | Company Administration, Primary Distributor, Secondary Dealer, Tertiary Retailer; all four are built. | 2026-10-26 |
 | Full screen names | Names, menus, breadcrumbs, table headings and buttons are written in full so everyone understands; no abbreviations (SKU, GST, PDF excepted). Screen IDs are reference codes next to the full name, never instead of it. | 2026-10-26 |
 | No filler text | No eyebrow labels, taglines or paragraphs that describe the screen. A line under the title appears only when it carries information (counts, dates, status). | 2026-10-26 |
+| Opens by double-click | No dev server. `index.html` and each individual screen HTML file must open directly from disk (`file://`); verify that way, never only through a local server. Relative paths, classic scripts, bundled font and logo. | 2026-10-26 |
 | Static prototype | HTML/CSS/small JavaScript. No backend, login, database, storage, real logic. Fictional data. | 2026-10-26 |
 | Design language | Light theme, deep navy text, blue accent, Inter, white cards on light grey, as in the MAVRO product screens; responsive (unlike the fixed-size MAVRO captures). | 2026-10-26 |
 

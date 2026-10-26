@@ -199,6 +199,12 @@ Exact figures are generated from the screen registry in Phase 1 and kept in `doc
 
 Plain HTML, CSS and a little JavaScript; opens by double-clicking `index.html` (no build step, no server).
 
+**Opens without a server (user requirement, 2026-10-26):** `index.html` and every individual screen file open by
+double-click, from a folder, a zip or any host. Each screen file is self-contained: it links the shared stylesheet
+and classic scripts by relative paths and sets its own default role, so it never depends on the directory having been
+opened first. No dev server, no build step, no `npm`. Checked in Phase 1 by opening files straight from disk
+(`file://`), not through any server.
+
 **`file://` constraint:** browsers block `type="module"` scripts and `fetch()` on `file://`, so the MAVRO shell
 pattern (ES module importing `.ts` from a dev server, fonts from `/node_modules/`) must not be copied. The registry
 and shell are classic `<script>` files that expose a global, with no imports and no fetch; fonts and images are

@@ -13,6 +13,8 @@ MAVRO.AI logo only.
 
 ## Rules that always apply
 
+- No dev server, no build step: `index.html` and every screen file must open by double-click (`file://`), with
+  relative paths and classic scripts only. Test that way.
 - Work in this repository only. The `mavro-ai` repository (`prototype/`, `prototype/modules/`) is a read-only visual
   reference for how screens look.
 - Screen names, menus, breadcrumbs, headings and buttons in full; no abbreviations. IDs are reference codes next to

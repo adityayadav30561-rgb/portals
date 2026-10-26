@@ -362,3 +362,24 @@ textarea.input { min-height: 5rem; padding: 0.625rem 0.875rem; resize: vertical;
 .pref td .check { justify-content: center; }
 .formbar { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: flex-end; }
 @media (max-width: 760px) { .msg .top-line time { margin-left: 0; } }
+
+/* ---------- Phase 11 additions: hierarchy tree ---------- */
+.tree { --cols: minmax(0, 1fr) 7.5rem 8rem 6.5rem 10rem; }
+.tree .row { display: grid; grid-template-columns: var(--cols); align-items: center; gap: 0 1rem; padding: 0.625rem 1.125rem; border-top: 1px solid var(--line); min-height: 3rem; }
+.tree .row.head-row { background: var(--surface-2); border-top: 0; font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); min-height: 2.5rem; }
+.tree .row .name { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.625rem; min-width: 0; padding-left: calc(var(--lvl, 0) * 1.75rem); }
+.tree .row .name b { font-weight: 600; }
+.tree .row .name > a { color: inherit; }
+.tree .row .num { text-align: right; font-variant-numeric: tabular-nums; }
+.tree summary { list-style: none; cursor: pointer; }
+.tree summary::-webkit-details-marker { display: none; }
+.tree summary .caret { width: 1.25rem; height: 1.25rem; flex: none; display: grid; place-items: center; color: var(--ink-3); transform: rotate(-90deg); transition: transform 0.15s; }
+.tree details[open] > summary .caret { transform: none; }
+.tree .leaf .name::before { content: ''; width: 1.25rem; flex: none; }
+.tree .row.root { background: var(--accent-soft); }
+.tree summary:hover, .tree .leaf:hover { background: var(--surface-2); }
+.tree .root:hover { background: var(--accent-soft); }
+@media (max-width: 64rem) { .tree { --cols: minmax(0, 1fr) 6.5rem 9rem; } .tree .c-code, .tree .c-city { display: none; } }
+@media (max-width: 40rem) { .tree .name .tag:not(:last-child) { display: none; } .tree { --cols: minmax(0, 1fr) 6.75rem; } .tree .c-status { display: none; } .tree .row { padding: 0.625rem 0.875rem; } .tree .row .name { padding-left: calc(var(--lvl, 0) * 1rem); } }
+.form-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 40rem) { .form-grid.three { grid-template-columns: minmax(0, 1fr); } }

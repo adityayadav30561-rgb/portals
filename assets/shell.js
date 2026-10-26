@@ -88,6 +88,12 @@
   Array.prototype.forEach.call(document.querySelectorAll('[data-count]'), function (e) {
     e.textContent = Array.prototype.filter.call(document.querySelectorAll('main ' + e.getAttribute('data-count')), function (x) { return !x.closest('[hidden]'); }).length;
   });
+  // data-expand="all" / "none" on a button opens or closes every <details class="node"> (Customer Hierarchy Explorer)
+  Array.prototype.forEach.call(document.querySelectorAll('[data-expand]'), function (b) {
+    b.addEventListener('click', function () {
+      Array.prototype.forEach.call(document.querySelectorAll('details.node'), function (d) { d.open = b.getAttribute('data-expand') === 'all'; });
+    });
+  });
   if (off) { document.documentElement.style.setProperty('--review-h', '0px'); return; }
 
   // Previous and next built screen for this role, in the order of the directory.

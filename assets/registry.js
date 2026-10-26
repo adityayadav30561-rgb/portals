@@ -255,6 +255,7 @@
     'TER-SLS-01', 'TER-PUR-01', 'TER-INV-05', 'TER-INV-06', 'TER-RTS-04',
     'PRI-ACC-01', 'PRI-BIL-05', 'PRI-BIL-06', 'PRI-BIL-07', 'PRI-BIL-08', 'PRI-BIL-09', 'PRI-BIL-10', 'PRI-RPT-03', 'PRI-RPT-04', 'PRI-RPT-05',
     'PRI-RET-01', 'PRI-RET-02', 'PRI-SUP-01', 'PRI-SUP-02', 'PRI-SUP-03', 'PRI-USR-01', 'PRI-USR-02', 'PRI-USR-03', 'PRI-PRO-02', 'PRI-NTF-01',
+    'CMP-ADM-01', 'CMP-CUS-01', 'CMP-CUS-02', 'CMP-CUS-03', 'CMP-CUS-04', 'CMP-USR-01', 'CMP-USR-02', 'CMP-PRD-01', 'CMP-PRD-02', 'CMP-PRD-03', 'CMP-PRD-04', 'CMP-ORD-01', 'CMP-ORD-02',
     'AUT-01', 'AUT-02', 'AUT-03', 'AUT-04', 'AUT-05', 'AUT-06', 'AUT-07', 'AUT-08', 'AUT-09'];
 
   function slug(text) { return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }

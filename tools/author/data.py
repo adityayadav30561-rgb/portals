@@ -1080,3 +1080,160 @@ CUSERS = [('Imran Sheikh', 'Retailer Owner', '51001', '26/10/2026 09:02', 'Activ
 _names = {u[0] for u in CUSERS} | set(CCUST)
 assert len(_names) == 5 + 38
 STATUS_CHIP.update({'Cash': 'plain'})
+
+
+# =====================================================================================================================
+# Phase 11 data (docs/DATA.md: "Phase 11 data"). Company Administration: Crestline Laminates, Super Admin part 1.
+# Everything the company sees is the same chain the customers see (Distributor Alpha, its eight dealers, their 20 retailers);
+# the asserts tie the company figures to the earlier phases.
+# =====================================================================================================================
+# ---- Crestline staff: name, role, phone, last sign-in, status (Meera Kapoor is the customer support agent; the portal has no role for her) ----
+CRL_USERS = [('Anita Deshmukh', 'Super Admin', '11221', '26/10/2026 08:30', 'Active'), ('Neha Kulkarni', 'Operations Manager', '11222', '26/10/2026 08:45', 'Active'),
+             ('Vikram Chopra', 'Sales Manager', '11223', '26/10/2026 09:10', 'Active'), ('Meera Kapoor', 'Customer Support Agent', '11224', '26/10/2026 09:30', 'Active')]
+AUSERS = [('Rajesh Menon', 'Owner', '21001', '26/10/2026 09:05', 'Active'), ('Kavita Joshi', 'Sales and Operations Manager', '21002', '26/10/2026 08:40', 'Active'),
+          ('Suresh Iyer', 'Accountant', '21003', '25/10/2026 17:30', 'Active'), ('Pooja Deshpande', 'Sales and Operations Manager', '21004', 'Not yet', 'Invited'),
+          ('Amit Kulkarni', 'Accountant', '21005', '30/06/2026', 'Inactive')]
+def user_email(name, org): return name.lower().replace(' ', '.') + '@' + org
+
+# ---- The 17 retailers of the other seven dealers: key, name, area, city, owner, customer since, parent dealer, October purchases from the dealer ----
+NEW_RETAILERS = [
+ ('GOD', 'Retailer Godavari Interiors',      'Nashik Road',   'Nashik',      'Santosh Pagar',     '20/06/2019', 'DLT', 180000),
+ ('PAN', 'Retailer Panchavati Furnishings',  'Panchavati',    'Nashik',      'Rahul Gaikwad',     '11/11/2019', 'DLT', 150000),
+ ('SIN', 'Retailer Sinnar Wood Works',       'Sinnar',        'Sinnar',      'Dinesh Wagh',       '08/02/2021', 'DLT', 120000),
+ ('DEO', 'Retailer Deolali Decor',           'Deolali',       'Nashik',      'Meena Sonawane',    '25/09/2022', 'DLT',  90000),
+ ('MAJ', 'Retailer Majiwada Interiors',      'Majiwada',      'Thane',       'Ajay Chavan',       '10/10/2020', 'FXT', 175000),
+ ('KAL', 'Retailer Kalyan Furniture House',  'Kalyan West',   'Kalyan',      'Sagar Mhatre',      '14/04/2021', 'FXT', 140000),
+ ('DOM', 'Retailer Dombivli Decor Studio',   'Dombivli East', 'Dombivli',    'Nisha Chaudhari',   '02/12/2023', 'FXT', 120000),
+ ('RAN', 'Retailer Rankala Interiors',       'Rankala',       'Kolhapur',    'Amol Patil',        '16/02/2021', 'GPL', 150000),
+ ('ICH', 'Retailer Ichalkaranji Modular Works', 'Ichalkaranji', 'Ichalkaranji', 'Sanjay Kamble',  '21/07/2021', 'GPL', 120000),
+ ('SHA', 'Retailer Shahupuri Furnishings',   'Shahupuri',     'Kolhapur',    'Vandana Jadhav',    '05/05/2024', 'GPL', 100000),
+ ('SIT', 'Retailer Sitabuldi Interiors',     'Sitabuldi',     'Nagpur',      'Rohit Meshram',     '30/08/2021', 'HRS', 180000),
+ ('DHA', 'Retailer Dharampeth Wood Craft',   'Dharampeth',    'Nagpur',      'Pranav Deshkar',    '12/01/2023', 'HRS', 125000),
+ ('KRD', 'Retailer Karad Furniture Mart',    'Karad',         'Karad',       'Vijay Jagtap',      '14/12/2022', 'IND', 125000),
+ ('KOR', 'Retailer Koregaon Decor',          'Koregaon',      'Satara',      'Smita Mane',        '09/06/2023', 'IND',  95000),
+ ('AKK', 'Retailer Akkalkot Road Interiors', 'Akkalkot Road', 'Solapur',     'Mahesh Kothari',    '18/05/2023', 'JYT', 110000),
+ ('PND', 'Retailer Pandharpur Furniture Studio', 'Pandharpur', 'Pandharpur', 'Revati Bhagwat',    '27/10/2023', 'JYT',  85000),
+ ('FON', 'Retailer Fontainhas Interiors',    'Fontainhas',    'Panaji',      'Savio Fernandes',   '14/10/2026', 'KNL', 105000),
+]
+assert len(NEW_RETAILERS) == 17 and len({r[0] for r in NEW_RETAILERS}) == 17
+for _d in DEALERS:                                    # Alpha's Dealer Network shows these retailer counts
+    _named = [r for r in RETAILERS if _d[0] == 'BRV'] + [r for r in NEW_RETAILERS if r[6] == _d[0]]
+    assert len(_named) == _d[6], (_d[0], len(_named), _d[6])
+assert all(pd(r[5]) > pd(DLR[r[6]][5]) for r in NEW_RETAILERS)
+# October purchases of the retailers from their dealer = the dealer's sales to retailers (Bravo's are the Phase 5 ledger)
+DEALER_RETAIL = {k: sum(r[7] for r in NEW_RETAILERS if r[6] == k) for k in DLR}
+DEALER_RETAIL['BRV'] = 630000
+assert [DEALER_RETAIL[k] for k in DLR] == [630000, 540000, 435000, 370000, 305000, 220000, 195000, 105000] and sum(DEALER_RETAIL.values()) == 2800000
+assert all(DEALER_RETAIL[k] <= DLR[k][7] for k in DLR)            # no dealer sells more to retailers in October than it bought from Alpha
+RETAIL_OCT = {r[0]: r[9][-1] for r in RETAILERS}; RETAIL_OCT.update({r[0]: r[7] for r in NEW_RETAILERS})
+assert sum(RETAIL_OCT.values()) == 2800000
+
+# ---- Customers of Crestline: the 29 organisations. code, key, name, type, parent key, city, region, status, since, owner, October purchases ----
+_CODE = {'ALP': 18, 'DLT': 89, 'GOD': 104, 'BRV': 127, 'PAN': 139, 'FXT': 164, 'MAJ': 176, 'GPL': 188, 'SIN': 204, 'RAN': 207, 'HRS': 215, 'KAL': 219, 'CHR': 231, 'ICH': 243, 'SIT': 254,
+         'KIR': 268, 'IND': 301, 'MEH': 309, 'DEO': 311, 'KRD': 322, 'DHA': 338, 'JYT': 342, 'AKK': 348, 'KOR': 352, 'PND': 366, 'DOM': 371, 'SHA': 395, 'KNL': 478, 'FON': 483}
+CUSTOMERS = [dict(code='CUS-0018', key='ALP', name='Distributor Alpha', type='Distributor', parent=None, city='Bhiwandi', region='Maharashtra and Goa', status='Active', since='12/04/2018',
+                  owner='Rajesh Menon', purchases=PURCH_MONTH[-1])]
+for _d in DEALERS:
+    CUSTOMERS.append(dict(code=f'CUS-{_CODE[_d[0]]:04d}', key=_d[0], name=_d[1], type='Dealer', parent='ALP', city=_d[2], region=_d[3], status=_d[4], since=_d[5], owner=_d[10], purchases=_d[7]))
+for _r in RETAILERS + [(r[0], r[1], r[2], r[3], r[4], r[5]) for r in NEW_RETAILERS]:
+    _par = 'BRV' if _r[0] in ('CHR', 'KIR', 'MEH') else next(x[6] for x in NEW_RETAILERS if x[0] == _r[0])
+    CUSTOMERS.append(dict(code=f'CUS-{_CODE[_r[0]]:04d}', key=_r[0], name=_r[1], type='Retailer', parent=_par, city=_r[3], region=DLR[_par][3],
+                          status='New' if _r[0] == 'FON' else 'Active', since=_r[5], owner=_r[4], purchases=RETAIL_OCT[_r[0]]))
+CUS = {c['key']: c for c in CUSTOMERS}
+assert len(CUSTOMERS) == 29 and len({c['code'] for c in CUSTOMERS}) == 29 and CUS['BRV']['code'] == 'CUS-0127' and CUS['ALP']['code'] == 'CUS-0018'
+_by_code = sorted(CUSTOMERS, key=lambda c: c['code'])
+assert [pd(c['since']) for c in _by_code] == sorted(pd(c['since']) for c in CUSTOMERS), 'customer codes follow the customer-since date'
+def tree_order():
+    """Hierarchy order: Alpha, then each dealer followed by its retailers."""
+    out = [CUS['ALP']]
+    for d in DEALERS:
+        out.append(CUS[d[0]]); out += [c for c in CUSTOMERS if c['parent'] == d[0]]
+    return out
+TREE = tree_order(); assert len(TREE) == 29
+CUS_STATUS = {s: sum(1 for c in CUSTOMERS if c['status'] == s) for s in ('Active', 'New')}; assert CUS_STATUS == {'Active': 27, 'New': 2}
+CUS_TYPE = {t: sum(1 for c in CUSTOMERS if c['type'] == t) for t in ('Distributor', 'Dealer', 'Retailer')}; assert CUS_TYPE == {'Distributor': 1, 'Dealer': 8, 'Retailer': 20}
+
+# ---- Customer approval queue: only dealer requests that have reached Crestline (retailer requests stop at the dealer and the distributor) ----
+# DRQ-2026-0017 is the one request waiting for Crestline; the decided ones are earlier requests of Distributor Alpha.
+PENDING_DRQ = dict(number='DRQ-2026-0017', name='Dealer Omkar', legal='Omkar Laminate Traders', owner='Omkar Deshmukh', city='Jalgaon', region='North Maharashtra', submitted='19/10/2026', by='Rajesh Menon',
+                   reviewed='21/10/2026', reviewer='Kavita Joshi', credit=400000, sheets=150, docs=3, gst='27AAAPD4417H1Z6', pan='AAAPD4417H', phone='+91 90000 41002', email='omkar.deshmukh@dealeromkar.example',
+                   address='Shop 9, Station Road, Jalgaon, Postal Code 425001', territory='Jalgaon and Dhule', tier='Dealer Tier B', period='30 days', assigned='Vikram Chopra')
+assert (PENDING_DRQ['credit'], PENDING_DRQ['sheets'], PENDING_DRQ['submitted'], PENDING_DRQ['reviewed']) == (REQUESTS[2][7], REQUESTS[2][8], REQUESTS[2][5], '21/10/2026') and PENDING_DRQ['name'] == REQUESTS[2][1]
+DECIDED_DRQ = [  # number, dealer, city, region, owner, submitted, credit, sheets, documents, reviewed, decided, decision, decided by
+ ('DRQ-2026-0014', 'Dealer Kunal', 'Panaji', 'Goa', 'Kunal Naik', '14/09/2026', 250000, 90, 3, '17/09/2026', '30/09/2026', 'Approved', 'Vikram Chopra'),
+ ('DRQ-2026-0011', 'Dealer Prasad Traders', 'Ratnagiri', 'Konkan', 'Prasad Sawant', '28/08/2026', 300000, 80, 2, '31/08/2026', '09/09/2026', 'Rejected', 'Vikram Chopra'),
+]
+assert DECIDED_DRQ[0][6] == DLR['KNL'][9] and DECIDED_DRQ[0][1] == DLR['KNL'][1] and pd(DECIDED_DRQ[0][10]) < pd(DLR['KNL'][5])
+assert all(r[0] < PENDING_DRQ['number'] for r in DECIDED_DRQ)
+DAYS_WAITING = (TODAY - pd(PENDING_DRQ['submitted'])).days; assert DAYS_WAITING == 7
+DECISION_DAYS = [(pd(r[10]) - pd(r[5])).days for r in DECIDED_DRQ]; assert DECISION_DAYS == [16, 12]
+
+# ---- Warehouses and company stock (sheets). Vapi is the plant warehouse (the 12,400 sheets of LM-WNT-001 on Product Details of the Primary portal are its available stock);
+#      Taloja is the regional warehouse. Orders awaiting confirmation or confirmed are reserved at Vapi. ----
+WAREHOUSES = [('Plant Warehouse', 'Vapi, Gujarat'), ('Regional Warehouse', 'Taloja, Maharashtra')]
+_VAPI = {'LM-WNT-001': 12600, 'LM-ARC-002': 18500, 'LM-CAL-003': 3000, 'LM-OAK-004': 6500, 'LM-SLT-005': 4500, 'LM-TEK-006': 9000, 'LM-CHR-007': 5200, 'LM-IVR-008': 7500,
+         'LM-STN-009': 640, 'LM-CPR-010': 1150, 'LM-WNG-011': 6100, 'LM-SKY-012': 5400}
+_TALOJA = {'LM-WNT-001': 1800, 'LM-ARC-002': 2400, 'LM-CAL-003': 420, 'LM-OAK-004': 900, 'LM-SLT-005': 650, 'LM-TEK-006': 1300, 'LM-CHR-007': 700, 'LM-IVR-008': 1100,
+           'LM-STN-009': 90, 'LM-CPR-010': 160, 'LM-WNG-011': 850, 'LM-SKY-012': 780}
+_LEVEL = {'LM-WNT-001': 4000, 'LM-ARC-002': 6000, 'LM-CAL-003': 1500, 'LM-OAK-004': 2500, 'LM-SLT-005': 2000, 'LM-TEK-006': 3000, 'LM-CHR-007': 2000, 'LM-IVR-008': 3000,
+          'LM-STN-009': 1000, 'LM-CPR-010': 500, 'LM-WNG-011': 2500, 'LM-SKY-012': 2000}
+RESERVED = {}
+for _o in ('ORD-2026-10482', 'ORD-2026-10459'):
+    for _s, _q in ORDER_LINES[_o]: RESERVED[_s] = RESERVED.get(_s, 0) + _q
+CSTK = {}
+for _s in BY:
+    _res = RESERVED.get(_s, 0); _av = _VAPI[_s] - _res + _TALOJA[_s]
+    CSTK[_s] = dict(vapi=_VAPI[_s], reserved=_res, vapi_avail=_VAPI[_s] - _res, taloja=_TALOJA[_s], on_hand=_VAPI[_s] + _TALOJA[_s], available=_av, level=_LEVEL[_s],
+                    status='Low Stock' if _av < _LEVEL[_s] else 'In Stock')
+assert CSTK['LM-WNT-001']['vapi_avail'] == 12400 and RESERVED == {'LM-WNT-001': 200, 'LM-ARC-002': 300, 'LM-CAL-003': 80, 'LM-OAK-004': 120, 'LM-SLT-005': 60, 'LM-TEK-006': 100, 'LM-IVR-008': 120, 'LM-SKY-012': 60}
+assert [s for s, b in CSTK.items() if b['status'] == 'Low Stock'] == ['LM-STN-009']                  # as the Primary Product Catalogue says: the only product Low Stock on the company side
+CSTK_COUNT = {st: sum(1 for b in CSTK.values() if b['status'] == st) for st in ('In Stock', 'Low Stock')}; assert CSTK_COUNT == {'In Stock': 11, 'Low Stock': 1}
+
+# ---- Crestline's orders from Distributor Alpha (the Order History of the Primary portal) ----
+ALPHA_ORDERS = [('ORD-2026-10482', '26/10/2026', 760, 949752, '31/10/2026', 'Awaiting Confirmation', 'Unpaid'), ('ORD-2026-10459', '23/10/2026', 280, 336500, '29/10/2026', 'Confirmed', 'Unpaid'),
+                ('ORD-2026-10447', '19/10/2026', 360, 442930, '27/10/2026', 'In Transit', 'Unpaid'), ('ORD-2026-10431', '15/10/2026', 520, 618400, '20/10/2026', 'Delivered', 'Partly Paid'),
+                ('ORD-2026-10398', '08/10/2026', 430, 524100, '13/10/2026', 'Delivered', 'Partly Paid'), ('ORD-2026-10372', '01/10/2026', 400, 481200, '06/10/2026', 'Delivered', 'Paid'),
+                ('ORD-2026-10341', '24/09/2026', 470, 572300, '29/09/2026', 'Delivered', 'Paid'), ('ORD-2026-10316', '17/09/2026', 330, 398650, '22/09/2026', 'Delivered', 'Paid'),
+                ('ORD-2026-10290', '10/09/2026', 500, 605900, '15/09/2026', 'Delivered', 'Paid'), ('ORD-2026-10265', '03/09/2026', 200, 241000, '', 'Cancelled', 'Not Applicable')]
+assert sum(o[3] for o in ALPHA_ORDERS[:6]) == PURCH_MONTH[-1] and all(ORDER_VALUE[o[0]] == o[3] and ORDER_SHEETS[o[0]] == o[2] for o in ALPHA_ORDERS[:6])
+ORDERS_BY_TIER = dict(Primary=6, Secondary=SALE_COUNT + 1, Tertiary=12 + 41 + 1)       # October, awaiting confirmation counted: ORD-2026-10482, SAL-2026-3042, TSL-2026-0413
+TERTIARY_COUNT = {'BRV': 12, 'DLT': 10, 'FXT': 8, 'GPL': 7, 'HRS': 6, 'IND': 4, 'JYT': 4, 'KNL': 2}
+assert sum(TERTIARY_COUNT.values()) == 53 and ORDERS_BY_TIER['Tertiary'] == 54 and ORDERS_BY_TIER['Secondary'] == 33
+ORDERS_ALL = sum(ORDERS_BY_TIER.values()); assert ORDERS_ALL == 93
+VALUE_BY_TIER = dict(Primary=PURCH_MONTH[-1], Secondary=3120000 + NEW_TOTAL, Tertiary=2800000 + PEND_TOTAL)
+assert (VALUE_BY_TIER['Secondary'], VALUE_BY_TIER['Tertiary']) == (3413820, 2904784)
+AWAITING = [('ORD-2026-10482', 'Primary', 'Distributor Alpha', 'Crestline Laminates', 949752), (NEW_ORDER, 'Secondary', 'Dealer Bravo', 'Distributor Alpha', NEW_TOTAL), (PEND_ORDER['number'], 'Tertiary', 'Retailer Charlie', 'Dealer Bravo', PEND_TOTAL)]
+
+# ---- Sales to dealers (Alpha) by region, October ----
+REGION_SALES = {}
+for _d in DEALERS: REGION_SALES[_d[3]] = REGION_SALES.get(_d[3], 0) + _d[7]
+assert REGION_SALES == {'West Maharashtra': 1559000, 'North Maharashtra': 592000, 'Konkan': 476000, 'Vidarbha': 338000, 'Goa': 155000} and sum(REGION_SALES.values()) == 3120000
+
+# ---- Support tickets as Crestline's customer support sees them (agent Meera Kapoor; customer Distributor Alpha): number, created, subject, category, priority, updated, status ----
+STATUS_CHIP.update({'Awaiting Customer Reply': 'warn', 'Waiting for Decision': 'warn', 'New': 'blue', 'Rejected': 'bad'})
+CRL_TICKETS = [('TKT-2026-0731', '24/10/2026', 'Damaged Sheets in ORD-2026-10431', 'Delivery', 'High', '26/10/2026', 'In Progress'),
+               ('TKT-2026-0724', '22/10/2026', 'Invoice INV-2026-03264 Amount Query', 'Billing', 'Medium', '23/10/2026', 'Awaiting Customer Reply'),
+               ('TKT-2026-0702', '15/10/2026', 'Price Tier Review Request', 'Account', 'Low', '15/10/2026', 'Open'),
+               ('TKT-2026-0688', '09/10/2026', 'Dispatch Delay on ORD-2026-10398', 'Delivery', 'Medium', '12/10/2026', 'Resolved'),
+               ('TKT-2026-0655', '29/09/2026', 'GST Correction on INV-2026-03198', 'Billing', 'Medium', '01/10/2026', 'Closed'),
+               ('TKT-2026-0631', '21/09/2026', 'Festive Scheme Eligibility', 'Schemes', 'Low', '23/09/2026', 'Closed')]
+CRL_TICKETS_OPEN = [t for t in CRL_TICKETS if t[6] not in ('Resolved', 'Closed')]; assert len(CRL_TICKETS_OPEN) == 3
+
+# ---- Order Details (shared by the Super Admin and the Operations Manager): ORD-2026-10459, confirmed, packing and dispatch planned for today ----
+O59 = dict(number='ORD-2026-10459', placed='23/10/2026 14:35', placed_by='Rajesh Menon', confirmed='24/10/2026 10:05', confirmed_by='Vikram Chopra', packing='26/10/2026', dispatch='26/10/2026', expected='29/10/2026',
+           lines=ORDER_LINES['ORD-2026-10459'], total=336500, ref='DA-2026-121', deliver='Bhiwandi Warehouse, Thane District', transporter='Western Freight Carriers')
+O59_TAX = ORDER_TAX['ORD-2026-10459']
+_w59 = {s: q * slab(s, q) for s, q in O59['lines']}
+O59_AMT = {s: round(O59_TAX['taxable'] * w / sum(_w59.values())) for s, w in _w59.items()}
+_big59 = max(O59_AMT, key=O59_AMT.get); O59_AMT[_big59] += O59_TAX['taxable'] - sum(O59_AMT.values())
+assert O59_TAX['taxable'] + 2 * O59_TAX['gst'] + O59_TAX['freight'] == 336500 and sum(O59_AMT.values()) == O59_TAX['taxable'] and sum(q for _, q in O59['lines']) == 280
+CREDIT_AFTER_59 = 4000000 - OUTSTANDING - 336500; assert CREDIT_AFTER_59 == 2177180
+
+# ---- Users of the whole network (the directory): organisation, users. The seven other dealers and 19 other retailers have two users each, all Active ----
+USER_ORGS = [('Crestline Laminates', 'crestlinelaminates.example', CRL_USERS), ('Distributor Alpha', 'distributoralpha.example', AUSERS), ('Dealer Bravo', 'dealerbravo.example', BUSERS),
+             ('Retailer Charlie', 'retailercharlie.example', CUSERS)]
+USERS_NAMED = sum(len(o[2]) for o in USER_ORGS); assert USERS_NAMED == 18
+USERS_OTHER = 2 * (7 + 19)                                   # seven other dealers, Kiran Interiors, Mehta Furniture and the 17 other retailers
+USERS_ALL = USERS_NAMED + USERS_OTHER; assert USERS_ALL == 70
+USER_STATUS = {s: sum(1 for o in USER_ORGS for u in o[2] if u[4] == s) for s in ('Active', 'Invited', 'Inactive')}
+USER_STATUS['Active'] += USERS_OTHER; assert USER_STATUS == {'Active': 64, 'Invited': 3, 'Inactive': 3} and sum(USER_STATUS.values()) == USERS_ALL

@@ -49,6 +49,12 @@ and Notifications were checked as Owner, Manager and Accountant (each sees their
 notifications, matching the bell badge); Invoices Overview and Create User were also looked at at 390. Not yet checked in
 Firefox or Safari.
 
+## Shell fix made in Phase 3
+
+`P.setLink` in `assets/shell.js` compared the portal object with a portal id string, so a link to a screen the signed-in role
+cannot use (for example the Manager's "Add Dealer Request", Owner only) stayed live. It now compares ids, so such links are
+inert, as the shell's comments always said. Re-verified for every page (`node tools/verify.js` with no prefix: ALL OK).
+
 ## Data decisions made in Phase 3 (all in DATA.md)
 
 - **ORD-2026-10398 is now "Partly Paid" (was "Paid")** in Order History, the only change to a Phase 2 screen. Reason: the outstanding

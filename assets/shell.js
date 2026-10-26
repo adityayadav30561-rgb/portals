@@ -40,10 +40,10 @@
   // same portal, available to the signed-in role; otherwise it is shown inert (no href, muted, with a reason) so
   // nobody lands on a missing file and a link never changes who is signed in.
   P.setLink = function (a, target) {
-    var sameRole = target.portal !== p.id || target.screen.roles.indexOf(role) >= 0;
+    var sameRole = target.portal.id !== p.id || target.screen.roles.indexOf(role) >= 0;
     var ok = target.screen.built && sameRole;
     if (ok) {
-      var r = target.portal === p.id ? role : target.screen.roles[0];
+      var r = target.portal.id === p.id ? role : target.screen.roles[0];
       a.setAttribute('href', withKeep(P.href(root, target.screen, r)));
       a.removeAttribute('aria-disabled'); a.removeAttribute('title');
     } else {

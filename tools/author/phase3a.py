@@ -103,7 +103,7 @@ for d in sorted(DEALERS, key=lambda d: -d[7]):
     sh = d[7] / 3120000 * 100
     share_rows.append(f'<tr><td>{link("PRI-DLR-02", d[1])}</td><td>{d[2]}</td><td class="num">{N(DEALER_SHEETS[d[0]])}</td><td class="num"><b>{M(d[7])}</b></td>'
                       f'<td><span class="inline-meter"><span class="meter"><i style="width:{sh / 22 * 100:.0f}%"></i></span><b>{sh:.1f}%</b></span></td></tr>')
-top = sorted(SOLD, key=lambda s: -SOLD[s])[:8]
+top = sorted(SOLD, key=lambda s: -SOLD[s])[:7]
 top_rows = ''.join(f'<li>{sw(s, "", "width:2.5rem;height:2.5rem;flex:none")}<div class="grow"><b>{BY[s][1]}</b><span class="meter" style="margin-top:.5rem"><i style="width:{SOLD[s] / SOLD[top[0]] * 100:.0f}%"></i></span></div><b>{N(SOLD[s])}</b></li>' for s in top)
 fin_colors = {'Woodgrain': '#0b8fa8', 'Matte': '#0a48fd', 'Gloss': '#e0a030', 'Texture': '#7a36fb', 'High Gloss': '#d43a2f', 'Suede': '#0c9b6a', 'Metallic': '#8b93a3'}
 body = f'''  <div class="head">

@@ -97,7 +97,7 @@ body = f'''  <div class="head">
     <h1>Create Support Ticket</h1>
     <div class="acts">{cancel('PRI-SUP-01')}<button class="btn" type="button">Save Draft</button><button class="btn pri" type="button">Submit Ticket</button></div>
   </div>
-  <div class="grid g-main-side" style="--side:22rem">
+  <div class="grid g-main-side" style="--side:24rem">
     <div class="stack">
       {form('Ticket Details', fld('Subject', 'sb', 'Credit Note Missing for RTN-2026-0377', full=True), fld('Category', 'cg', 'Billing', 'select', ['Delivery', 'Billing', 'Account', 'Schemes', 'Product']), fld('Priority', 'pr', 'Medium', 'select', ['Low', 'Medium', 'High']),
             fld('Related Order', 'ro', 'ORD-2026-10372', 'select', ['None', 'ORD-2026-10482', 'ORD-2026-10459', 'ORD-2026-10447', 'ORD-2026-10431', 'ORD-2026-10372']), fld('Related Invoice', 'ri', 'INV-2026-03233', 'select', ['None', 'INV-2026-03318', 'INV-2026-03291', 'INV-2026-03264', 'INV-2026-03233']),

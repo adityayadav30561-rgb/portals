@@ -92,7 +92,9 @@ and the ticket description, which are user content).
    and payment modes; Charlie's stock levels and reorder levels; the offers OFR-2026-01 and 02 from Dealer Bravo; Store Profile legal name (Charlie Laminates Private Limited), code RTL-0041, established 2018.
 9. **Phase 9 placeholders (new):** the letter "B" for documents Bravo issues to retailers; Charlie's payments, returns and tickets; the offers OFR-2026-03 (Monsoon, ₹1,880) and 04 (Winter); the five users (Mohit Gawande invited, Sneha Ranpise inactive); the 13-area access matrix.
 10. **Phase 11 decisions (new):** the scope and data choices listed under "Where we are"; also the 17 retailer names, owners and purchases, Dealer Omkar's details, DRQ-2026-0014 and 0011, the Taloja warehouse and company stock, Vikram Chopra's user history.
-11. Earlier answers applied from my recommendations (change if you disagree): Marble Finish Launch Incentive 140 of 300; Dealer Lakshya not in
+11. **Sales Manager and approvals (new, your call):** the registry gives the Sales Manager neither Order Details (Super Admin and Operations Manager) nor the Customer Approval Queue (Super Admin only), yet Vikram Chopra confirms orders and approves dealer requests in the Phase 11 data. Recommendation: tag the Sales Manager onto Customer Approval Queue (as the Managers were tagged onto existing screens in Phase 2) and give Sales Order Overview (SAL-09) a Confirm action in Phase 13. Adding a role to a screen changes the per-role counts in PLAN.md, so it waits for you.
+12. Order Management's "Orders by Tier" shows an order-count total only (93); a value total across tiers would count the same sheets up to three times.
+13. Earlier answers applied from my recommendations (change if you disagree): Marble Finish Launch Incentive 140 of 300; Dealer Lakshya not in
    Pending Dealer Requests; Financial Reports May to October; May to September tax split kept.
 
 ## Next

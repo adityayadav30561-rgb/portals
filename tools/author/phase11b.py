@@ -24,7 +24,7 @@ body = f'''  <div class="head">
     {tabs([('All Users', USERS_ALL, True), ('Active', USER_STATUS['Active'], False), ('Invited', USER_STATUS['Invited'], False), ('Inactive', USER_STATUS['Inactive'], False)])}
     {filters('Search by name, email address or organisation', 'Search users', ('Organisation', 'All'), ('Role', 'All'), ('Sort by', 'Organisation'))}
     <div class="body">{table([('Name', ''), ('Organisation', ''), ('Role', ''), ('Email Address', ''), ('Last Sign-In', ''), ('Status', '')], [urows], 'wrap')}
-      {pager(f'Showing 1 to 12 of {USERS_ALL} users')}</div>
+      <div class="pg"><span>Showing 1 to 12 of {USERS_ALL} users</span><div class="pages"><span class="on">1</span><span>2</span><span>3</span><span>…</span><span>{-(-USERS_ALL // 12)}</span></div></div></div>
   </section>
 '''
 page('company', 'user-directory', 'CMP-USR-01', 'Company Administration — Super Admin — User Directory (CMP-USR-01)', body)
@@ -86,13 +86,15 @@ tier_rows = (f'<tr><td><b>Primary Distributor Tier A</b></td><td>Crestline Lamin
              f'<tr><td><b>Retailer Tier C</b></td><td>Dealer Bravo</td><td class="num"><b>{M(rp(sku))}</b></td></tr>')
 ordered = [(o, q) for o, ls in ORDER_LINES.items() for s, q in ls if s == sku]
 assert sum(q for _, q in ordered) == BOUGHT[sku] == 600 and len(ordered) == 5
+res_orders = [o for o in ('ORD-2026-10482', 'ORD-2026-10459') if any(s == sku for s, _ in ORDER_LINES[o])]
+assert len(res_orders) == 1 and sum(q for s, q in ORDER_LINES[res_orders[0]] if s == sku) == st['reserved']
 body = f'''  <div class="head">
     <div class="title-row"><h1>{p[1]}</h1>{chip(st["status"])}</div>
     <div class="acts"><button class="btn" type="button"><i data-icon="download"></i>Download Specification</button><a class="btn pri" data-link="CMP-PRD-04"><i data-icon="edit"></i>Edit Product</a></div>
   </div>
   <div class="kpis">
     {kpi('Available Sheets', N(st['available']))}
-    {kpi('Reserved for Orders', N(st['reserved']), chip('2 orders', 'plain'))}
+    {kpi('Reserved for Orders', N(st['reserved']), chip(f'{len(res_orders)} order' + ('s' if len(res_orders) != 1 else ''), 'plain'))}
     {kpi('Sheets Ordered This Month', N(BOUGHT[sku]), chip(f'{len(ordered)} orders', 'plain'))}
     {kpi('Reorder Level', N(st['level']))}
   </div>

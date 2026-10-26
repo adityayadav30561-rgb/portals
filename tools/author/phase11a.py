@@ -80,7 +80,7 @@ body = f'''  <div class="head">
     <div class="acts"><button class="btn" type="button"><i data-icon="download"></i>Download Customer Profile</button><button class="btn" type="button"><i data-icon="edit"></i>Edit Customer</button><button class="btn danger" type="button">Place on Hold</button></div>
   </div>
   <div class="kpis">
-    {kpi('Orders This Month', ML(PURCH_MONTH[-1]), up(pct(PURCH_MONTH[-1], PURCH_MONTH[-2])))}
+    {kpi('Order Value This Month', ML(PURCH_MONTH[-1]), up(pct(PURCH_MONTH[-1], PURCH_MONTH[-2])))}
     {kpi('Outstanding Balance', ML(OUTSTANDING), '<span class="delta down">2 Overdue</span>')}
     {kpi('Credit Limit', ML(CREDIT_LIMIT), chip(f'{used}% Used', 'plain'))}
     {kpi('Dealers', str(CUS_TYPE['Dealer']), chip(f'{CUS_TYPE["Retailer"]} Retailers', 'plain'))}
@@ -96,7 +96,7 @@ body = f'''  <div class="head">
     <div class="body">{table([('Order Number', ''), ('Order Date', ''), ('Sheets', 'num'), ('Value', 'num'), ('Delivery Date', ''), ('Order Status', ''), ('Payment', '')], [order_rows], 'wrap')}</div></section>
   <div class="grid g-main-side" style="--side:26rem">
     <section class="card flush"><header><h2>Dealers</h2><a class="more" data-link="CMP-CUS-04">Customer hierarchy</a></header>
-      <div class="body">{table([('Dealer', ''), ('City', ''), ('Status', ''), ('Retailers', 'num'), ('Orders This Month', 'num')], [dealer_rows], 'wrap', foot=dealer_foot)}</div></section>
+      <div class="body">{table([('Dealer', ''), ('City', ''), ('Status', ''), ('Retailers', 'num'), ('Purchases This Month', 'num')], [dealer_rows], 'wrap', foot=dealer_foot)}</div></section>
     <div class="stack">
       <section class="card flush"><header><h2>Contacts</h2></header><div class="body">{table([('Name', ''), ('Role', ''), ('Phone', '')], [f'<tr><td class="nowrap"><b>{n}</b></td><td>{r}</td><td class="nowrap">{p}</td></tr>' for n, r, p in contacts], 'wrap')}</div></section>
       <section class="card flush"><header><h2>Documents</h2></header><div class="body">{table([('Document', ''), ('Type', ''), ('Date', '')], [f'<tr><td><b>{n}</b></td><td>{t}</td><td class="nowrap">{d}</td></tr>' for n, t, d in docs], 'wrap')}</div></section>

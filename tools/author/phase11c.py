@@ -7,7 +7,7 @@ chain = [('Primary', 'Crestline Laminates', 'Distributor Alpha', ORDERS_BY_TIER[
          ('Secondary', 'Distributor Alpha', f'{CUS_TYPE["Dealer"]} Dealers', ORDERS_BY_TIER['Secondary'], VALUE_BY_TIER['Secondary']),
          ('Tertiary', f'{CUS_TYPE["Dealer"]} Dealers', f'{CUS_TYPE["Retailer"]} Retailers', ORDERS_BY_TIER['Tertiary'], VALUE_BY_TIER['Tertiary'])]
 chain_rows = ''.join(f'<tr><td><b>{t}</b></td><td>{s}</td><td>{b}</td><td class="num">{n}</td><td class="num"><b>{M(v)}</b></td><td class="num">1</td></tr>' for t, s, b, n, v in chain)
-chain_foot = f'<tfoot><tr><td colspan="3">Total</td><td class="num">{ORDERS_ALL}</td><td class="num">{M(sum(c[4] for c in chain))}</td><td class="num">3</td></tr></tfoot>'
+chain_foot = f'<tfoot><tr><td colspan="3">Total</td><td class="num">{ORDERS_ALL}</td><td></td><td class="num">3</td></tr></tfoot>'
 AW_DATE = {'ORD-2026-10482': '26/10/2026', NEW_ORDER: '26/10/2026', PEND_ORDER['number']: '26/10/2026'}
 aw_rows = ''.join(f'<tr><td class="mono nowrap"><b>{o[0]}</b></td><td>{o[1]}</td><td>{o[3]}</td><td>{o[2]}</td><td>{AW_DATE[o[0]]}</td><td class="num"><b>{M(o[4])}</b></td></tr>' for o in AWAITING)
 aw_foot = f'<tfoot><tr><td colspan="5">Total</td><td class="num">{M(sum(o[4] for o in AWAITING))}</td></tr></tfoot>'

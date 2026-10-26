@@ -116,13 +116,13 @@ page('primary', 'payment-details', 'PRI-BIL-04', 'Primary Customer — Owner —
 # ---------- Schemes and Incentives ----------
 SCH = [  # number, name, type, start, end, status, done, goal, reward text
  ('SCH-2026-04', 'Festive Volume Rebate', 'Volume Rebate', '01/10/2026', '30/11/2026', 'Active', 2750, 2500, '2% rebate'),
- ('SCH-2026-05', 'Marble Finish Launch Incentive', 'Product Incentive', '01/09/2026', '31/12/2026', 'Active', 180, 300, f'{M(4500)} earned'),
+ ('SCH-2026-05', 'Marble Finish Launch Incentive', 'Product Incentive', '01/09/2026', '31/12/2026', 'Active', 140, 300, f'{M(3500)} earned'),
  ('SCH-2026-06', 'Winter Season Volume Bonus', 'Volume Bonus', '01/12/2026', '31/01/2027', 'Upcoming', 0, 3500, '3% bonus'),
  ('SCH-2026-02', 'Monsoon Fast Mover Bonus', 'Product Incentive', '01/07/2026', '30/09/2026', 'Completed', 2550, 2400, f'{M(38250)} credited'),
  ('SCH-2026-01', 'Summer Stock Incentive', 'Volume Incentive', '01/04/2026', '30/06/2026', 'Completed', 2310, 2000, f'{M(46200)} credited'),
 ]
-assert 180 * 25 == 4500 and 2550 * 15 == 38250 and 2310 * 20 == 46200
-earned = 4500 + 38250 + 46200
+assert 140 * 25 == 3500 and 2550 * 15 == 38250 and 2310 * 20 == 46200
+earned = 3500 + 38250 + 46200
 def prog(done, goal):
     pc = min(100, round(done / goal * 100))
     return f'<span class="inline-meter" style="justify-content:flex-start"><span class="meter {"ok" if done >= goal else ""}"><i style="width:{pc}%"></i></span><span style="white-space:nowrap"><b style="min-width:0">{N(done)}</b> of {N(goal)}</span></span>'

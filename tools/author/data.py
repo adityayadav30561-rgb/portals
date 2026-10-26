@@ -483,3 +483,95 @@ DISPUTES = [  # number, invoice, raised, reason, invoice amount, disputed amount
 assert 20 * 905 + 2 * round(0.09 * 20 * 905) == 21358                                  # 20 sheets of LM-ARC-002 at the 50-199 price, with Central and State GST
 OPEN_DISPUTES = [d for d in DISPUTES if d[6] != 'Resolved']
 assert len(OPEN_DISPUTES) == 2 and sum(d[5] for d in OPEN_DISPUTES) == 38350
+
+
+# =====================================================================================================================
+# Phase 5 data (docs/DATA.md: "Phase 5 data"). Secondary Customer: Dealer Bravo, Pune. Orders to Distributor Alpha are the Alpha
+# sales ledger rows of Dealer Bravo (the sale number is the order number and the invoice number); retailers and their sales are new.
+# =====================================================================================================================
+def rp(sku):
+    """Retailer price per sheet before GST (Retailer Tier C): the Dealer Tier B price plus 12%, to the nearest rupee 5."""
+    return round(dp(sku) * 1.12 / 5) * 5
+
+BRV_SALES = [s for s in SALES if s['dealer'] == 'BRV']                      # newest first, 6 orders, 480 sheets, ₹6,84,000
+assert len(BRV_SALES) == 6 and sum(s['sheets'] for s in BRV_SALES) == 480
+BRV_PURCH_MONTH = [520000, 590000, 480000, 630000, 610000, 684000]
+BRV_RETAIL_MONTH = [510000, 560000, 470000, 600000, 600000, 630000]       # Bravo's sales to its retailers by month
+
+# The order placed on 26/10/2026 (Place Order, Order Builder, Order Confirmation); awaiting confirmation, so not yet a sale in the Alpha ledger
+NEW_ORDER = 'SAL-2026-3042'
+NEW_LINES = [('LM-WNT-001', 60), ('LM-ARC-002', 80), ('LM-OAK-004', 40), ('LM-TEK-006', 30)]
+NEW_SUB = sum(q * dp(s) for s, q in NEW_LINES); NEW_GST = round(NEW_SUB * 0.09); NEW_TOTAL = NEW_SUB + 2 * NEW_GST
+assert (NEW_SUB, NEW_GST, NEW_TOTAL) == (249000, 22410, 293820) and sum(q for _, q in NEW_LINES) == 210
+BRV_LIMIT = 800000; BRV_OWES = DEALER_OWES['BRV']
+assert BRV_OWES == 260000 and BRV_LIMIT - BRV_OWES - NEW_TOTAL == 246180
+# Order SAL-2026-3040 (Order Details): dealer-price lines, a trade discount (the difference to the ledger value), then GST
+O40 = BRV_SALES[0]; assert O40['number'] == 'SAL-2026-3040' and O40['value'] == 137000
+O40_SUB = sum(q * dp(s) for s, q in O40['lines']); O40_TAX = 116102; O40_GST = round(0.09 * O40_TAX)
+O40_DISC = O40_SUB - O40_TAX
+assert (O40_SUB, O40_DISC, O40_GST) == (119700, 3598, 10449) and O40_TAX + 2 * O40_GST == 137000
+
+# ---- Bravo's stock (sheets): sku -> on hand, reserved for retailers, reorder level. On order = the two open orders above. ----
+_BS = {'LM-WNT-001': (180, 45, 80), 'LM-ARC-002': (240, 60, 100), 'LM-CAL-003': (38, 12, 40), 'LM-OAK-004': (95, 20, 60), 'LM-SLT-005': (60, 15, 40),
+       'LM-TEK-006': (110, 25, 60), 'LM-CHR-007': (22, 10, 40), 'LM-IVR-008': (140, 30, 80), 'LM-STN-009': (0, 0, 30), 'LM-CPR-010': (18, 6, 20),
+       'LM-WNG-011': (85, 20, 50), 'LM-SKY-012': (70, 18, 40)}
+BRV_ON_ORDER = {}
+for _s, _q in O40['lines'] + NEW_LINES: BRV_ON_ORDER[_s] = BRV_ON_ORDER.get(_s, 0) + _q
+BSTOCK = {}
+for _s, (_h, _r, _l) in _BS.items():
+    _av = _h - _r
+    BSTOCK[_s] = dict(on_hand=_h, reserved=_r, available=_av, on_order=BRV_ON_ORDER.get(_s, 0), level=_l,
+                      status='Out of Stock' if _h == 0 else 'Low Stock' if _av < _l else 'In Stock')
+assert sum(b['on_hand'] for b in BSTOCK.values()) == 1058 and sum(b['reserved'] for b in BSTOCK.values()) == 261
+assert sum(b['on_order'] for b in BSTOCK.values()) == 310
+assert [s for s, b in BSTOCK.items() if b['status'] == 'Low Stock'] == ['LM-CAL-003', 'LM-CHR-007', 'LM-CPR-010'] and BSTOCK['LM-STN-009']['status'] == 'Out of Stock'
+BSTOCK_VALUE = sum(b['on_hand'] * dp(s) for s, b in BSTOCK.items())             # at Bravo's cost (dealer price)
+BFINISH = {}
+for _s, _b in BSTOCK.items(): BFINISH[BY[_s][2]] = BFINISH.get(BY[_s][2], 0) + _b['on_hand']
+assert sum(BFINISH.values()) == 1058
+
+# ---- Retailers of Dealer Bravo and the October sales to them (newest first; numbers TSL-2026-0401 to 0412) ----
+# key, name, area, city, owner, since, credit limit, credit period (days), September sales, monthly sales May to October
+RETAILERS = [
+ ('CHR', 'Retailer Charlie', 'Camp', 'Pune', 'Imran Sheikh', '11/05/2021', 300000, 15, 240000, [190000, 210000, 175000, 230000, 240000, 264000]),
+ ('KIR', 'Retailer Kiran Interiors', 'Kothrud', 'Pune', 'Kiran Desai', '03/02/2022', 250000, 15, 195000, [165000, 180000, 150000, 185000, 195000, 210000]),
+ ('MEH', 'Retailer Mehta Furniture', 'Pimpri Chinchwad', 'Pimpri', 'Nilesh Mehta', '19/09/2022', 200000, 15, 165000, [155000, 170000, 145000, 185000, 165000, 156000]),
+]
+RTL = {r[0]: r for r in RETAILERS}
+assert [sum(r[9][i] for r in RETAILERS) for i in range(6)] == BRV_RETAIL_MONTH and sum(r[8] for r in RETAILERS) == 600000
+_TSPEC = {'CHR': [(25, 62000, 'U'), (19, 58000, 'P'), (12, 52000, 'P'), (6, 49000, 'P'), (1, 43000, 'P')],
+          'KIR': [(24, 48000, 'U'), (16, 55000, 'P'), (9, 60000, 'P'), (2, 47000, 'P')],
+          'MEH': [(21, 62000, 'P'), (13, 50000, 'P'), (4, 44000, 'P')]}
+_TSHEETS = {'CHR': 155, 'KIR': 125, 'MEH': 90}
+TSALES = []
+for _k, _rows in _TSPEC.items():
+    assert sum(r[1] for r in _rows) == RTL[_k][9][-1]
+    _sh = [round(v / (630000 / 370) / 5) * 5 for _, v, _p in _rows]; _sh[-1] += _TSHEETS[_k] - sum(_sh)
+    for (_d, _v, _p), _n in zip(_rows, _sh):
+        TSALES.append(dict(retailer=_k, day=_d, value=_v, paid=_v if _p == 'P' else 0, sheets=_n, date=f'{_d:02d}/10/2026', payment='Paid' if _p == 'P' else 'Unpaid'))
+TSALES.sort(key=lambda s: (s['day'], list(RTL).index(s['retailer'])))
+for _i, _s in enumerate(TSALES): _s['number'] = f'TSL-2026-{401 + _i:04d}'
+TSALES.reverse()
+assert len(TSALES) == 12 and sum(s['value'] for s in TSALES) == 630000 and sum(s['sheets'] for s in TSALES) == 370 and TSALES[0]['number'] == 'TSL-2026-0412'
+RTL_SHEETS = {k: sum(s['sheets'] for s in TSALES if s['retailer'] == k) for k in RTL}
+RTL_OWES = {k: sum(s['value'] - s['paid'] for s in TSALES if s['retailer'] == k) for k in RTL}
+RTL_LAST = {k: next(s['date'] for s in TSALES if s['retailer'] == k) for k in RTL}
+assert RTL_OWES == {'CHR': 62000, 'KIR': 48000, 'MEH': 0} and RTL_SHEETS == _TSHEETS
+
+# ---- Inventory Item Details for Bravo (LM-CAL-003): receipt from Alpha, sales to retailers, balance walking back from 38 on hand ----
+_CAL_RETAIL = {'TSL-2026-0412': 6, 'TSL-2026-0410': 4, 'TSL-2026-0408': 5, 'TSL-2026-0406': 8, 'TSL-2026-0405': 6, 'TSL-2026-0402': 4}
+BCAL = []
+for _s in TSALES:
+    if _s['number'] in _CAL_RETAIL:
+        assert _CAL_RETAIL[_s['number']] <= _s['sheets']
+        BCAL.append(dict(date=_s['date'], type='Sale to Retailer', who=RTL[_s['retailer']][1], ref=_s['number'], sheets=-_CAL_RETAIL[_s['number']]))
+BCAL.append(dict(date='10/10/2026', type='Receipt', who='Distributor Alpha', ref='SAL-2026-3021', sheets=25))      # delivered two days after the 08/10 dispatch
+BCAL.sort(key=lambda m: pd(m['date']), reverse=True)
+_b = 38
+for _m in BCAL: _m['balance'] = _b; _b -= _m['sheets']
+BCAL_OPEN = _b
+assert BCAL_OPEN == 46
+BCAL_SOLD = -sum(m['sheets'] for m in BCAL if m['sheets'] < 0)
+
+# ---- Bravo's retailer request (Add Retailer Request) and schemes from Distributor Alpha ----
+RETAILER_REQUEST = ('Retailer Dhruv Interiors', 'Wakad', 'Pune', 'Dhruv Patil', '27AAHFD6620L1Z8', 150000, 60)

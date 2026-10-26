@@ -89,7 +89,7 @@ returns `RTN-2026-0412`; support tickets `TKT-2026-0731`; schemes `SCH-2026-04`;
 - Purchases from Crestline by month: May 22,10,000; June 25,60,000; July 19,80,000; August 27,40,000; September 24,30,000; October **33,52,882** (to 26 October).
 - Sales to dealers by month: May 24,80,000; June 28,10,000; July 22,40,000; August 30,60,000; September 27,90,000; October **31,20,000**.
 - Orders: 142 in total: Awaiting Confirmation 2, Confirmed 3, In Transit 2, Delivered 132, Cancelled 3.
-- Schemes: **Festive Volume Rebate** (`SCH-2026-04`): 2% rebate on orders once 2,500 sheets are reached across October and November (changed from 3,000 on 2026-10-26 by the user); progress 2,750 of 2,500 sheets: **target reached**, 250 above. ORD-2026-10482 is the order that takes the total over the target (1,990 before it), so the rebate applies to that order only (−₹16,426); earlier invoices are not changed. **Marble Finish Launch Incentive**: ₹25 per sheet of LM-CAL-003, progress 180 of 300 sheets.
+- Schemes: **Festive Volume Rebate** (`SCH-2026-04`): 2% rebate on orders once 2,500 sheets are reached across October and November (changed from 3,000 on 2026-10-26 by the user); progress 2,750 of 2,500 sheets: **target reached**, 250 above. ORD-2026-10482 is the order that takes the total over the target (1,990 before it), so the rebate applies to that order only (−₹16,426); earlier invoices are not changed. **Marble Finish Launch Incentive**: ₹25 per sheet of LM-CAL-003, progress 140 of 300 sheets.
 
 ## Order flow (Place Order → Order Builder → Order Confirmation)
 
@@ -218,7 +218,7 @@ ORD-2026-10431 lines (520 sheets): WNT 120, ARC 150, CAL 60, OAK 100, TEK 90 (th
 | Scheme | Type | Period | Status | Progress / result |
 |---|---|---|---|---|
 | SCH-2026-04 Festive Volume Rebate | Volume Rebate, 2% | 01/10/2026 to 30/11/2026 | Active | 2,750 of 2,500 sheets (the six October orders: 760 + 280 + 360 + 520 + 430 + 400), target reached, 250 above, 35 days left |
-| SCH-2026-05 Marble Finish Launch Incentive | Product Incentive, ₹25 per sheet of LM-CAL-003 | 01/09/2026 to 31/12/2026 | Active | 180 of 300 sheets, earned ₹4,500 |
+| SCH-2026-05 Marble Finish Launch Incentive | Product Incentive, ₹25 per sheet of LM-CAL-003 | 01/09/2026 to 31/12/2026 | Active | 140 of 300 sheets (60 delivered on 20/10 plus the 80 on ORD-2026-10482; changed from 180 on 2026-10-26 so it agrees with the stock history), earned ₹3,500 |
 | SCH-2026-06 Winter Season Volume Bonus | Volume Bonus, 3% | 01/12/2026 to 31/01/2027 | Upcoming | target 3,500 sheets |
 | SCH-2026-02 Monsoon Fast Mover Bonus | Product Incentive, ₹15 per sheet | 01/07/2026 to 30/09/2026 | Completed | 2,550 of 2,400 sheets, ₹38,250 credited |
 | SCH-2026-01 Summer Stock Incentive | Volume Incentive, ₹20 per sheet | 01/04/2026 to 30/06/2026 | Completed | 2,310 of 2,000 sheets, ₹46,200 credited |
@@ -266,3 +266,25 @@ Every dealer sale is split into product lines (`SALES[..]['lines']`; sum per sal
 **Credit notes** (the Phase 3 return credits, ₹42,340): CN-2026-0103 16/10 RTN-2026-0377 ORD-2026-10372 ₹18,000; CN-2026-0098 09/10 RTN-2026-0361 ORD-2026-10341 ₹10,550; CN-2026-0091 24/09 RTN-2026-0319 ORD-2026-10290 ₹13,790.
 **Invoice disputes** (series `DIS-2026-0014`; disputed amounts stay inside the invoice balances): DIS-2026-0014 INV-2026-03264, 22/10, Wrong Product Delivered (20 sheets of LM-ARC-002 from ORD-2026-10398, return RTN-2026-0396; 20 × ₹905 = ₹18,100 + Central GST ₹1,629 + State GST ₹1,629 = **₹21,358**), Awaiting Your Reply, related ticket TKT-2026-0724; DIS-2026-0011 INV-2026-03021, 10/10, Quantity Shortfall, ₹16,992, Under Review; DIS-2026-0007 INV-2026-03198, 29/09, Tax Amount Mismatch, ₹4,284, Resolved. **Open disputes 2, ₹38,350.** Dispute Details shows DIS-2026-0014 (four messages, two attachments).
 **Record Payment** is pre-filled with the two overdue invoices (₹1,86,400 + ₹1,32,000 = ₹3,18,400), Bank Transfer from Sahyadri Bank, Bhiwandi Branch; after it the balance would be ₹11,67,920 and nothing overdue.
+
+## Phase 5 data (Secondary Customer: Dealer Bravo, Pune; model in `tools/author/data.py`, section "Phase 5")
+
+**Orders to Distributor Alpha are the Alpha sales ledger rows of Dealer Bravo.** The sale number is the order number and the invoice number (`SAL-2026-3040`).
+Bravo's six October orders (SAL-2026-3010, 3017, 3021, 3029, 3033, 3040; 480 sheets, ₹6,84,000; owes ₹2,60,000 = 3033 + 3040); September ₹6,10,000; monthly purchases May to October
+5,20,000; 5,90,000; 4,80,000; 6,30,000; 6,10,000; 6,84,000. Order History also shows SAL-2026-3006 (30/09, 95 sheets, ₹1,35,500), 2999 (22/09, 105, ₹1,48,000) and 2990 (14/09, 75, ₹1,06,500), all Paid.
+Counts for the tabs: 212 orders (1 Awaiting Confirmation, 1 In Transit, 208 Delivered, 2 Cancelled). Orders This Month 6 (₹6.84 lakh); an order awaiting confirmation is not counted until confirmed.
+**The order placed on 26/10/2026 16:05 by Sunita Rao is `SAL-2026-3042`** (Awaiting Confirmation, delivery requested 30/10): WNT 60, ARC 80, OAK 40, TEK 30 = 210 sheets at the dealer price (Dealer Tier B, `dp()`; no volume slabs): subtotal ₹2,49,000, Central GST ₹22,410, State GST ₹22,410, **total ₹2,93,820**, freight free; credit available after it ₹2,46,180 (limit ₹8,00,000, owes ₹2,60,000). Alpha's Dealer Order Activity and Manager Dashboard show it as the one order awaiting confirmation; the Alpha ledger (32 sales, ₹31,20,000) is unchanged.
+**Order Details shows SAL-2026-3040** (CAL 25, SKY 10, ARC 65; subtotal ₹1,19,700 at dealer prices, trade discount −₹3,598, taxable ₹1,16,102, Central GST and State GST ₹10,449 each, total ₹1,37,000, issued 24/10, due 23/11, dispatched 24/10 17:45 as DSP-2026-5527, expected 26/10, vehicle MH 12 QR 4418, driver Santosh Gaikwad, +91 90000 12346).
+Retailer price (Retailer Tier C, `rp()`) = dealer price + 12%, to the nearest ₹5.
+
+**Bravo's stock (sheets; on hand / reserved for retailers / reorder level; on order from the two open orders):** WNT 180/45/80 (on order 60); ARC 240/60/100 (145); CAL 38/12/40 (25); OAK 95/20/60 (40); SLT 60/15/40; TEK 110/25/60 (30); CHR 22/10/40; IVR 140/30/80; STN 0/0/30; CPR 18/6/20; WNG 85/20/50; SKY 70/18/40 (10).
+Total on hand **1,058**, reserved 261, on order 310, stock value at dealer price ₹12,55,785. Status rule: Out of Stock at 0 on hand; Low Stock when available is below the reorder level (CAL, CHR, CPR); 8 In Stock, 3 Low, 1 Out, as for Alpha.
+**Inventory Item Details (LM-CAL-003):** 38 on hand, 26 available, receipt +25 on 10/10 (SAL-2026-3021), six sales to retailers (−33 in October), balance 46 at the start of October, batches B-2610-19 (10/10, 25) and B-2609-08 (12/09, 13), reorder 100 sheets, 2 days lead time, 20 days of cover.
+
+**Retailers of Dealer Bravo** (Retailer Tier C, credit period 15 days): Retailer Charlie (Camp, Pune; Imran Sheikh; since 11/05/2021; limit ₹3,00,000; GST 27AAJCC4410E1ZK; Shop 12, MG Road, Camp, Pune, Postal Code 411001; contacts Imran Sheikh Retailer Owner +91 90000 51001, Pooja Verma Sales Executive 51002, Faisal Khan Inventory and Purchasing Executive 51003);
+Retailer Kiran Interiors (Kothrud, Pune; Kiran Desai; 03/02/2022; ₹2,50,000); Retailer Mehta Furniture (Pimpri Chinchwad, Pimpri; Nilesh Mehta; 19/09/2022; ₹2,00,000).
+**Bravo's sales to retailers (October ₹6,30,000, 370 sheets, September ₹6,00,000):** Charlie ₹2,64,000 (155 sheets; September 2,40,000), Kiran ₹2,10,000 (125; 1,95,000), Mehta ₹1,56,000 (90; 1,65,000). Monthly May to October: total 5,10,000; 5,60,000; 4,70,000; 6,00,000; 6,00,000; 6,30,000 (Charlie 1,90,000; 2,10,000; 1,75,000; 2,30,000; 2,40,000; 2,64,000).
+Twelve sales `TSL-2026-0401` to `0412` (newest 0412, Charlie 25/10, ₹62,000, unpaid); owed ₹1,10,000 (Charlie ₹62,000 = TSL-0412, Kiran ₹48,000 = TSL-0411, Mehta nil). Phase 6 builds on this ledger.
+**Dealer schemes from Distributor Alpha:** `SCH-2026-07` Dealer Festive Volume Rebate (1% once 750 sheets, 01/10 to 30/11/2026; progress 690 of 750 = 480 recorded + 210 on SAL-2026-3042, so the rebate is not yet earned); `SCH-2026-08` Marble Finish Dealer Incentive (₹15 per sheet of LM-CAL-003, 01/10 to 31/12/2026; 50 of 100 sheets, earned ₹750).
+**Add Retailer Request:** Retailer Dhruv Interiors, Wakad, Pune, Dhruv Patil, GST 27AAHFD6620L1Z8, requested credit ₹1,50,000, 60 sheets a month, 2 of 3 documents; path: Dealer Review Arjun Nair, Distributor Approval Kavita Joshi.
+**Dealer Bravo profile:** customer code CUS-0127, legal name Bravo Laminate Traders, established 2015, GST 27AAKFB3318D1ZP, credit used 32% (₹2,60,000 of ₹8,00,000).

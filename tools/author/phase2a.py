@@ -55,7 +55,7 @@ body = f'''  <div class="head">
     <section class="card"><header><h2>Active Schemes</h2><a class="more" data-link="PRI-SCH-01">All schemes</a></header>
       <div class="body"><ul class="list">
         {scheme('Festive Volume Rebate','30/11/2026',2750,2500,100,'ok')}
-        {scheme('Marble Finish Launch Incentive','31/12/2026',180,300,60,'')}
+        {scheme('Marble Finish Launch Incentive','31/12/2026',140,300,47,'')}
       </ul></div></section>
   </div>
 '''

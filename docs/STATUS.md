@@ -4,14 +4,14 @@ _Last updated: 2026-10-26. Update at the end of every task and phase._
 
 ## Where we are
 
-**Phase 4 (Primary Manager and Accountant) is built and verified; waiting for the user's approval before Phase 5** (Secondary Owner,
-part 1). 61 of 196 screens are built: 9 sign-in screens, the 11 Phase 2 screens, the 24 Phase 3 screens and the 17 Phase 4 screens.
-**The Primary Distributor portal is complete (52 screens, all three roles).** All open by double-click from disk.
+**Phase 5 (Secondary Owner, part 1) is built and verified; waiting for the user's approval before Phase 6** (Secondary Owner, part 2). The user
+said "continue" after Phase 4, taken as approval of Phase 4. 75 of 196 screens are built: 9 sign-in screens, the 11 Phase 2, 24 Phase 3 and
+17 Phase 4 screens (Primary Distributor complete, 52) and the 14 Phase 5 screens of the Secondary Dealer portal.
 
-Phase 4 screens (17): Manager (Sales and Operations Manager): Dashboard, Low Stock Overview, Stock Movement History, Dispatch Overview,
-Dealer Order Activity, Dealer Performance, Pending Dealer Requests. Accountant: Dashboard, Purchase History, Outstanding Balances,
-Overdue Invoices, Record Payment, Invoice Ageing Report, Purchase Summary Report, Financial Reports, Invoice Disputes, Invoice
-Dispute Details. Generators: `tools/author/phase4a.py` (Manager) and `phase4b.py` (Accountant). New data is in DATA.md, "Phase 4 data".
+Phase 5 screens (14, in `tools/author/phase5a.py`; the ones shared with the Secondary Manager open with `?role=MGR`): Dashboard, Company
+Profile, Product Catalogue, Product Details, Place Order, Order Builder, Order Confirmation, Order History, Order Details, Inventory Overview,
+Inventory Item Details, Retailer Network, Retailer Details, Add Retailer Request. (PLAN.md said "about 17"; the registry has 14 for this scope.)
+Dealer Bravo's data (orders are the Alpha sales ledger rows, stock, retailers, the twelve retailer sales) is in DATA.md, "Phase 5 data".
 
 ## What exists
 
@@ -41,12 +41,13 @@ Dispute Details. Generators: `tools/author/phase4a.py` (Manager) and `phase4b.py
 - To add a screen: write it in a generator, add its ID to `BUILT`, run `node tools/inventory.mjs` and
   `node tools/verify.js <folder> <ID prefix>`, and look at the screenshots.
 
-## Verified in Phase 4
+## Verified in Phase 5
 
-`node tools/verify.js <folder>` with no filter: ALL OK (every built screen, every role that sees it, 1440, 1366 × 768 and 390 px over
-`file://`). Every Phase 4 screen was looked at in a screenshot at 1440; the Manager Dashboard and Record Payment also at 390 (tables scroll
-inside their cards on the phone, as designed). The Owner Dashboard, Inventory Item Details and Schemes screens were looked at again after
-the changes below. Not yet checked in Firefox or Safari.
+`node tools/verify.js <folder>` with no filter: ALL OK (1440, 1366 × 768 and 390 px over `file://`, every built screen and role). Every Phase 5
+screen's 1440 screenshot was looked at for Dashboard, Order Details, Inventory Item Details, Retailer Network and Retailer Details; the rest
+only passed the automated checks and should be looked at when approving. Not yet checked in Firefox or Safari.
+
+Phase 4 was verified the same way (see git log).
 
 ## Changes to Phase 2 and 3 screens made in Phase 4 (user's answers to the Phase 3 open items, 2026-10-26)
 
@@ -69,21 +70,23 @@ and the ticket description, which are user content).
 
 ## Open items for the user
 
-1. **Marble Finish Launch Incentive progress (180 of 300 sheets since 01/09)** cannot be traced to receipts: Calacatta Item Details shows
-   no receipt between 24/08 and 20/10 (60 sheets). The ORD-2026-10482 order (80 sheets, not yet delivered) and 10431 (60) account for 140 at
-   most. Say whether to lower the progress to 140, or add a September order of 40 sheets to the history.
-2. **Dealer Lakshya** (the filled-in Add Dealer Request form, status Draft) is not in Pending Dealer Requests, because the form is an
-   unsent draft. Pending Dealer Requests holds three other requests (Mahesh, Navin, Omkar). Say if you want Lakshya added as a fourth.
-3. **Calendar:** the Accountant's "Financial Reports" cover May to October 2026 (the months in DATA.md), not April to October; April has no
-   figures yet.
-4. Tax columns (Purchase Summary Report) for May to September are solved from the monthly purchases, not from invoices (DATA.md,
-   "Tax split"). Say if they should be left out until invoices exist for those months.
+1. **Decisions applied from my recommendations after "continue" (change if you disagree):** Marble Finish Launch Incentive progress is now
+   140 of 300 sheets, earned ₹3,500 (was 180; it agrees with the stock history). Dealer Lakshya stays out of Pending Dealer Requests (an
+   unsent draft). Financial Reports stay May to October. The May to September tax split stays (DATA.md, "Tax split").
+2. **Bravo's order SAL-2026-3042 awaiting confirmation** also shows on Alpha's Manager screens as the one order awaiting confirmation
+   (Dealer Order Activity, Dashboard), outside the 32 recorded sales.
+3. **Order numbers for dealers** are the Alpha sale numbers (SAL-2026-3040); Bravo's invoice numbers are the same. Say if dealers should have
+   a separate order number series.
+4. Bravo's Dealer Festive Volume Rebate (1% at 750 sheets) and Marble Finish Dealer Incentive (₹15 per sheet) are new (DATA.md); the
+   user did not specify dealer schemes, so these are placeholders to confirm in Phase 6.
 
 ## Next
 
-**Phase 5: Secondary Owner, part 1** (PLAN.md section 5; about 17 screens): Dashboard, Company Profile, Product Catalogue, Product Details,
-Place Order, Order Builder, Order Confirmation, Order History, Order Details, Inventory Overview, Inventory Item Details, Retailer Network,
-Retailer Details, Add Retailer Request. Start of the session: read CLAUDE.md, this file, DECISIONS.md, DATA.md (add the dealer's own data
-first: Dealer Bravo's stock, orders to Distributor Alpha, retailers), PLAN.md section 5; write `phase5a.py`; call the advisor before
-starting and after committing. Reuse the Phase 3 and 4 data (`DEALERS`, `SALES`, `MOVES`, `ORDER_LINES`) so Dealer Bravo's purchases agree with
-Distributor Alpha's sales (₹6,84,000, 480 sheets, six sales).
+**Phase 6: Secondary Owner, part 2** (PLAN.md section 5; about 18 screens): Tertiary Sales Overview, Entry and History, Invoices Overview and
+Invoice Details, Payments Overview and Payment Details, Schemes and Incentives and Scheme Details, Sales Reports, Inventory Reports, Return
+Requests and Create Return Request, Support Ticket List, Create and Details, User Management, Create User, User Details, My Profile,
+Notifications. Reuse `TSALES` (twelve October sales to Charlie, Kiran and Mehta), the Alpha ledger rows of Dealer Bravo as Bravo's invoices
+(due 30 days after the sale, `BRV_SALES`), `BSTOCK`, `SCH_FESTIVE` and `SCH_MARBLE` (in phase5a.py; move to data.py when needed). Bravo's
+payments to Alpha: the paid sales (3010, 3017, 3021, 3029) need payment records (add to DATA.md first). Start of the session: read CLAUDE.md,
+this file, DECISIONS.md, DATA.md (Phase 5 data), PLAN.md section 5; write `phase6a.py`; call the advisor before starting and after
+committing.

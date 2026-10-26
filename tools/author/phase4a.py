@@ -8,7 +8,8 @@ def signed(n): return f'+{n}' if n > 0 else f'{SQ}{abs(n)}' if n < 0 else '0'
 def prod_cell(s, sid=None):
     name = f'<a data-link="{sid}"><b>{BY[s][1]}</b></a>' if sid else f'<b>{BY[s][1]}</b>'
     return f'<div class="prod">{sw(s)}<div>{name}</div></div>'
-FUL = {'Delivered': 'ok', 'In Transit': 'blue', 'Being Packed': 'warn'}
+FUL = {'Delivered': 'ok', 'In Transit': 'blue', 'Being Packed': 'warn', 'Awaiting Confirmation': 'warn'}
+PEND = f'<tr><td class="mono nowrap"><b>{NEW_ORDER}</b></td><td>26/10/2026</td><td>{{DEALER}}</td>{{SHEETS}}<td class="num"><b>{M(NEW_TOTAL)}</b></td><td>{chip("Awaiting Confirmation")}</td>{{TAIL}}</tr>'
 def ful(st): return chip(st, FUL[st])
 def growth(a, b):
     if not b: return chip('New', 'blue')
@@ -28,7 +29,8 @@ dsp_rows = ''.join(f'<tr><td class="mono nowrap"><b>{d[0]}</b></td><td>{chip(d[1
 DSP_HEADS = [('Dispatch Number', ''), ('Direction', ''), ('Company or Dealer', ''), ('Sheets', 'num'), ('Expected', ''), ('Status', '')]
 
 # ---------- Dashboard ----------
-recent = ''.join(f'<tr><td class="mono nowrap"><b>{s["number"]}</b></td><td>{s["date"]}</td><td>{link("PRI-DLR-02", DLR[s["dealer"]][1])}</td><td class="num">{N(s["sheets"])}</td><td class="num"><b>{M(s["value"])}</b></td><td>{ful(s["status"])}</td></tr>' for s in SALES[:6])
+recent = ''.join(f'<tr><td class="mono nowrap"><b>{s["number"]}</b></td><td>{s["date"]}</td><td>{link("PRI-DLR-02", DLR[s["dealer"]][1])}</td><td class="num"><b>{M(s["value"])}</b></td><td>{ful(s["status"])}</td></tr>' for s in SALES[:5])
+recent = PEND.replace('{DEALER}', link("PRI-DLR-02", 'Dealer Bravo')).replace('{SHEETS}', '').replace('{TAIL}', '') + recent
 req_list = ''.join(f'<li><div class="grow"><div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap"><b>{r[1]}</b><span class="tag">{r[2]}</span></div></div>{chip(r[10])}</li>' for r in REQUESTS)
 low_rows = ''.join(f'<tr><td>{prod_cell(p[0], "PRI-INV-03")}</td><td class="mono nowrap">{p[0]}</td><td class="num"><b>{N(p[10])}</b></td><td class="num">{N(p[12])}</td><td class="num">{N(REORDER_QTY[p[0]])}</td><td>{chip(p[13])}</td></tr>' for p in LOW)
 ful_donut = chart('donut', series=[{'name': 'Delivered', 'value': STATUS_COUNT['Delivered'], 'color': 'var(--ok)'}, {'name': 'In Transit', 'value': STATUS_COUNT['In Transit'], 'color': 'var(--accent)'},
@@ -47,9 +49,9 @@ body = f'''  <div class="head">
     {card('Dealer Orders by Week', chart('bars', [w[0] for w in WEEKS], [{'name': 'Order value', 'values': WEEK_VALUE, 'color': 'var(--teal)'}], money=True, height=280))}
     <section class="card"><header><h2>Order Fulfilment</h2></header><div class="body center">{ful_donut}</div></section>
   </div>
-  <div class="grid g-main-side">
+  <div class="grid g-main-side" style="--side:20rem">
     <section class="card flush"><header><h2>Recent Dealer Orders</h2><a class="more" data-link="PRI-DLR-04">All dealer orders</a></header>
-      <div class="body">{table([('Sale Number', ''), ('Date', ''), ('Dealer', ''), ('Sheets', 'num'), ('Value', 'num'), ('Status', '')], [recent])}</div></section>
+      <div class="body">{table([('Sale Number', ''), ('Date', ''), ('Dealer', ''), ('Value', 'num'), ('Status', '')], [recent])}</div></section>
     <section class="card"><header><h2>Pending Dealer Requests</h2><a class="more" data-link="PRI-DLR-06">All requests</a></header>
       <div class="body"><ul class="list">{req_list}</ul>{kv([('Requested Credit', ML(sum(r[7] for r in REQUESTS)))], 'total')}</div></section>
   </div>
@@ -156,7 +158,8 @@ page('primary', 'dispatch-overview', 'PRI-DSP-01', 'Primary Customer — Sales a
 
 # ---------- Dealer Order Activity ----------
 cnt = lambda st: sum(1 for s in SALES if s['status'] == st)
-act_rows = ''.join(f'<tr><td class="mono nowrap"><b>{s["number"]}</b></td><td>{s["date"]}</td><td>{link("PRI-DLR-02", DLR[s["dealer"]][1])}</td><td class="num">{N(s["sheets"])}</td><td class="num"><b>{M(s["value"])}</b></td><td>{ful(s["status"])}</td><td>{pay_chip(s["payment"])}</td></tr>' for s in SALES[:10])
+act_rows = ''.join(f'<tr><td class="mono nowrap"><b>{s["number"]}</b></td><td>{s["date"]}</td><td>{link("PRI-DLR-02", DLR[s["dealer"]][1])}</td><td class="num">{N(s["sheets"])}</td><td class="num"><b>{M(s["value"])}</b></td><td>{ful(s["status"])}</td><td>{pay_chip(s["payment"])}</td></tr>' for s in SALES[:9])
+act_rows = PEND.replace('{DEALER}', link("PRI-DLR-02", 'Dealer Bravo')).replace('{SHEETS}', '<td class="num">210</td>').replace('{TAIL}', f'<td>{pay_chip("Unpaid")}</td>') + act_rows
 by_dealer = sorted(DEALERS, key=lambda d: -sum(1 for s in SALES if s['dealer'] == d[0]))
 mx = max(sum(1 for s in SALES if s['dealer'] == d[0]) for d in DEALERS)
 dealer_list = ''.join(f'<li><div class="grow"><div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap"><b>{d[1]}</b><span class="tag">{d[2]}</span></div><span class="meter" style="margin-top:.625rem"><i style="width:{sum(1 for s in SALES if s["dealer"] == d[0]) / mx * 100:.0f}%"></i></span></div><b>{sum(1 for s in SALES if s["dealer"] == d[0])}</b></li>' for d in by_dealer)
@@ -165,9 +168,9 @@ body = f'''  <div class="head">
     <div class="acts"><span class="sel"><small>Period</small> October 2026 <i data-icon="down"></i></span><button class="btn" type="button"><i data-icon="download"></i>Export Orders</button></div>
   </div>
   <div class="kpis">
-    {kpi('Dealer Orders', str(SALE_COUNT))}
+    {kpi('Confirmed Orders', str(SALE_COUNT))}
     {kpi('Order Value', ML(3120000), up('11.8%'))}
-    {kpi('Sheets Ordered', N(2195))}
+    {kpi('Awaiting Confirmation', '1', chip(ML(NEW_TOTAL), 'warn'))}
     {kpi('Awaiting Dispatch', str(cnt('Being Packed')), chip('Being Packed', 'warn'))}
   </div>
   <div class="grid g-main-side" style="--side:26rem">
@@ -175,10 +178,10 @@ body = f'''  <div class="head">
     {card('Orders by Dealer', f'<ul class="list">{dealer_list}</ul>')}
   </div>
   <section class="card flush">
-    {tabs([('All Orders', SALE_COUNT, True), ('Being Packed', cnt('Being Packed'), False), ('In Transit', cnt('In Transit'), False), ('Delivered', cnt('Delivered'), False)])}
+    {tabs([('All Orders', SALE_COUNT + 1, True), ('Awaiting Confirmation', 1, False), ('Being Packed', cnt('Being Packed'), False), ('In Transit', cnt('In Transit'), False), ('Delivered', cnt('Delivered'), False)])}
     {filters('Search by sale number or dealer', 'Search dealer orders', ('Date Range', 'October 2026'), ('Dealer', 'All'), ('Payment', 'All'))}
     <div class="body">{table([('Sale Number', ''), ('Date', ''), ('Dealer', ''), ('Sheets', 'num'), ('Value', 'num'), ('Fulfilment', ''), ('Payment', '')], [act_rows])}
-      {pager(f'Showing 1 to 10 of {SALE_COUNT} orders')}</div>
+      {pager(f'Showing 1 to 10 of {SALE_COUNT + 1} orders')}</div>
   </section>
 '''
 page('primary', 'dealer-order-activity', 'PRI-DLR-04', 'Primary Customer — Sales and Operations Manager — Dealer Order Activity (PRI-DLR-04)', body)

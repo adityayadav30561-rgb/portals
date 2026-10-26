@@ -81,7 +81,7 @@ body = f'''  <div class="head">
   </section>
 
   <div class="grid g-3" style="--cols:1.3fr 1.3fr 1fr">
-    {block('Business Details', [('Legal Name','Distributor Alpha Private Limited'),('GST Number',nw('27AABCD4521F1Z7')),('Permanent Account Number',nw('AABCD4521F')),('Business Type','Distributor'),('Established','2011')])}
+    {block('Business Details', [('Legal Name','Distributor Alpha Private Limited'),('GST Number',nw('27AABCD4521F1Z7')),('Business Type','Distributor'),('Established','2011')])}
     {block('Addresses', [('Registered Office','Plot 14, Bhiwandi Logistics Park, Thane District, Maharashtra, Postal Code 421302'),('Pune Warehouse','Survey 88, Hadapsar Industrial Estate, Pune, Postal Code 411013')])}
     <section class="card"><header><h2>Commercial Terms</h2></header><div class="body"><dl class="kv"><dt>Price Tier</dt><dd>Primary Distributor Tier A</dd><dt>Credit Limit</dt><dd>{M(4000000)}</dd><dt>Outstanding Balance</dt><dd>{M(1486320)}</dd><dt>Credit Used</dt><dd><span class="inline-meter"><span class="meter warn"><i style="width:37%"></i></span><b>37%</b></span></dd><dt>Credit Period</dt><dd>45 days</dd></dl></div></section>
   </div>
@@ -136,7 +136,7 @@ page('primary','product-catalogue','PRI-CAT-01','Primary Customer — Owner — 
 
 # ---------- Product Details ----------
 sku = 'LM-WNT-001'; p = BY[sku]
-slab_rows = ''.join(f'<tr{" class=hl" if i==2 else ""}><td>{a}</td><td class="num"><b>{M(b)}</b></td><td class="num">{M(b*25)}</td></tr>' for i,(a,b) in enumerate([('1 to 49 sheets',p[4][0]),('50 to 199 sheets',p[4][1]),('200 sheets or more',p[4][2])]))
+slab_rows = ''.join(f'<tr{" class=hl" if i==2 else ""}><td>{a}</td><td class="num"><b>{M(b)}</b></td><td class="num">{M(b*25)}</td></tr>' for i,(a,b) in enumerate([('1\u201349',p[4][0]),('50\u2013199',p[4][1]),('200+',p[4][2])]))
 specs = [('SKU',sku),('Finish','Woodgrain'),('Thickness','1.0 mm'),('Sheet Size','8 ft × 4 ft (2,440 mm × 1,220 mm)'),('Weight per Sheet','6.1 kg'),('Grade','Decorative'),('Pack Size','25 sheets'),('Colour Family','Brown')]
 spec_kv = ''.join(f'<dt>{k}</dt><dd>{v}</dd>' for k,v in specs)
 related = ['LM-WNG-011','LM-TEK-006','LM-OAK-004','LM-SLT-005']

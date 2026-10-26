@@ -70,11 +70,13 @@
   var groups = [];
   list.forEach(function (x) { var g = P.group(x, role); if (groups.indexOf(g) < 0) groups.push(g); });
   var nav = groups.map(function (g) {
-    var items = list.filter(function (x) { return P.group(x, role) === g; }).map(function (x) {
+    var members = list.filter(function (x) { return P.group(x, role) === g; });
+    var items = members.map(function (x) {
       var on = x === active;
       return '<a class="nv"' + (on ? ' aria-current="page"' : '') + ' data-nav="' + x.id + '">' + svg(iconFor(x)) + '<span>' + esc(x.name) + '</span></a>';
     }).join('');
-    return '<h6>' + esc(g) + '</h6>' + items;
+    // A heading over a single item would repeat it, so only groups of two or more get one.
+    return '<div class="grp">' + (members.length > 1 ? '<h6>' + esc(g) + '</h6>' : '') + items + '</div>';
   }).join('');
 
   var logo = '<img class="logo" src="' + root + 'assets/brand/logo-480.webp" width="161" height="30" alt="MAVRO.AI">';
@@ -95,7 +97,7 @@
   }).join('');
   var placeholder = p.id === 'company' ? 'Search customers, orders and products' : 'Search products, orders and invoices';
   var top = '<header class="top"><button class="icon-btn menu-btn" type="button" aria-label="Open menu" data-menu>' + svg('menu') + '</button>' +
-    '<nav class="crumb" aria-label="Breadcrumb">' + crumb + '</nav>' +
+    (crumbs.length > 1 ? '<nav class="crumb" aria-label="Breadcrumb">' + crumb + '</nav>' : '') +
     '<label class="search">' + svg('search') + '<input type="search" placeholder="' + placeholder + '" aria-label="Search"></label>' +
     '<a class="icon-btn" data-ntf aria-label="Notifications">' + svg('bell') + '<span class="dot">3</span></a>' +
     '<div class="who"><button type="button" aria-haspopup="true" data-who><span class="av">' + esc(initials(person.person)) + '</span>' +

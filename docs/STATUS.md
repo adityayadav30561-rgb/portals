@@ -51,8 +51,8 @@ follow them, and `tools/verify.js` now fails on text under 13px and on paragraph
    tag the Manager onto them (no new screens)? Secondary Manager has the same gap.
 2. Whether the look is approved (sidebar, cards, colours, swatches, charts). Record changes in DECISIONS.md.
 3. In Order History every row opens Order Details for ORD-2026-10447 (documented in DATA.md).
-4. The Company Profile still shows the Permanent Account Number row (the user underlined it in a review screenshot with the
-   text to remove; kept because it is a data row, not a caption: confirm).
+4. **Secondary lines under names** (SKU under product names, city under dealers, job title, "PDF · date"): keep for record
+   details, or move SKU and city into their own columns or tags? Blocks Phase 3.
 5. Date and money formats (see DECISIONS.md, "Raised at the Phase 2 design checkpoint"). Record the answers before Phase 3.
 
 ## Next

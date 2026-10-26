@@ -54,6 +54,8 @@ Applies to every screen, in every phase. `tools/verify.js` enforces what a machi
 
 ## Raised at the Phase 2 design checkpoint, waiting for the user
 
+- **Secondary lines under names** (SKU, city, job title, "PDF · date"): keep for record details, or move into own columns or tags?
+
 - Approval of the application look (sidebar, top bar, cards, colours, laminate swatches, charts).
 - **Manager ordering dead end:** Place Order is shared by Owner and Manager but Order Builder, Order Confirmation and Inventory Item Details are Owner only; tag the Managers onto them (no new screens)? Same for the Secondary Manager.
 - **Date format:** 26/10/2026 in tables, "26 October 2026" in text; no three-letter month names (the no-abbreviations rule).

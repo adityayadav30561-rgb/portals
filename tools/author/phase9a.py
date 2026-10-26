@@ -53,7 +53,7 @@ body = f'''  <div class="head">
     {kpi('Sales This Month', ML(CRETAIL_OCT), up(pct(CRETAIL_OCT, CHR_RETAIL_SEPT)))}
     {kpi('Sales Recorded', str(len(CSALES)))}
     {kpi('Sheets Sold', N(163))}
-    {kpi('Average Sale Value', M(CRETAIL_OCT // len(CSALES)))}
+    {kpi('Average Sale Value', M(round(CRETAIL_OCT / len(CSALES))))}
   </div>
   <section class="card flush">
     {tabs([('All Sales', len(CSALES), True)] + [(m, mcnt(m), False) for m in PAYMODES])}
@@ -260,11 +260,11 @@ body = f'''  <div class="head">
     {kpi('Sales Including GST', ML(CRETAIL_OCT), up(pct(CRETAIL_OCT, CHR_RETAIL_SEPT)))}
     {kpi('Sales Before GST', ML(CSUB_TOTAL))}
     {kpi('Sheets Sold', N(163))}
-    {kpi('Average Sale Value', M(CRETAIL_OCT // len(CSALES)))}
+    {kpi('Average Sale Value', M(round(CRETAIL_OCT / len(CSALES))))}
   </div>
   <div class="grid g-2">
     {card('Sales by Week, Including GST', chart('bars', [w[0] for w in WEEKS], [{'name': 'Sales', 'values': CWEEK_VALUE, 'color': 'var(--accent)'}], money=True, height=260))}
-    <section class="card"><header><h2>Sales by Payment Mode</h2></header><div class="body center">{chart('donut', series=[{'name': m, 'value': CMODE_SALES[m][1], 'color': c} for m, c in zip(['Card', 'Cash', 'Bank Transfer', 'Cheque'], ['var(--accent)', '#0b8fa8', '#7a36fb', '#e0a030'])], center=str(len(CSALES)), caption='sales')}</div></section>
+    <section class="card"><header><h2>Sales by Payment Mode</h2></header><div class="body center">{chart('donut', series=sorted([{'name': m, 'value': CMODE_SALES[m][1], 'color': c} for m, c in zip(['Card', 'Cash', 'Bank Transfer', 'Cheque'], ['var(--accent)', '#0b8fa8', '#7a36fb', '#e0a030'])], key=lambda x: -x['value']), center=str(len(CSALES)), caption='sales')}</div></section>
   </div>
   {card('Sales by Finish, Before GST', chart('bars', list(fin_val), [{'name': 'Sales before GST', 'values': list(fin_val.values()), 'color': 'var(--accent)'}], money=True, height=260))}
   <section class="card flush"><header><h2>Sales by Product</h2></header>

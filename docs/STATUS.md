@@ -16,7 +16,7 @@ Sales Reports state their basis (sales including GST ₹3,27,557; tables before 
 **Changes to Phase 8 made in Phase 9:** the last three sales to customers (RSL-2026-0396 to 0398) are dated today (26/10), every sale has a time and a recorder (rule in DATA.md), the dashboard line is now "Earned on Active Offers".
 All earlier generators re-run: `screens/` differs only in those two Phase 8 screens (dashboard, Stock Movement History).
 
-**Review gaps, stated plainly:** Phases 4 and 5 had no post-commit advisor review. The advisor reviewed the plans of Phases 6 to 9 and the finished Phases 6, 7 and 8; the finished Phase 9 review is recorded once done. Not yet checked in Firefox or Safari.
+**Review gaps, stated plainly:** Phases 4 and 5 had no post-commit advisor review. The advisor reviewed the plans of Phases 6 to 9 and the finished Phases 6, 7 and 8; the finished Phase 9 also had its post-commit review (fixes: Sales Executive Support Ticket Details related records, average sale value rounded, donut order, ticket number). Not yet checked in Firefox or Safari.
 Shared Bravo screens do not yet link Low Stock Overview or Incoming Stock for the Manager (the sidebar does).
 
 ## What exists

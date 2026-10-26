@@ -123,7 +123,7 @@ body = f'''  <div class="head">
     </div>
     <div class="stack">
       {card('Ticket Information', kv([('Ticket Number', f'<span class="mono">{t0[0]}</span>'), ('Status', chip(t0[6])), ('Priority', chip(t0[4])), ('Category', t0[3]), ('Created', '25/10/2026 17:40'), ('Last Updated', '26/10/2026 10:45'), ('Assigned To', 'Arjun Nair')]))}
-      {card('Related Records', kv([('Order', link('TER-ORD-02', 'TSL-2026-0412', False)), ('Invoice', link('TER-BIL-02', 'TSL-2026-0412', False))], ''))}
+      <div data-role="OWN">{card('Related Records', kv([('Order', link('TER-ORD-02', 'TSL-2026-0412', False)), ('Invoice', link('TER-BIL-02', 'TSL-2026-0412', False))], ''))}</div>
     </div>
   </div>
 '''

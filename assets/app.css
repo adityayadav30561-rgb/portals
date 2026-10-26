@@ -334,7 +334,7 @@ textarea.input { min-height: 5rem; padding: 0.625rem 0.875rem; resize: vertical;
 .btn.danger:hover { background: var(--bad-soft); }
 .av-lg { width: 4rem; height: 4rem; border-radius: 50%; background: linear-gradient(135deg, #0a48fd, #7a36fb); color: #fff; display: grid; place-items: center; font: 600 1.25rem var(--sans, Inter, sans-serif); flex: none; }
 .tbl td.c, .tbl th.c { text-align: center; }
-.tbl td.c .ic { color: var(--ok); width: 1.125rem; height: 1.125rem; }
+.tbl td.c .ic { display: inline-block; vertical-align: middle; color: var(--ok); width: 1.125rem; height: 1.125rem; }
 .tbl td.c .no { color: var(--ink-3); }
 .drop { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; padding: 1rem; border: 1.5px dashed var(--line-2); border-radius: 0.75rem; background: var(--surface-2); }
 .drop .btn { margin-left: auto; }

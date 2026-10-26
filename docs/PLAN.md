@@ -239,7 +239,7 @@ widths, the inventory regenerated, docs/STATUS.md updated, a commit and a push.
 |---|---|---|---|
 | **1. Foundations** ✓ done 2026-10-26 | Design system, registry with all 196 screens (including menu group and parent screen), review bar, Screen Directory and the four portal directories, shared sign-in screens, coverage check | 9 | Directory lists every screen; sign-in screens done; check passes |
 | **2. Primary Owner, part 1** ✓ done and approved 2026-10-26 | Application sidebar and top bar, Owner Dashboard, Company Profile, Product Catalogue, Product Details, Place Order, Order Builder, Order Confirmation, Order History, Order Details, Inventory Overview, Inventory Item Details | 11 | **Design checkpoint: you approve the look before the rest is built** |
-| **3. Primary Owner, part 2** | Dealer network, secondary sales, invoices and payments, schemes, reports, returns, support, users, profile, notifications | 24 | |
+| **3. Primary Owner, part 2** ✓ built 2026-10-26, awaiting approval | Dealer network, secondary sales, invoices and payments, schemes, reports, returns, support, users, profile, notifications | 24 | |
 | **4. Primary Manager and Accountant** | Both dashboards and their own screens | 17 | Primary Distributor complete (52) |
 | **5. Secondary Owner, part 1** | Dashboard, profile, catalogue, ordering, orders, inventory, retailer network | about 17 | |
 | **6. Secondary Owner, part 2** | Tertiary sales, invoices and payments, schemes, reports, returns, support, users, notifications | about 18 | |

@@ -4,20 +4,17 @@ _Last updated: 2026-10-26. Update at the end of every task and phase._
 
 ## Where we are
 
-**Phase 9 (Tertiary Retailer Owner, part 2) is built and verified; waiting for the user's approval before Phase 10** (Sales Executive and Inventory and Purchasing Executive dashboards and their own screens).
-"START NEXT" (2026-10-26) was taken as approval of Phase 8; the Phase 7 and Phase 8 open items stay as my recommendations until the user answers.
-**141 of 196 screens are built:** 9 sign-in screens, Primary Distributor (52), Secondary Dealer (45) and 35 of the 40 Tertiary Retailer screens.
+**Phase 10 (Tertiary Sales Executive and Inventory and Purchasing Executive) is built and verified; the Tertiary Retailer portal is complete (40 of 40).** "DO IT" (2026-10-26) was taken as approval of Phase 9;
+the Phase 7, 8 and 9 open items stay as my recommendations until the user answers. **146 of 196 screens are built:** 9 sign-in screens, Primary Distributor (52), Secondary Dealer (45), Tertiary Retailer (40).
+The 50 Company Administration screens remain (Phases 11 to 13).
 
-Phase 9 screens (21; generators `tools/author/phase9a.py` and `phase9b.py`; Retailer Charlie): Record Retail Sale, Retail Sales History, Retail Sale Details (shared with the Sales Executive), Invoices Overview,
-Invoice Details, Payments Overview, Payment Details, Schemes and Offers, Scheme Details, Sales Reports, Inventory Reports, Return Requests, Create Return Request, Support Ticket List, Create Support Ticket,
-Support Ticket Details (the three support screens shared with the Sales Executive), User Management, Create User, User Details, My Profile and Notifications (shared with both Executives; three unread each).
-Data: DATA.md, "Phase 9 data". Highlights: invoices are Bravo's TSL sales (245, 1 open: TSL-2026-0412, ₹62,000, due 09/11); payments by Charlie reconcile (₹12,47,000 over six months = purchases ₹13,09,000 − ₹62,000, carry-in 0);
-Sales Reports state their basis (sales including GST ₹3,27,557; tables before GST ₹2,77,595); no profit or margin total anywhere; documents Dealer Bravo issues to retailers carry a "B" (PAY-2026-B0388, RTN-2026-B0214, TKT-2026-B0452).
-**Changes to Phase 8 made in Phase 9:** the last three sales to customers (RSL-2026-0396 to 0398) are dated today (26/10), every sale has a time and a recorder (rule in DATA.md), the dashboard line is now "Earned on Active Offers".
-All earlier generators re-run: `screens/` differs only in those two Phase 8 screens (dashboard, Stock Movement History).
+Phase 10 screens (5; generator `tools/author/phase10.py`): Sales Executive Dashboard (`sales-executive-dashboard.html`), Low Stock Overview, Recent Transactions; Inventory and Purchasing Executive Dashboard
+(`inventory-and-purchasing-executive-dashboard.html`), Incoming Deliveries. Data: DATA.md, "Phase 10 data" (nothing new invented: today's three sales ₹17,541 and 10 sheets, the seven daily values, 100 sheets incoming worth ₹1,66,784,
+the link rule per role). Figures for "today" carry a count chip, never a comparison; no Receive button (neither delivery is in transit); Sales Executive screens link only to what that role can open.
+**Change to Phase 9 made in Phase 10:** the Record Retail Sale example is now ARC 3, WNT 1, TEK 3 (₹12,838), so it equals no figure of today's sales (Pooja Verma's two sales today add up to ₹13,134). All earlier generators re-run: `screens/` differs only in that screen.
 
-**Review gaps, stated plainly:** Phases 4 and 5 had no post-commit advisor review. The advisor reviewed the plans of Phases 6 to 9 and the finished Phases 6, 7 and 8; the finished Phase 9 also had its post-commit review (fixes: Sales Executive Support Ticket Details related records, average sale value rounded, donut order, ticket number). Not yet checked in Firefox or Safari.
-Shared Bravo screens do not yet link Low Stock Overview or Incoming Stock for the Manager (the sidebar does).
+**Review gaps, stated plainly:** Phases 4 and 5 had no post-commit advisor review. The advisor reviewed the plans of Phases 6 to 10 and the finished Phases 6 to 9; the finished Phase 10 review is recorded once done. Not yet checked in Firefox or Safari.
+Shared screens do not yet link the newest screens in every place: Bravo's Manager screens do not link Low Stock Overview or Incoming Stock, and Charlie's PUR "Delivery Arriving Tomorrow" notification and My Inventory's Incoming Shipments card open Order Details, not Incoming Deliveries (the sidebars link everything).
 
 ## What exists
 
@@ -102,6 +99,13 @@ and the ticket description, which are user content).
 
 ## Next
 
-**Phase 10: Tertiary Sales Executive and Inventory and Purchasing Executive** (PLAN.md; 5 screens): Sales Executive Dashboard, Low Stock Overview, Recent Transactions; Inventory and Purchasing Executive Dashboard, Incoming Deliveries.
-Both roles already see the shared screens built in Phases 8 and 9. Build on: `CSALES` (today's three sales at 10:30, 13:10, 15:50), `CSTOCK`/`CREC`, `INCOMING`-style shipments (TSL-2026-0412 Being Packed expected 27/10; TSL-2026-0413 awaiting confirmation),
-the notifications already shown to each role. Add the Phase 10 data to DATA.md first. Then Tertiary Retailer is complete (40). Call the advisor before starting and after committing.
+**Phase 11: Company Super Admin, part 1** (PLAN.md, section "Company Administration"; 13 screens): Super Admin Dashboard (ADM-01), Customer Directory (CUS-01), Customer Details (CUS-02), Customer Approval Queue (CUS-03),
+Customer Hierarchy Explorer (CUS-04), User Directory (USR-01), User Details (USR-02), Product Management (PRD-01), Product Details (PRD-02), Create Product (PRD-03), Edit Product (PRD-04), Order Management (ORD-01),
+Order Details (ORD-02, shared with the Operations Manager). Phase 12 is Super Admin part 2 (dispatch, inventory, analytics and the four sales reports, invoices, schemes, support, territory, audit, settings, notifications, My Profile),
+Phase 13 the Sales Manager and Operations Manager. This starts a new portal: read `assets/registry.js` (the `S.company` list and the three roles Anita Deshmukh, Vikram Chopra, Neha Kulkarni), the screens in `screens/primary/` (the Crestline side as the Primary portal saw it)
+and docs/DATA.md "Phase 2" to "Phase 4" before building.
+**Crestline facts already on screen (the Company portal must agree):** Crestline Laminates, GST 24AABCC7782M1Z4, Plant Warehouse, Vapi, Gujarat; Super Admin Anita Deshmukh, Sales Manager Vikram Chopra, Operations Manager Neha Kulkarni, customer support agent Meera Kapoor;
+orders ORD-2026-10xxx (Distributor Alpha's six October orders 10372 to 10482; 10482 awaits confirmation), invoices INV-2026-03xxx (the nine in DATA.md "Invoices and payments", outstanding ₹14,86,320, two overdue ₹3,18,400), schemes SCH-2026-01 to 06 (SCH-2026-04 Festive Volume Rebate target reached),
+dealer request DRQ-2026-0017 (Dealer Omkar, Jalgaon) waiting for Vikram Chopra, credit limit of Alpha ₹40,00,000. **Only one distributor (Distributor Alpha) and, below it, eight dealers (Bravo to Kunal) and Bravo's three retailers are modelled;** the Company screens
+list Alpha, its eight dealers and the retailers that exist, and must not invent other distributors without recording them in DATA.md first (add a "Phase 11 data" section: customer directory, approval queue, users across the company, product management view, order management across tiers).
+Call the advisor before starting and after committing.

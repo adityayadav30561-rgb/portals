@@ -14,7 +14,7 @@ PAYMODES = ['Cash', 'Card', 'Bank Transfer', 'Cheque']
 def mode_chip(m): return chip(m, 'plain')
 
 # ---------- Record Retail Sale (shared with the Sales Executive) ----------
-ENTRY = {'LM-ARC-002': 3, 'LM-WNT-001': 2, 'LM-TEK-006': 2}
+ENTRY = {'LM-ARC-002': 3, 'LM-WNT-001': 1, 'LM-TEK-006': 3}                                    # 12,838: not equal to any figure of today's sales
 e_sub = sum(q * crp(s) for s, q in ENTRY.items()); e_gst = round(e_sub * 0.09); e_total = e_sub + 2 * e_gst
 assert all(q <= CSTOCK[s]['available'] for s, q in ENTRY.items())
 lines = ''

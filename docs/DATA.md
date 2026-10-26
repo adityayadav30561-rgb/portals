@@ -81,7 +81,7 @@ except LM-STN-009 "Low Stock" (company side).
 ## Number series
 
 Orders `ORD-2026-10482`; invoices `INV-2026-03318`; payments `PAY-2026-02217`; dispatches `DSP-2026-5521`;
-returns `RTN-2026-0412`; support tickets `TKT-2026-0731`; schemes `SCH-2026-04`. Batches `B-2610-14`.
+returns `RTN-2026-0412`; support tickets `TKT-2026-0731`; schemes `SCH-2026-04`; sales to dealers `SAL-2026-3041`. Batches `B-2610-14`. Payment modes: Bank Transfer, Net Banking, Cheque (never UPI, NEFT, RTGS). Say "Bank Reference", not UTR or Ref.
 
 ## Distributor Alpha figures (Owner view)
 
@@ -113,14 +113,14 @@ returns `RTN-2026-0412`; support tickets `TKT-2026-0731`; schemes `SCH-2026-04`.
 | ORD-2026-10459 | 23/10/2026 | 280 | 3,36,500 | 29/10/2026 (planned) | Confirmed | Unpaid |
 | ORD-2026-10447 | 19/10/2026 | 360 | 4,42,930 | 27/10/2026 (expected) | In Transit | Unpaid |
 | ORD-2026-10431 | 15/10/2026 | 520 | 6,18,400 | 20/10/2026 | Delivered | Partly Paid |
-| ORD-2026-10398 | 08/10/2026 | 430 | 5,24,100 | 13/10/2026 | Delivered | Paid |
+| ORD-2026-10398 | 08/10/2026 | 430 | 5,24,100 | 13/10/2026 | Delivered | Partly Paid |
 | ORD-2026-10372 | 01/10/2026 | 400 | 4,81,200 | 06/10/2026 | Delivered | Paid |
 | ORD-2026-10341 | 24/09/2026 | 470 | 5,72,300 | 29/09/2026 | Delivered | Paid |
 | ORD-2026-10316 | 17/09/2026 | 330 | 3,98,650 | 22/09/2026 | Delivered | Paid |
 | ORD-2026-10290 | 10/09/2026 | 500 | 6,05,900 | 15/09/2026 | Delivered | Paid |
 | ORD-2026-10265 | 03/09/2026 | 200 | 2,41,000 | none | Cancelled | Not Applicable |
 
-In the prototype every row opens the same Order Details screen, which shows **ORD-2026-10447**.
+In the prototype every row opens the same Order Details screen, which shows **ORD-2026-10447**. (Changed in Phase 3: ORD-2026-10398 was "Paid"; it is Partly Paid so the open invoices add up to the outstanding balance, see Invoices.)
 
 ## Order Details order: ORD-2026-10447
 
@@ -145,3 +145,97 @@ Account Number AABCD4521F; registered address Plot 14, Bhiwandi Logistics Park, 
 Code 421302; Pune Warehouse, Survey 88, Hadapsar Industrial Estate, Pune, Postal Code 411013. Price tier "Primary
 Distributor Tier A"; territory Maharashtra and Goa; Crestline account manager Vikram Chopra. Documents: GST
 Registration Certificate (18/04/2018), Trade Licence (renewed 02/04/2026), Distributor Agreement 2026–27 (signed 02/04/2026).
+
+## Dealers of Distributor Alpha (Phase 3; model in `tools/author/data.py`: `DEALERS`, `SALES`)
+
+Eight dealers. "Sales" are the October 2026 amounts invoiced to the dealer, GST included, and add up to **₹31,20,000** (the
+dashboard's Sales to Dealers, 2,195 sheets, **32 sales**, average ₹97,500). September sales add up to ₹27,90,000. "Owes" is
+the unpaid part of the October sales (₹10,67,500 in all, compact ₹10.68 lakh). Retailers: Bravo's three are named in the hierarchy above.
+
+| Dealer | City | Region | Status | Customer since | Retailers | Sales (October) | Sales (September) | Sheets | Owes | Credit limit |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Dealer Bravo | Pune | West Maharashtra | Active | 03/09/2019 | 3 | 6,84,000 | 6,10,000 | 480 | 2,60,000 | 8,00,000 |
+| Dealer Delta | Nashik | North Maharashtra | Active | 14/02/2019 | 4 | 5,92,000 | 5,20,000 | 410 | 1,89,500 | 7,00,000 |
+| Dealer Foxtrot | Thane | Konkan | Active | 21/06/2020 | 3 | 4,76,000 | 4,35,000 | 335 | 1,66,500 | 6,00,000 |
+| Dealer Gopal | Kolhapur | West Maharashtra | Active | 09/11/2020 | 3 | 4,11,000 | 3,85,000 | 290 | 1,15,000 | 5,00,000 |
+| Dealer Harsh | Nagpur | Vidarbha | Active | 17/03/2021 | 2 | 3,38,000 | 3,60,000 | 240 | 1,01,500 | 5,00,000 |
+| Dealer Indira | Satara | West Maharashtra | Active | 05/08/2022 | 2 | 2,46,000 | 2,35,000 | 175 | 98,500 | 4,00,000 |
+| Dealer Jayant | Solapur | West Maharashtra | Active | 28/01/2023 | 2 | 2,18,000 | 2,45,000 | 155 | 43,500 | 4,00,000 |
+| Dealer Kunal | Panaji | Goa | New | 02/10/2026 | 1 | 1,55,000 | none | 110 | 93,000 | 2,50,000 |
+
+Dealer owners: Sunita Rao (Bravo), Prakash Jadhav, Mohan Patil, Gopal Kulkarni, Harsh Wankhede, Indira Bhosale, Jayant
+Shinde, Kunal Naik. **Dealer Bravo details** (the one Dealer Details screen): price tier Dealer Tier B; credit period 30
+days; GST Number 27AAKFB3318D1ZP; Shop 6, Laminate Market Road, Hadapsar, Pune, Postal Code 411028; contacts Sunita Rao (Owner,
+sunita.rao@dealerbravo.example, +91 90000 31001) Arjun Nair (Sales and Inventory Manager, arjun.nair@dealerbravo.example, +91
+90000 31002) and Rekha Sawant (Accountant, +91 90000 31003); retailers Retailer Charlie (Pune, Imran Sheikh), Retailer Kiran Interiors (Pune, Kiran Desai), Retailer Mehta
+Furniture (Pimpri, Nilesh Mehta); relationship manager Kavita Joshi. Bravo's six October sales: 24/10 ₹1,37,000 (100 sheets,
+DSP-2026-5527, unpaid); 17/10 ₹1,23,000 (unpaid); 13/10 ₹1,09,500; 08/10 ₹1,23,000 (DSP-2026-5471); 05/10 ₹96,000; 01/10
+₹95,500. Bravo monthly sales: May 5,20,000; June 5,90,000; July 4,80,000; August 6,30,000; September 6,10,000; October 6,84,000.
+
+**Sales to dealers.** Every sale has a sale number (`SAL-2026-3010` to `SAL-2026-3041`, newest 3041), a date, a dealer, sheets,
+value, payment (Paid, Partly Paid, Unpaid) and a dispatch number. The dispatch numbers on the Phase 2 stock movements of LM-CAL-003
+(5534, 5527, 5519, 5508, 5496, 5471, 5452) are real sales in this ledger. Monthly sales to dealers are the DATA.md figures above
+(May 24,80,000 ... October 31,20,000).
+**Dealer price list (Dealer Tier B), per sheet before GST:** the Crestline 1–49 price plus 10%, to the nearest ₹5 (`dp()`): WNT 1,300;
+ARC 1,035; CAL 1,715; OAK 1,365; SLT 1,450; TEK 1,120; CHR 1,200; IVR 890; STN 1,630; CPR 2,080; WNG 1,330; SKY 955.
+**October sheets sold to dealers by product** (2,195): WNT 280, ARC 405, CAL 165, OAK 205, SLT 110, TEK 220, CHR 100, IVR 210, STN 0, CPR 35, WNG 180, SKY 285.
+By finish: Woodgrain 680, Matte 615, Gloss 385, Texture 205, High Gloss 165, Suede 110, Metallic 35. Regions (October): West Maharashtra
+₹15,59,000; North Maharashtra ₹5,92,000; Konkan ₹4,76,000; Vidarbha ₹3,38,000; Goa ₹1,55,000.
+
+## Invoices and payments (Phase 3; `INVOICES`, `PAYMENTS`)
+
+Invoices from Crestline are issued on the dispatch date and fall due 45 days later. Today is 26/10/2026.
+
+| Invoice | Order | Issued | Due | Amount | Paid | Balance | Status |
+|---|---|---|---|---|---|---|---|
+| INV-2026-03318 | ORD-2026-10447 | 24/10/2026 | 08/12/2026 | 4,42,930 | 0 | 4,42,930 | Unpaid |
+| INV-2026-03291 | ORD-2026-10431 | 18/10/2026 | 02/12/2026 | 6,18,400 | 2,00,000 | 4,18,400 | Partly Paid |
+| INV-2026-03264 | ORD-2026-10398 | 11/10/2026 | 25/11/2026 | 5,24,100 | 2,17,510 | 3,06,590 | Partly Paid |
+| INV-2026-03233 | ORD-2026-10372 | 04/10/2026 | 18/11/2026 | 4,81,200 | 4,81,200 | 0 | Paid |
+| INV-2026-03198 | ORD-2026-10341 | 27/09/2026 | 11/11/2026 | 5,72,300 | 5,72,300 | 0 | Paid |
+| INV-2026-03171 | ORD-2026-10316 | 20/09/2026 | 04/11/2026 | 3,98,650 | 3,98,650 | 0 | Paid |
+| INV-2026-03140 | ORD-2026-10290 | 13/09/2026 | 28/10/2026 | 6,05,900 | 6,05,900 | 0 | Paid |
+| INV-2026-03021 | ORD-2026-10171 | 12/08/2026 | 26/09/2026 | 1,32,000 | 0 | 1,32,000 | Overdue 30 days |
+| INV-2026-02986 | ORD-2026-10158 | 05/08/2026 | 19/09/2026 | 1,86,400 | 0 | 1,86,400 | Overdue 37 days |
+
+**Open invoices add up to the outstanding balance: 4,42,930 + 4,18,400 + 3,06,590 + 1,32,000 + 1,86,400 = ₹14,86,320; the two overdue ones are ₹3,18,400.**
+134 invoices in all (every delivered or in-transit order): 5 open, 2 of them overdue, 129 paid. ORD-2026-10459 and ORD-2026-10482 have no invoice yet.
+Invoiced in October ₹20,66,630 (4 invoices). In the prototype every invoice row opens the same Invoice Details screen, which shows
+**INV-2026-03318** (the four lines of ORD-2026-10447, Central GST ₹33,440, State GST ₹33,440, freight ₹4,500). Issued by Crestline Laminates, GST
+Number 24AABCC7782M1Z4, Plant Warehouse, Vapi, Gujarat.
+
+Payments (newest first; 131 in all): PAY-2026-02217 21/10 ₹2,00,000 Bank Transfer (INV-2026-03291); 02204 17/10 ₹2,17,510 Net Banking (03264);
+02188 15/10 ₹4,81,200 Bank Transfer (03233); 02143 08/10 ₹5,72,300 Cheque (03198); 02109 02/10 ₹3,98,650 Bank Transfer (03171); 02061 24/09 ₹6,05,900
+Net Banking (03140); 01984 12/09 ₹5,43,200 Bank Transfer (03109); 01921 02/09 ₹4,76,800 Cheque (03068); 01866 25/08 ₹4,12,000 Bank Transfer (03010);
+01802 14/08 ₹3,58,400 Net Banking (02961). **Paid in October ₹18,69,660 in 5 payments** (Bank Transfer 10,79,850; Net Banking 2,17,510; Cheque 5,72,300).
+Paid by month: May 21,40,000; June 24,10,000; July 20,90,000; August 25,30,000; September 23,60,000; October 18,69,660.
+**Payment Details shows PAY-2026-02217**: recorded 21/10/2026 14:20 by Suresh Iyer, received by Crestline 22/10/2026 10:05, confirmed
+22/10/2026 16:30; paid from Sahyadri Bank, Bhiwandi Branch; Bank Reference SB26102100417; settles ₹2,00,000 of INV-2026-03291 (balance after ₹4,18,400).
+ORD-2026-10431 lines (520 sheets): WNT 120, ARC 150, CAL 60, OAK 100, TEK 90.
+
+## Schemes (Phase 3)
+
+| Scheme | Type | Period | Status | Progress / result |
+|---|---|---|---|---|
+| SCH-2026-04 Festive Volume Rebate | Volume Rebate, 2% | 01/10/2026 to 30/11/2026 | Active | 2,750 of 3,000 sheets (the six October orders: 760 + 280 + 360 + 520 + 430 + 400), 250 to go, 35 days left |
+| SCH-2026-05 Marble Finish Launch Incentive | Product Incentive, ₹25 per sheet of LM-CAL-003 | 01/09/2026 to 31/12/2026 | Active | 180 of 300 sheets, earned ₹4,500 |
+| SCH-2026-06 Winter Season Volume Bonus | Volume Bonus, 3% | 01/12/2026 to 31/01/2027 | Upcoming | target 3,500 sheets |
+| SCH-2026-02 Monsoon Fast Mover Bonus | Product Incentive, ₹15 per sheet | 01/07/2026 to 30/09/2026 | Completed | 2,550 of 2,400 sheets, ₹38,250 credited |
+| SCH-2026-01 Summer Stock Incentive | Volume Incentive, ₹20 per sheet | 01/04/2026 to 30/06/2026 | Completed | 2,310 of 2,000 sheets, ₹46,200 credited |
+
+## Returns, support, users (Phase 3)
+
+Return requests to Crestline (Credit Amount = sheets × the 50–199 price, only once credit is issued): RTN-2026-0412 25/10 ORD-2026-10431 CAL-003 12
+sheets Damaged in Transit, Under Review; 0408 22/10 ORD-2026-10431 WNT-001 8 Surface Defect, Approved; 0396 16/10 ORD-2026-10398 ARC-002 20 Wrong Product
+Delivered, Pickup Scheduled; 0377 09/10 ORD-2026-10372 OAK-004 15 Damaged in Transit, Credit Issued ₹18,000; 0361 02/10 ORD-2026-10341 CHR-007 10 Surface
+Defect, Credit Issued ₹10,550; 0342 26/09 ORD-2026-10316 SLT-005 6 Shade Mismatch, Rejected; 0319 18/09 ORD-2026-10290 TEK-006 14 Damaged in Transit, Credit Issued ₹13,790.
+Credit issued in all ₹42,340. Open requests 3 (40 sheets).
+
+Support tickets (Crestline Customer Support, agent Meera Kapoor): TKT-2026-0731 24/10 Damaged Sheets in ORD-2026-10431, Delivery, High, In Progress;
+0724 22/10 Invoice INV-2026-03264 Amount Query, Billing, Medium, Awaiting Your Reply; 0702 15/10 Price Tier Review Request, Account, Low, Open;
+0688 09/10 Dispatch Delay on ORD-2026-10398, Delivery, Medium, Resolved; 0655 29/09 GST Correction on INV-2026-03198, Billing, Medium, Closed;
+0631 21/09 Festive Scheme Eligibility, Schemes, Low, Closed. Ticket Details shows TKT-2026-0731 (four messages, three attachments).
+
+Users of Distributor Alpha: Rajesh Menon (Owner, Active), Kavita Joshi (Sales and Operations Manager, Active), Suresh Iyer (Accountant, Active), Pooja
+Deshpande (Sales and Operations Manager, Invited 24/10/2026), Amit Kulkarni (Accountant, Inactive, last signed in 30/06/2026). Phones +91 90000 21001 to 21005.
+Notifications: the bell badge says 3, so each of the three roles has exactly three unread notifications.

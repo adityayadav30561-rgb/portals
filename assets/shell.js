@@ -72,6 +72,22 @@
       i.type = i.type === 'password' ? 'text' : 'password';
     });
   });
+  // Role-aware content on screens shared by several roles:
+  //   data-role="OWN MGR"   shown only to those roles
+  //   data-me="name|role|email|initials"   filled in with the signed-in person
+  //   data-count="selector" the number of visible elements that match (inside <main>)
+  var self = p.roles.filter(function (r) { return r.code === role; })[0];
+  Array.prototype.forEach.call(document.querySelectorAll('[data-role]'), function (e) {
+    if (e.getAttribute('data-role').split(' ').indexOf(role) < 0) e.hidden = true;
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-me]'), function (e) {
+    var k = e.getAttribute('data-me');
+    e.textContent = k === 'name' ? self.person : k === 'role' ? self.label : k === 'initials' ? self.person.split(' ').map(function (w) { return w[0]; }).join('').slice(0, 2)
+      : self.person.toLowerCase().replace(/ /g, '.') + '@' + p.org.toLowerCase().replace(/[^a-z]/g, '') + '.example';
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-count]'), function (e) {
+    e.textContent = Array.prototype.filter.call(document.querySelectorAll('main ' + e.getAttribute('data-count')), function (x) { return !x.closest('[hidden]'); }).length;
+  });
   if (off) { document.documentElement.style.setProperty('--review-h', '0px'); return; }
 
   // Previous and next built screen for this role, in the order of the directory.

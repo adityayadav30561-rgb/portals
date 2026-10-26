@@ -311,3 +311,175 @@ def pay_chip(s):
 
 def dl_btn(label='Download'):
     return f'<button class="btn sm" type="button" aria-label="{label}"><i data-icon="download"></i></button>'
+
+
+# =====================================================================================================================
+# Phase 4 data (docs/DATA.md: "Phase 4 data"). Manager: stock movements, dispatches, dealer orders and targets, dealer requests.
+# Accountant: ageing, purchases and tax, credit notes, disputes. Everything reconciles with Phases 2 and 3; asserts check it.
+# =====================================================================================================================
+import datetime
+TODAY = datetime.date(2026, 10, 26)
+def pd(s): return datetime.date(int(s[6:]), int(s[3:5]), int(s[:2]))
+def fd(x): return x.strftime('%d/%m/%Y')
+
+# ---- Lines of the six October orders (ORD-2026-10482/10459/10447 from OPEN_ORDERS; the delivered three are new in Phase 4) ----
+ORDER_LINES = {o: l for o, (_d, _st, l) in OPEN_ORDERS.items()}
+ORDER_LINES['ORD-2026-10431'] = ORDER_10431
+ORDER_LINES['ORD-2026-10398'] = [('LM-WNT-001', 100), ('LM-ARC-002', 130), ('LM-OAK-004', 90), ('LM-SLT-005', 60), ('LM-TEK-006', 50)]
+ORDER_LINES['ORD-2026-10372'] = [('LM-WNT-001', 80), ('LM-ARC-002', 100), ('LM-OAK-004', 80), ('LM-IVR-008', 80), ('LM-WNG-011', 60)]
+ORDER_VALUE = {'ORD-2026-10482': 949752, 'ORD-2026-10459': 336500, 'ORD-2026-10447': 442930, 'ORD-2026-10431': 618400,
+               'ORD-2026-10398': 524100, 'ORD-2026-10372': 481200}
+ORDER_SHEETS = {o: sum(q for _, q in l) for o, l in ORDER_LINES.items()}
+assert ORDER_SHEETS == {'ORD-2026-10482': 760, 'ORD-2026-10459': 280, 'ORD-2026-10447': 360, 'ORD-2026-10431': 520, 'ORD-2026-10398': 430, 'ORD-2026-10372': 400}
+assert sum(ORDER_VALUE.values()) == PURCH_MONTH[-1]
+# Receipts: the three delivered October orders arrive at Bhiwandi Warehouse on their delivery dates
+RECEIPTS = [('ORD-2026-10431', '20/10/2026'), ('ORD-2026-10398', '13/10/2026'), ('ORD-2026-10372', '06/10/2026')]
+RECEIVED = sum(ORDER_SHEETS[o] for o, _ in RECEIPTS)                                   # 1,350
+assert RECEIVED == 1350
+# Sheets purchased in October by product (all six orders, 2,750) and the allocated value (same method as SOLD_VALUE)
+BOUGHT = {}
+for _o, _l in ORDER_LINES.items():
+    for _s, _q in _l: BOUGHT[_s] = BOUGHT.get(_s, 0) + _q
+assert sum(BOUGHT.values()) == 2750
+_w = {s: q * BY[s][4][1] for s, q in BOUGHT.items()}
+BOUGHT_VALUE = {s: round(PURCH_MONTH[-1] * w / sum(_w.values())) for s, w in _w.items()}
+_big = max(BOUGHT_VALUE, key=BOUGHT_VALUE.get); BOUGHT_VALUE[_big] += PURCH_MONTH[-1] - sum(BOUGHT_VALUE.values())
+assert sum(BOUGHT_VALUE.values()) == 3352882
+
+# ---- Stock adjustments (October) ----
+ADJUSTMENTS = [('ADJ-2026-0036', '23/10/2026', 'LM-TEK-006', -10, 'Damaged in Handling'), ('ADJ-2026-0035', '21/10/2026', 'LM-WNT-001', -6, 'Damaged in Handling'),
+               ('ADJ-2026-0034', '12/10/2026', 'LM-CAL-003', -5, 'Damaged in Handling'), ('ADJ-2026-0033', '09/10/2026', 'LM-SLT-005', 3, 'Count Correction'),
+               ('ADJ-2026-0032', '06/10/2026', 'LM-OAK-004', -4, 'Count Correction'), ('ADJ-2026-0031', '02/10/2026', 'LM-ARC-002', -8, 'Damaged in Handling')]
+ADJUSTED = sum(a[3] for a in ADJUSTMENTS)                                              # -30
+assert ADJUSTED == -30
+
+# ---- Dealer sales: delivery status, expected delivery and the product lines of every sale ----
+LEAD = {'Pune': 2, 'Thane': 3, 'Nashik': 3, 'Kolhapur': 4, 'Satara': 4, 'Solapur': 4, 'Nagpur': 6, 'Panaji': 5}   # days from dispatch to delivery
+for _s in SALES:
+    _dt = pd(_s['date']); _exp = _dt + datetime.timedelta(days=LEAD[DLR[_s['dealer']][2]])
+    _s['expected'] = fd(_exp); _s['status'] = 'Being Packed' if _dt == TODAY else 'Delivered' if _exp < TODAY else 'In Transit'
+    _s['city'] = DLR[_s['dealer']][2]
+_CAL_SALE = {('DLT', 26): 20, ('BRV', 24): 25, ('FXT', 22): 15, ('GPL', 19): 30, ('HRS', 15): 25, ('BRV', 8): 25, ('DLT', 3): 25}   # as in Inventory Item Details
+assert sum(_CAL_SALE.values()) == SOLD['LM-CAL-003']
+_left = {s: SOLD[s] for s in ['LM-ARC-002', 'LM-WNT-001', 'LM-TEK-006', 'LM-IVR-008', 'LM-SKY-012', 'LM-OAK-004', 'LM-WNG-011', 'LM-SLT-005', 'LM-CHR-007', 'LM-CPR-010']}
+_queue = []                                                                            # chunks of up to 40 sheets, products taken in turn, so each sale mixes products
+while any(_left.values()):
+    for _k in _left:
+        if _left[_k]: _t = min(40, _left[_k]); _queue.append([_k, _t]); _left[_k] -= _t
+_qi = 0
+for _s in reversed(SALES):                                                             # oldest first
+    _s['lines'] = []; _c = _CAL_SALE.get((_s['dealer'], _s['day']), 0)
+    if _c: _s['lines'].append(('LM-CAL-003', _c))
+    _need = _s['sheets'] - _c
+    while _need > 0:
+        _take = min(_need, _queue[_qi][1])
+        _same = [n for n, l in enumerate(_s['lines']) if l[0] == _queue[_qi][0]]
+        if _same: _s['lines'][_same[0]] = (_queue[_qi][0], _s['lines'][_same[0]][1] + _take)
+        else: _s['lines'].append((_queue[_qi][0], _take))
+        _queue[_qi][1] -= _take; _need -= _take
+        if _queue[_qi][1] == 0: _qi += 1
+assert all(q == 0 for _, q in _queue) and all(sum(q for _, q in s['lines']) == s['sheets'] for s in SALES)
+_chk = {}
+for _s in SALES:
+    for _k, _q in _s['lines']: _chk[_k] = _chk.get(_k, 0) + _q
+assert all(_chk.get(k, 0) == v for k, v in SOLD.items())
+STATUS_COUNT = {st: sum(1 for s in SALES if s['status'] == st) for st in ('Being Packed', 'In Transit', 'Delivered')}
+
+# ---- Every stock movement of October (newest first): receipts, sales to dealers, adjustments ----
+MOVES = []
+for _o, _dt in RECEIPTS:
+    for _k, _q in ORDER_LINES[_o]: MOVES.append(dict(date=_dt, type='Receipt', sku=_k, who='Crestline Laminates', ref=_o, sheets=_q))
+for _s in SALES:
+    for _k, _q in _s['lines']: MOVES.append(dict(date=_s['date'], type='Sale to Dealer', sku=_k, who=DLR[_s['dealer']][1], ref=_s['dispatch'], sheets=-_q))
+for _a in ADJUSTMENTS: MOVES.append(dict(date=_a[1], type='Stock Adjustment', sku=_a[2], who=_a[4], ref=_a[0], sheets=_a[3]))
+_kind = {'Sale to Dealer': 0, 'Receipt': 1, 'Stock Adjustment': 2}
+MOVES.sort(key=lambda m: m['sku'])
+MOVES.sort(key=lambda m: (pd(m['date']), _kind[m['type']], m['ref']), reverse=True)
+assert sum(m['sheets'] for m in MOVES) == RECEIVED - 2195 + ADJUSTED
+# Inventory Item Details (LM-CAL-003): the movements walk back from 215 on hand to 325 before 03/10
+CAL_MOVES = [m for m in MOVES if m['sku'] == 'LM-CAL-003']
+_bal = 215
+for _m in CAL_MOVES: _m['balance'] = _bal; _bal -= _m['sheets']
+CAL_OPENING = _bal
+assert CAL_OPENING == 325 and len(CAL_MOVES) == 9
+MOVE_BY = {s: dict(received=0, sold=0, adjusted=0) for s in BY}
+for _m in MOVES:
+    MOVE_BY[_m['sku']]['received' if _m['type'].startswith('Receipt') else 'sold' if _m['type'].startswith('Sale') else 'adjusted'] += abs(_m['sheets']) if not _m['type'].startswith('Stock') else _m['sheets']
+assert all(MOVE_BY[s]['sold'] == SOLD[s] for s in SOLD)
+
+# ---- Low stock: reorder quantity per product (CAL-003 = 400 as on Inventory Item Details); suggested value at the quantity's slab price ----
+REORDER_QTY = {'LM-STN-009': 300, 'LM-CHR-007': 300, 'LM-CAL-003': 400, 'LM-CPR-010': 150}
+LOW = [p for p in P if p[13] in ('Low Stock', 'Out of Stock')]
+assert [p[0] for p in LOW] == ['LM-CAL-003', 'LM-CHR-007', 'LM-STN-009', 'LM-CPR-010'] and set(REORDER_QTY) == {p[0] for p in LOW}
+LOW_VALUE = {s: q * slab(s, q) for s, q in REORDER_QTY.items()}
+assert sum(LOW_VALUE.values()) == 1570000
+
+# ---- Dealer targets (October) and performance ----
+TARGET = {'BRV': 650000, 'DLT': 600000, 'FXT': 450000, 'GPL': 425000, 'HRS': 375000, 'IND': 240000, 'JYT': 250000, 'KNL': 150000}
+TARGET_TOTAL = sum(TARGET.values()); assert TARGET_TOTAL == 3140000
+def achievement(k): return DLR[k][7] / TARGET[k] * 100
+def perf_status(k):
+    a = achievement(k); return 'Above Target' if a >= 100 else 'Near Target' if a >= 95 else 'Below Target'
+STATUS_CHIP.update({'Above Target': 'ok', 'Near Target': 'warn', 'Below Target': 'bad', 'Being Packed': 'warn', 'Awaiting Your Review': 'warn',
+                    'Sent to Crestline': 'blue', 'Awaiting Your Reply': 'warn', 'Under Review': 'warn', 'Not Yet Due': 'plain'})
+WEEKS = [('1 to 7 October', 1, 7), ('8 to 14 October', 8, 14), ('15 to 21 October', 15, 21), ('22 to 26 October', 22, 26)]
+def week_sales(a, b): return [s for s in SALES if a <= s['day'] <= b]
+assert sum(len(week_sales(a, b)) for _, a, b in WEEKS) == 32
+
+# ---- Pending dealer requests (Add Dealer Request, approved by the Sales and Operations Manager, then Crestline) ----
+REQUESTS = [  # number, dealer, city, region, owner, submitted, submitted by, credit requested, expected sheets per month, documents, status
+ ('DRQ-2026-0019', 'Dealer Mahesh', 'Amravati', 'Vidarbha', 'Mahesh Gaikwad', '24/10/2026', 'Rajesh Menon', 300000, 120, 3, 'Awaiting Your Review'),
+ ('DRQ-2026-0018', 'Dealer Navin', 'Sangli', 'West Maharashtra', 'Navin Kamble', '22/10/2026', 'Rajesh Menon', 350000, 100, 2, 'Awaiting Your Review'),
+ ('DRQ-2026-0017', 'Dealer Omkar', 'Jalgaon', 'North Maharashtra', 'Omkar Deshmukh', '19/10/2026', 'Rajesh Menon', 400000, 150, 3, 'Sent to Crestline'),
+]
+assert sum(r[7] for r in REQUESTS) == 1050000
+
+# ---- Accountant: ageing of the open invoices, credit, tax split, credit notes, disputes ----
+CREDIT_LIMIT = 4000000
+def days_over(i): return (TODAY - pd(i[3])).days            # negative: days until due
+def bucket(i):
+    o = days_over(i)
+    return 'Not Yet Due' if o <= 0 else '1 to 30 Days Overdue' if o <= 30 else '31 to 60 Days Overdue' if o <= 60 else '61 to 90 Days Overdue' if o <= 90 else 'Over 90 Days Overdue'
+BUCKETS = ['Not Yet Due', '1 to 30 Days Overdue', '31 to 60 Days Overdue', '61 to 90 Days Overdue', 'Over 90 Days Overdue']
+AGE = {b: [i for i in OPEN_INV if bucket(i) == b] for b in BUCKETS}
+AGE_AMT = {b: sum(i[4] - i[5] for i in v) for b, v in AGE.items()}
+assert sum(AGE_AMT.values()) == OUTSTANDING and AGE_AMT['Not Yet Due'] == 1167920 and AGE_AMT['1 to 30 Days Overdue'] == 132000 and AGE_AMT['31 to 60 Days Overdue'] == 186400
+CREDIT_AVAILABLE = CREDIT_LIMIT - OUTSTANDING                # 25,13,680; after ORD-2026-10482 it is 15,63,928 as on Order Builder
+assert CREDIT_AVAILABLE - 949752 == 1563928
+
+def tax_split(total, free_above=500000):
+    """taxable + 2 x round(9%) + freight = total. Freight is 4,500 below the free-freight limit when an exact split exists, else 0."""
+    for f in ([4500, 0] if total < free_above else [0]):
+        t0 = int((total - f) / 1.18)
+        for t in range(t0 - 3, t0 + 4):
+            if t + 2 * round(0.09 * t) + f == total: return dict(taxable=t, gst=round(0.09 * t), freight=f, total=total)
+    raise ValueError(total)
+ORDER_TAX = {o: tax_split(v) for o, v in ORDER_VALUE.items()}
+assert ORDER_TAX['ORD-2026-10482'] == dict(taxable=804874, gst=72439, freight=0, total=949752)            # Order Builder
+assert ORDER_TAX['ORD-2026-10447'] == dict(taxable=371550, gst=33440, freight=4500, total=442930)         # Invoice Details
+def _sum_tax(rows): return {k: sum(r[k] for r in rows) for k in ('taxable', 'gst', 'freight', 'total')}
+# Months May to September: totals are the DATA.md purchases; freight is 4,500 for each order below the limit (count chosen so a split exists)
+MONTH_TAX = []
+for _m, _tot in zip(MONTHS[:-1], PURCH_MONTH[:-1]):
+    for _k in range(2, 7):
+        _f = 4500 * _k; _t0 = int((_tot - _f) / 1.18)
+        _hit = [t for t in range(_t0 - 3, _t0 + 4) if t + 2 * round(0.09 * t) + _f == _tot]
+        if _hit: MONTH_TAX.append(dict(taxable=_hit[0], gst=round(0.09 * _hit[0]), freight=_f, total=_tot)); break
+    else: raise ValueError(_m)
+MONTH_TAX.append(_sum_tax(list(ORDER_TAX.values())))
+assert MONTH_TAX[-1]['total'] == 3352882 and sum(m['total'] for m in MONTH_TAX) == sum(PURCH_MONTH)
+assert all(m['taxable'] + 2 * m['gst'] + m['freight'] == m['total'] for m in MONTH_TAX)
+
+CREDIT_NOTES = [  # number, date, return request, order, credit amount (sheets x the 50-199 price: the Phase 3 return credits)
+ ('CN-2026-0103', '16/10/2026', 'RTN-2026-0377', 'ORD-2026-10372', 18000), ('CN-2026-0098', '09/10/2026', 'RTN-2026-0361', 'ORD-2026-10341', 10550),
+ ('CN-2026-0091', '24/09/2026', 'RTN-2026-0319', 'ORD-2026-10290', 13790)]
+assert sum(c[4] for c in CREDIT_NOTES) == 42340
+
+DISPUTES = [  # number, invoice, raised, reason, invoice amount, disputed amount, status, company response
+ ('DIS-2026-0014', 'INV-2026-03264', '22/10/2026', 'Wrong Product Delivered', 524100, 21358, 'Awaiting Your Reply', 'Pickup scheduled, credit note to follow'),
+ ('DIS-2026-0011', 'INV-2026-03021', '10/10/2026', 'Quantity Shortfall', 132000, 16992, 'Under Review', 'Delivery challan being checked'),
+ ('DIS-2026-0007', 'INV-2026-03198', '29/09/2026', 'Tax Amount Mismatch', 572300, 4284, 'Resolved', 'Corrected invoice issued'),
+]
+assert 20 * 905 + 2 * round(0.09 * 20 * 905) == 21358                                  # 20 sheets of LM-ARC-002 at the 50-199 price, with Central and State GST
+OPEN_DISPUTES = [d for d in DISPUTES if d[6] != 'Resolved']
+assert len(OPEN_DISPUTES) == 2 and sum(d[5] for d in OPEN_DISPUTES) == 38350

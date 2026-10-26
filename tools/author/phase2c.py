@@ -110,12 +110,8 @@ page('primary','inventory-overview','PRI-INV-01','Primary Customer — Owner —
 # ---------- Inventory Item Details (LM-CAL-003) ----------
 sku = 'LM-CAL-003'; p = BY[sku]
 dates = ['27/07/2026','03/08/2026','10/08/2026','17/08/2026','24/08/2026','31/08/2026','07/09/2026','14/09/2026','21/09/2026','28/09/2026','05/10/2026','12/10/2026','19/10/2026','26/10/2026']
-levels = [480,420,365,300,690,630,575,510,445,385,330,300,260,215]
-mv = [('26/10/2026','Sale to Dealer','Dealer Delta','DSP-2026-5534','\u221220',215),('24/10/2026','Sale to Dealer','Dealer Bravo','DSP-2026-5527','\u221225',235),
-      ('22/10/2026','Sale to Dealer','Dealer Foxtrot','DSP-2026-5519','\u221215',260),('19/10/2026','Sale to Dealer','Dealer Gopal','DSP-2026-5508','\u221230',275),
-      ('15/10/2026','Sale to Dealer','Dealer Harsh','DSP-2026-5496','\u221225',305),('12/10/2026','Stock Adjustment','Damaged in handling','ADJ-2026-0034','\u22125',330),
-      ('08/10/2026','Sale to Dealer','Dealer Bravo','DSP-2026-5471','\u221225',335),('03/10/2026','Sale to Dealer','Dealer Delta','DSP-2026-5452','\u221225',360)]
-mv_rows = ''.join(f'<tr><td>{d}</td><td>{chip(t, "warn" if t=="Stock Adjustment" else "blue")}</td><td>{who}</td><td class="mono nowrap">{ref}</td><td class="num"><b>{q}</b></td><td class="num">{N(b)}</td></tr>' for d,t,who,ref,q,b in mv)
+levels = [420,360,305,240,630,570,515,450,385,325,300,270,215,215]   # weekly closing levels; October points follow the movement balances below
+mv_rows = ''.join(f'<tr><td>{m["date"]}</td><td>{chip(m["type"], {"Stock Adjustment": "warn", "Receipt": "ok"}.get(m["type"], "blue"))}</td><td>{m["who"]}</td><td class="mono nowrap">{m["ref"]}</td><td class="num"><b>{"+" if m["sheets"] > 0 else chr(0x2212)}{abs(m["sheets"])}</b></td><td class="num">{N(m["balance"])}</td></tr>' for m in CAL_MOVES)
 body = f'''  <div class="head">
     <div class="title-row"><h1>{p[1]}</h1>{chip('Low Stock')}</div>
     <div class="acts"><a class="btn" data-link="PRI-CAT-02"><i data-icon="box"></i>View Product</a><a class="btn pri" data-link="PRI-ORD-03"><i data-icon="plus"></i>Reorder</a></div>
@@ -132,12 +128,12 @@ body = f'''  <div class="head">
       <section class="card"><header><h2>Stock Level</h2></header>
         <div class="body">{chart('line', dates, [{'name':'Sheets on hand','values':levels,'color':'var(--accent)'},{'name':'Reorder level','values':[250]*14,'color':'var(--bad)','dots':False}], area=True)}</div></section>
       <section class="card flush"><header><h2>Stock Movements</h2><a class="more" data-link="PRI-INV-01">Inventory overview</a></header>
-        <div class="body"><div class="table-wrap"><table class="tbl"><thead><tr><th>Date</th><th>Type</th><th>Dealer or Reason</th><th>Reference</th><th class="num">Sheets</th><th class="num">Balance</th></tr></thead><tbody>{mv_rows}</tbody></table></div></div></section>
+        <div class="body"><div class="table-wrap"><table class="tbl"><thead><tr><th>Date</th><th>Type</th><th>Name or Reason</th><th>Reference</th><th class="num">Sheets</th><th class="num">Balance</th></tr></thead><tbody>{mv_rows}</tbody></table></div></div></section>
     </div>
     <div class="stack">
       <section class="card pad" style="display:grid;gap:1rem">{sw(sku,'lg','aspect-ratio:16/9')}<dl class="kv"><dt>SKU</dt><dd class="mono">{sku}</dd><dt>Finish</dt><dd>{p[2]}</dd><dt>Thickness</dt><dd>{p[3]}</dd><dt>Sheet Size</dt><dd>8 ft × 4 ft</dd></dl></section>
       <section class="card flush"><header><h2>Batches</h2></header><div class="body"><div class="table-wrap"><table class="tbl"><thead><tr><th>Batch</th><th>Received</th><th class="num">Sheets</th></tr></thead><tbody>
-        <tr><td class="mono">B-2608-07</td><td>24/08/2026</td><td class="num">160</td></tr><tr><td class="mono">B-2606-11</td><td>14/06/2026</td><td class="num">55</td></tr></tbody></table></div></div></section>
+        <tr><td class="mono">B-2610-14</td><td>20/10/2026</td><td class="num">60</td></tr><tr><td class="mono">B-2608-07</td><td>24/08/2026</td><td class="num">100</td></tr><tr><td class="mono">B-2606-11</td><td>14/06/2026</td><td class="num">55</td></tr></tbody></table></div></div></section>
       <section class="card"><header><h2>Reorder Settings</h2><button class="btn sm" type="button" style="margin-left:auto"><i data-icon="edit"></i>Edit</button></header><div class="body"><dl class="kv"><dt>Reorder Level</dt><dd>250 sheets</dd><dt>Reorder Quantity</dt><dd>400 sheets</dd><dt>Lead Time</dt><dd>6 days</dd><dt>Preferred Warehouse</dt><dd>Bhiwandi Warehouse</dd></dl></div></section>
     </div>
   </div>

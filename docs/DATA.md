@@ -80,7 +80,7 @@ except LM-STN-009 "Low Stock" (company side).
 
 ## Number series
 
-Orders `ORD-2026-10482`; invoices `INV-2026-03318`; payments `PAY-2026-02217`; dispatches `DSP-2026-5521`;
+Orders `ORD-2026-10482`; dealer requests `DRQ-2026-0019`; invoice disputes `DIS-2026-0014`; credit notes `CN-2026-0103`; stock adjustments `ADJ-2026-0034`; invoices `INV-2026-03318`; payments `PAY-2026-02217`; dispatches `DSP-2026-5521`;
 returns `RTN-2026-0412`; support tickets `TKT-2026-0731`; schemes `SCH-2026-04`; sales to dealers `SAL-2026-3041`. Batches `B-2610-14`. Payment modes: Bank Transfer, Net Banking, Cheque (never UPI, NEFT, RTGS). Say "Bank Reference", not UTR or Ref.
 
 ## Distributor Alpha figures (Owner view)
@@ -89,7 +89,7 @@ returns `RTN-2026-0412`; support tickets `TKT-2026-0731`; schemes `SCH-2026-04`;
 - Purchases from Crestline by month: May 22,10,000; June 25,60,000; July 19,80,000; August 27,40,000; September 24,30,000; October **33,52,882** (to 26 October).
 - Sales to dealers by month: May 24,80,000; June 28,10,000; July 22,40,000; August 30,60,000; September 27,90,000; October **31,20,000**.
 - Orders: 142 in total: Awaiting Confirmation 2, Confirmed 3, In Transit 2, Delivered 132, Cancelled 3.
-- Schemes: **Festive Volume Rebate** (`SCH-2026-04`): 2% rebate on orders of 3,000 sheets across October and November, progress 2,750 of 3,000 sheets. **Marble Finish Launch Incentive**: ₹25 per sheet of LM-CAL-003, progress 180 of 300 sheets.
+- Schemes: **Festive Volume Rebate** (`SCH-2026-04`): 2% rebate on orders once 2,500 sheets are reached across October and November (changed from 3,000 on 2026-10-26 by the user); progress 2,750 of 2,500 sheets: **target reached**, 250 above. ORD-2026-10482 is the order that takes the total over the target (1,990 before it), so the rebate applies to that order only (−₹16,426); earlier invoices are not changed. **Marble Finish Launch Incentive**: ₹25 per sheet of LM-CAL-003, progress 180 of 300 sheets.
 
 ## Order flow (Place Order → Order Builder → Order Confirmation)
 
@@ -211,13 +211,13 @@ Net Banking (03140); 01984 12/09 ₹5,43,200 Bank Transfer (03109); 01921 02/09 
 Paid by month: May 21,40,000; June 24,10,000; July 20,90,000; August 25,30,000; September 23,60,000; October 18,69,660.
 **Payment Details shows PAY-2026-02217**: recorded 21/10/2026 14:20 by Suresh Iyer, received by Crestline 22/10/2026 10:05, confirmed
 22/10/2026 16:30; paid from Sahyadri Bank, Bhiwandi Branch; Bank Reference SB26102100417; settles ₹2,00,000 of INV-2026-03291 (balance after ₹4,18,400).
-ORD-2026-10431 lines (520 sheets): WNT 120, ARC 150, CAL 60, OAK 100, TEK 90.
+ORD-2026-10431 lines (520 sheets): WNT 120, ARC 150, CAL 60, OAK 100, TEK 90 (the 60 sheets of CAL are received into stock on 20/10, see Phase 4 data).
 
 ## Schemes (Phase 3)
 
 | Scheme | Type | Period | Status | Progress / result |
 |---|---|---|---|---|
-| SCH-2026-04 Festive Volume Rebate | Volume Rebate, 2% | 01/10/2026 to 30/11/2026 | Active | 2,750 of 3,000 sheets (the six October orders: 760 + 280 + 360 + 520 + 430 + 400), 250 to go, 35 days left |
+| SCH-2026-04 Festive Volume Rebate | Volume Rebate, 2% | 01/10/2026 to 30/11/2026 | Active | 2,750 of 2,500 sheets (the six October orders: 760 + 280 + 360 + 520 + 430 + 400), target reached, 250 above, 35 days left |
 | SCH-2026-05 Marble Finish Launch Incentive | Product Incentive, ₹25 per sheet of LM-CAL-003 | 01/09/2026 to 31/12/2026 | Active | 180 of 300 sheets, earned ₹4,500 |
 | SCH-2026-06 Winter Season Volume Bonus | Volume Bonus, 3% | 01/12/2026 to 31/01/2027 | Upcoming | target 3,500 sheets |
 | SCH-2026-02 Monsoon Fast Mover Bonus | Product Incentive, ₹15 per sheet | 01/07/2026 to 30/09/2026 | Completed | 2,550 of 2,400 sheets, ₹38,250 credited |
@@ -239,3 +239,30 @@ Support tickets (Crestline Customer Support, agent Meera Kapoor): TKT-2026-0731 
 Users of Distributor Alpha: Rajesh Menon (Owner, Active), Kavita Joshi (Sales and Operations Manager, Active), Suresh Iyer (Accountant, Active), Pooja
 Deshpande (Sales and Operations Manager, Invited 24/10/2026), Amit Kulkarni (Accountant, Inactive, last signed in 30/06/2026). Phones +91 90000 21001 to 21005.
 Notifications: the bell badge says 3, so each of the three roles has exactly three unread notifications.
+
+## Phase 4 data (Manager and Accountant; model in `tools/author/data.py`, section "Phase 4")
+
+**Lines of the six October orders** (purchases ₹33,52,882 = 9,49,752 + 3,36,500 + 4,42,930 + 6,18,400 + 5,24,100 + 4,81,200; 2,750 sheets).
+10482, 10459, 10447 and 10431 as above. **10398 (430):** WNT 100, ARC 130, OAK 90, SLT 60, TEK 50. **10372 (400):** WNT 80, ARC 100, OAK 80, IVR 80, WNG 60.
+Sheets purchased by product (October): WNT 600, ARC 830, CAL 140, OAK 390, SLT 120, TEK 240, IVR 200, SKY 60, CHR 60, WNG 110, STN 0, CPR 0.
+Rule: never show sheets × price for a past order or invoice unless it multiplies out exactly; by-product money is allocated in proportion with a rounding plug (as `SOLD_VALUE`).
+
+**Receipts at Bhiwandi Warehouse in October** (the delivered orders, on their delivery dates): 10372 on 06/10, 10398 on 13/10, 10431 on 20/10 = **1,350 sheets**.
+**Stock adjustments (October, net −30):** ADJ-2026-0031 02/10 ARC −8 and 0036 23/10 TEK −10, 0035 21/10 WNT −6, 0034 12/10 CAL −5 (all Damaged in Handling); 0032 06/10 OAK −4 and 0033 09/10 SLT +3 (Count Correction).
+**October stock movements: 108** (receipts 15 lines, sales to dealers 87 lines, adjustments 6): received 1,350, sold 2,195, adjusted −30, net −875 (8,290 at the start of October, 7,415 now).
+Every dealer sale is split into product lines (`SALES[..]['lines']`; sum per sale = its sheets, sum per product = October sheets sold; CAL appears only on the seven dispatches already shown on Inventory Item Details).
+**Inventory Item Details (LM-CAL-003) changed in Phase 4:** the 60 sheets of ORD-2026-10431 are received on 20/10 (Receipt from Crestline, +60), so balances before 20/10 are 60 lower (opening 325 before 03/10; 300, 275, 270, 245, 215, then 275, 260, 235, 215); batches B-2610-14 (20/10, 60), B-2608-07 (24/08, 100), B-2606-11 (14/06, 55); Inventory Reports ageing for CAL is 60 / 0 / 155.
+
+**Dispatch status of dealer sales.** Expected delivery = sale date + days by city (Pune 2, Thane 3, Nashik 3, Kolhapur 4, Satara 4, Solapur 4, Nagpur 6, Panaji 5). Being Packed = dispatched today (26/10); Delivered = expected before today; otherwise In Transit. Result: 1 Being Packed (SAL-2026-3041), 2 In Transit, 29 Delivered. Incoming from Crestline: the three open orders (1,400 sheets) as on Inventory Overview.
+
+**Low stock (Low Stock Overview).** Products below their reorder level: LM-CAL-003 (available 125, level 250), LM-CHR-007 (60, 200), LM-CPR-010 (55, 100) = Low Stock; LM-STN-009 (0, 150) = Out of Stock. Reorder quantity: CAL 400 (as on Item Details), CHR 300, STN 300, CPR 150; value at the slab price of that quantity: 5,80,000 + 3,03,000 + 4,12,500 + 2,74,500 = **₹15,70,000** (before GST). Sheets short of reorder level 460.
+
+**Dealer targets (October).** BRV 6,50,000; DLT 6,00,000; FXT 4,50,000; GPL 4,25,000; HRS 3,75,000; IND 2,40,000; JYT 2,50,000; KNL 1,50,000 = ₹31,40,000. Achievement = sales ÷ target: 99.4% overall; Above Target (100% or more) Bravo 105.2%, Foxtrot 105.8%, Indira 102.5%, Kunal 103.3%; Near Target (95% to 99%) Delta 98.7%, Gopal 96.7%; Below Target Harsh 90.1%, Jayant 87.2%. Growth is October against September sales (Kunal is New).
+
+**Pending dealer requests** (number series `DRQ-2026-0019`): DRQ-2026-0019 Dealer Mahesh, Amravati, Mahesh Gaikwad, 24/10, ₹3,00,000 credit, 120 sheets a month, 3 of 3 documents, Awaiting Your Review; DRQ-2026-0018 Dealer Navin, Sangli, Navin Kamble, 22/10, ₹3,50,000, 100 sheets, 2 of 3 documents, Awaiting Your Review; DRQ-2026-0017 Dealer Omkar, Jalgaon, Omkar Deshmukh, 19/10, ₹4,00,000, 150 sheets, 3 of 3, Sent to Crestline (reviewed by Kavita Joshi 21/10, waiting for Vikram Chopra). All submitted by Rajesh Menon. Requested credit ₹10,50,000.
+
+**Accountant.** Credit limit ₹40,00,000; outstanding ₹14,86,320 (37%); credit available ₹25,13,680 (₹15,63,928 after ORD-2026-10482). **Ageing of the open invoices** (days past due date, today 26/10): Not Yet Due ₹11,67,920 (INV-03264, 03291, 03318); 1 to 30 days overdue ₹1,32,000 (INV-03021, 30 days); 31 to 60 days overdue ₹1,86,400 (INV-02986, 37 days); 61 to 90 and over 90: none. Overdue ₹3,18,400 = 21.4% of the balance.
+**Tax split** (taxable + 2 × 9% + freight = total, freight ₹4,500 on an order below ₹5,00,000 when an exact split exists, else ₹0): October orders — 10482 taxable 8,04,874 GST 72,439 each, freight 0; 10459 2,81,356 / 25,322 / 4,500; 10447 3,71,550 / 33,440 / 4,500; 10431 5,24,068 / 47,166 / 0; 10398 4,44,152 / 39,974 / 0; 10372 4,07,796 / 36,702 / 0 (October: taxable ₹28,33,796, Central GST ₹2,55,043, State GST ₹2,55,043, freight ₹9,000). May to September totals are solved the same way in `MONTH_TAX` (freight 9,000 / 9,000 / 13,500 / 9,000 / 13,500). **Purchases are orders placed (₹33,52,882 in October); "Invoiced" is ₹20,66,630 (4 invoices, two October orders have no invoice yet). Screens name the basis.** Six-month purchases ₹1,52,72,882; payments ₹1,33,99,660.
+**Credit notes** (the Phase 3 return credits, ₹42,340): CN-2026-0103 16/10 RTN-2026-0377 ORD-2026-10372 ₹18,000; CN-2026-0098 09/10 RTN-2026-0361 ORD-2026-10341 ₹10,550; CN-2026-0091 24/09 RTN-2026-0319 ORD-2026-10290 ₹13,790.
+**Invoice disputes** (series `DIS-2026-0014`; disputed amounts stay inside the invoice balances): DIS-2026-0014 INV-2026-03264, 22/10, Wrong Product Delivered (20 sheets of LM-ARC-002 from ORD-2026-10398, return RTN-2026-0396; 20 × ₹905 = ₹18,100 + Central GST ₹1,629 + State GST ₹1,629 = **₹21,358**), Awaiting Your Reply, related ticket TKT-2026-0724; DIS-2026-0011 INV-2026-03021, 10/10, Quantity Shortfall, ₹16,992, Under Review; DIS-2026-0007 INV-2026-03198, 29/09, Tax Amount Mismatch, ₹4,284, Resolved. **Open disputes 2, ₹38,350.** Dispute Details shows DIS-2026-0014 (four messages, two attachments).
+**Record Payment** is pre-filled with the two overdue invoices (₹1,86,400 + ₹1,32,000 = ₹3,18,400), Bank Transfer from Sahyadri Bank, Bhiwandi Branch; after it the balance would be ₹11,67,920 and nothing overdue.

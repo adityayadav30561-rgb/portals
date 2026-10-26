@@ -115,7 +115,7 @@ page('primary', 'payment-details', 'PRI-BIL-04', 'Primary Customer — Owner —
 
 # ---------- Schemes and Incentives ----------
 SCH = [  # number, name, type, start, end, status, done, goal, reward text
- ('SCH-2026-04', 'Festive Volume Rebate', 'Volume Rebate', '01/10/2026', '30/11/2026', 'Active', 2750, 3000, '2% rebate'),
+ ('SCH-2026-04', 'Festive Volume Rebate', 'Volume Rebate', '01/10/2026', '30/11/2026', 'Active', 2750, 2500, '2% rebate'),
  ('SCH-2026-05', 'Marble Finish Launch Incentive', 'Product Incentive', '01/09/2026', '31/12/2026', 'Active', 180, 300, f'{M(4500)} earned'),
  ('SCH-2026-06', 'Winter Season Volume Bonus', 'Volume Bonus', '01/12/2026', '31/01/2027', 'Upcoming', 0, 3500, '3% bonus'),
  ('SCH-2026-02', 'Monsoon Fast Mover Bonus', 'Product Incentive', '01/07/2026', '30/09/2026', 'Completed', 2550, 2400, f'{M(38250)} credited'),
@@ -128,9 +128,10 @@ def prog(done, goal):
     return f'<span class="inline-meter" style="justify-content:flex-start"><span class="meter {"ok" if done >= goal else ""}"><i style="width:{pc}%"></i></span><span style="white-space:nowrap"><b style="min-width:0">{N(done)}</b> of {N(goal)}</span></span>'
 def sch_card(s):
     pc = round(s[6] / s[7] * 100)
-    return f'''<section class="card"><header><h2>{s[1]}</h2><span style="margin-left:auto">{chip(s[5])}</span></header><div class="body">
+    reached = f'{chip("Target Reached", "ok")} ' if s[6] >= s[7] else ''
+    return f'''<section class="card"><header><h2>{s[1]}</h2><span style="margin-left:auto">{reached}{chip(s[5])}</span></header><div class="body">
       <div style="display:flex;align-items:baseline;gap:.5rem"><b style="font-size:1.5rem;letter-spacing:-.02em">{N(s[6])}</b><span>of {N(s[7])} sheets</span><b style="margin-left:auto">{pc}%</b></div>
-      <span class="meter {"ok" if pc >= 90 else ""}" style="margin:.75rem 0 1.25rem"><i style="width:{pc}%"></i></span>
+      <span class="meter {"ok" if pc >= 90 else ""}" style="margin:.75rem 0 1.25rem"><i style="width:{min(pc, 100)}%"></i></span>
       {kv([('Scheme Number', f'<span class="mono">{s[0]}</span>'), ('Type', s[2]), ('Reward', s[8] if s[0] != "SCH-2026-04" else "2% rebate on order value"), ('Ends', s[4])])}
       <a class="btn block" data-link="PRI-SCH-02" style="margin-top:1.25rem">View Scheme</a></div></section>'''
 sch_rows = [f'<tr><td>{link("PRI-SCH-02", s[1])}</td><td class="mono nowrap">{s[0]}</td><td>{s[4]}</td><td>{prog(s[6], s[7]) if s[5] != "Upcoming" else "—"}</td><td class="nowrap">{s[8]}</td><td>{chip(s[5])}</td></tr>' for s in SCH]
@@ -141,7 +142,7 @@ body = f'''  <div class="head">
   <div class="kpis">
     {kpi('Active Schemes', '2')}
     {kpi('Incentives Earned This Year', M(earned))}
-    {kpi('Sheets to Festive Target', '250 <small>sheets</small>', chip('35 days left', 'warn'))}
+    {kpi('Sheets Above Festive Target', '250 <small>sheets</small>', chip('Target Reached', 'ok'))}
     {kpi('Upcoming Schemes', '1')}
   </div>
   <div class="grid g-2">{sch_card(SCH[0])}{sch_card(SCH[1])}</div>
@@ -158,21 +159,21 @@ body = f'''  <div class="head">
     <div class="acts"><button class="btn" type="button"><i data-icon="download"></i>Download Terms</button><a class="btn pri" data-link="PRI-ORD-03"><i data-icon="plus"></i>Place Order</a></div>
   </div>
   <div class="kpis">
-    {kpi('Sheets Counted', N(2750), chip('92% of Target', 'blue'))}
-    {kpi('Sheets Remaining', '250')}
+    {kpi('Sheets Counted', N(2750), chip('Target Reached', 'ok'))}
+    {kpi('Sheets Above Target', '250')}
     {kpi('Days Left', '35')}
     {kpi('Rebate Rate', '2%')}
   </div>
   <div class="grid g-main-side" style="--side:24rem">
     <div class="stack">
       <section class="card"><header><h2>Progress to Target</h2></header><div class="body">
-        <div style="display:flex;align-items:baseline;gap:.5rem"><b style="font-size:1.75rem;letter-spacing:-.02em">2,750</b><span>of 3,000 sheets</span><b style="margin-left:auto">92%</b></div>
-        <span class="meter ok" style="margin:.75rem 0 1.25rem"><i style="width:92%"></i></span>
+        <div style="display:flex;align-items:baseline;gap:.5rem"><b style="font-size:1.75rem;letter-spacing:-.02em">2,750</b><span>of 2,500 sheets</span><b style="margin-left:auto">110%</b></div>
+        <span class="meter ok" style="margin:.75rem 0 1.25rem"><i style="width:100%"></i></span>
         {kv([('Rebate on ORD-2026-10482', M(16426))])}</div></section>
       <section class="card flush"><header><h2>Qualifying Orders</h2></header><div class="body">{table([('Order Number',''), ('Order Date',''), ('Order Status',''), ('Sheets Counted','num')], [q_rows], foot='<tfoot><tr><td colspan="3">Total</td><td class="num">2,750</td></tr></tfoot>')}</div></section>
     </div>
     <div class="stack">
-      {card('Scheme Terms', kv([('Scheme Type', 'Volume Rebate'), ('Rebate Rate', '2% of order value'), ('Target', '3,000 sheets'), ('Start Date', '01/10/2026'), ('End Date', '30/11/2026'), ('Eligible Products', 'All 12 products'), ('Eligible Customers', 'Primary Distributors')]))}
+      {card('Scheme Terms', kv([('Scheme Type', 'Volume Rebate'), ('Rebate Rate', '2% of order value'), ('Target', '2,500 sheets'), ('Start Date', '01/10/2026'), ('End Date', '30/11/2026'), ('Eligible Products', 'All 12 products'), ('Eligible Customers', 'Primary Distributors')]))}
       <section class="card flush"><header><h2>Documents</h2></header><div class="body">{table([('Document',''), ('Type',''), ('','')], [f'<tr><td><b>Scheme Terms</b></td><td><span class="tag">PDF</span></td><td><div class="row-actions">{dl_btn("Download terms")}</div></td></tr>'])}</div></section>
     </div>
   </div>
@@ -216,12 +217,13 @@ page('primary', 'sales-reports', 'PRI-RPT-01', 'Primary Customer — Owner — S
 
 # ---------- Inventory Reports ----------
 def ageing(p):
-    if p[0] == 'LM-CAL-003': return (0, 0, 215)               # batches B-2608-07 (24/08, 160) and B-2606-11 (14/06, 55): both over 60 days
+    if p[0] == 'LM-CAL-003': return (60, 0, 155)              # batches B-2610-14 (20/10, 60), B-2608-07 (24/08, 100) and B-2606-11 (14/06, 55)
     on = p[8]; a = round(on * 0.62 / 5) * 5; b = round(on * 0.26 / 5) * 5
     return (a, b, on - a - b)
 AG = {p[0]: ageing(p) for p in P}
 ag_tot = [sum(AG[s][i] for s in AG) for i in range(3)]
 assert sum(ag_tot) == 7415
+assert all(AG[s][0] >= sum(q for o, _ in RECEIPTS for k, q in ORDER_LINES[o] if k == s) for s in AG), 'October receipts must be in the youngest band'
 ir = ''.join(f'<tr><td><div class="prod">{sw(p[0])}<div><b>{p[1]}</b></div></div></td><td class="mono nowrap">{p[0]}</td><td class="num"><b>{N(p[8])}</b></td><td class="num">{N(SOLD[p[0]]) if SOLD[p[0]] else "—"}</td>'
              f'<td class="num">{N(AG[p[0]][0]) if AG[p[0]][0] else "—"}</td><td class="num">{N(AG[p[0]][1]) if AG[p[0]][1] else "—"}</td><td class="num">{N(AG[p[0]][2]) if AG[p[0]][2] else "—"}</td></tr>' for p in P)
 finish = [('Matte', 2910, '#0a48fd'), ('Woodgrain', 2680, '#0b8fa8'), ('Texture', 640, '#7a36fb'), ('Gloss', 465, '#e0a030'), ('Suede', 410, '#0c9b6a'), ('High Gloss', 215, '#d43a2f'), ('Metallic', 95, '#8b93a3')]

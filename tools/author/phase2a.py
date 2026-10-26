@@ -17,7 +17,7 @@ dealer_rows = ''.join(f'<li><div class="grow"><div style="display:flex;align-ite
 alerts = [('LM-STN-009',0,150),('LM-CHR-007',60,200),('LM-CAL-003',125,250)]
 alert_rows = ''.join(f'<tr><td><div class="prod">{sw(s)}<div><b>{BY[s][1]}</b></div></div></td><td class="mono nowrap">{s}</td><td class="num"><b>{N(a)}</b></td><td class="num">{N(r)}</td><td>{chip(BY[s][13])}</td></tr>' for s,a,r in alerts)
 def scheme(name, ends, done, goal, pct, cls):
-    return f'''<li style="display:block"><div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap"><b style="flex:1;min-width:10rem">{name}</b><span class="chip plain">Ends {ends}</span></div>
+    return f'''<li style="display:block"><div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap"><b style="flex:1;min-width:10rem">{name}</b>{'<span class="chip ok">Target Reached</span>' if done >= goal else ''}<span class="chip plain">Ends {ends}</span></div>
           <span class="meter {cls}" style="margin-top:.75rem"><i style="width:{pct}%"></i></span>
           <div style="margin-top:.5rem"><b>{N(done)}</b> of {N(goal)} sheets</div></li>'''
 
@@ -54,7 +54,7 @@ body = f'''  <div class="head">
       <div class="body"><div class="table-wrap"><table class="tbl"><thead><tr><th>Product</th><th>SKU</th><th class="num">Available</th><th class="num">Reorder Level</th><th>Status</th></tr></thead><tbody>{alert_rows}</tbody></table></div></div></section>
     <section class="card"><header><h2>Active Schemes</h2><a class="more" data-link="PRI-SCH-01">All schemes</a></header>
       <div class="body"><ul class="list">
-        {scheme('Festive Volume Rebate','30/11/2026',2750,3000,92,'ok')}
+        {scheme('Festive Volume Rebate','30/11/2026',2750,2500,100,'ok')}
         {scheme('Marble Finish Launch Incentive','31/12/2026',180,300,60,'')}
       </ul></div></section>
   </div>

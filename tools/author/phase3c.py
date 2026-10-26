@@ -242,7 +242,7 @@ page('primary', 'my-profile', 'PRI-PRO-02', 'Primary Customer — Owner — My P
 def n(sid, title, ref, when, icon, kind='', unread=False):
     return (f'<li{" class=unread" if unread else ""}><span class="dot {kind}"><i data-icon="{icon}"></i></span><div class="title"><a data-link="{sid}">{title}</a><span class="tag mono">{ref}</span></div><time>{when}</time></li>')
 def day(label, *items): return f'<div class="day">{label}</div><ul class="feed ntf">{"".join(items)}</ul>'
-OWN = (day('Today', n('PRI-ORD-02', 'Order Submitted', 'ORD-2026-10482', '11:42', 'cart', '', True), n('PRI-SCH-02', 'Scheme Target Within Reach', 'SCH-2026-04', '09:15', 'tag', 'ok', True), n('PRI-INV-02', 'Low Stock', 'LM-CAL-003', '08:30', 'warn', 'warn', True))
+OWN = (day('Today', n('PRI-ORD-02', 'Order Submitted', 'ORD-2026-10482', '11:42', 'cart', '', True), n('PRI-SCH-02', 'Scheme Target Reached', 'SCH-2026-04', '09:15', 'tag', 'ok', True), n('PRI-INV-02', 'Low Stock', 'LM-CAL-003', '08:30', 'warn', 'warn', True))
        + day('Yesterday', n('PRI-SUP-03', 'New Reply on Support Ticket', 'TKT-2026-0731', '16:10', 'help'), n('PRI-RET-01', 'Return Request Submitted', 'RTN-2026-0412', '11:20', 'ret'))
        + day('24 October 2026', n('PRI-BIL-02', 'Invoice Issued', 'INV-2026-03318', '06:32', 'receipt'))
        + day('23 October 2026', n('PRI-ORD-02', 'Order Confirmed', 'ORD-2026-10459', '09:50', 'cart', 'ok'))

@@ -22,15 +22,24 @@
     if (v === 0) return '₹0';
     return v >= 10000000 ? '₹' + trim(v / 10000000) + ' crore' : v >= 100000 ? '₹' + trim(v / 100000) + ' lakh' : '₹' + fmt(v);
   };
-  var nice = function (max) {
-    var exp = Math.pow(10, Math.floor(Math.log10(max || 1))), f = max / exp;
-    return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * exp;
+  // Axis scale: the smallest step of 1, 2, 2.5 or 5 times a power of ten that reaches the largest value in six intervals or fewer,
+  // so a peak of 33.5 lakh gets a 40 lakh axis, not 50 lakh.
+  var scale = function (max) {
+    max = max || 1;
+    var e0 = Math.floor(Math.log10(max)) - 1;
+    for (var e = e0; ; e++) {
+      var steps = [1, 2, 2.5, 5];
+      for (var k = 0; k < steps.length; k++) {
+        var step = steps[k] * Math.pow(10, e), n = Math.ceil(max / step - 1e-9);
+        if (n <= 6) return { step: step, ticks: n, top: step * n };
+      }
+    }
   };
 
   function axes(box, svg, W, H, labels, series, money) {
     var all = [];
     series.forEach(function (s) { s.values.forEach(function (v) { all.push(v); }); });
-    var top = nice(Math.max.apply(null, all)), ticks = money ? 5 : 4;
+    var sc = scale(Math.max.apply(null, all)), top = sc.top, ticks = sc.ticks;
     var tickLabel = function (v) { return money ? moneyLabel(v) : fmt(v); };
     var widest = 0;
     for (var t = 0; t <= ticks; t++) widest = Math.max(widest, tickLabel((top * t) / ticks).length);

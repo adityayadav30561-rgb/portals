@@ -240,10 +240,11 @@
     ['09', 'Not Found', 'ALL', 'Errors', 'm', 'Shown when the requested page does not exist']
   ];
 
-  // Screens that exist as files today (sign-in screens; Phase 2: eleven Primary Owner screens; Phase 3: the Primary Owner's remaining screens). Add an ID here when its file is built.
+  // Screens that exist as files today (sign-in screens; Phase 2: eleven Primary Owner screens; Phase 3: the Primary Owner's remaining screens; Phase 4: the Primary Manager and Accountant). Add an ID here when its file is built.
   var BUILT = ['PRI-OWN-01', 'PRI-PRO-01', 'PRI-CAT-01', 'PRI-CAT-02', 'PRI-ORD-03', 'PRI-ORD-04', 'PRI-ORD-05', 'PRI-ORD-01', 'PRI-ORD-02', 'PRI-INV-01', 'PRI-INV-02',
     'PRI-DLR-01', 'PRI-DLR-02', 'PRI-DLR-03', 'PRI-SAL-01', 'PRI-SAL-02', 'PRI-SAL-03',
     'PRI-BIL-01', 'PRI-BIL-02', 'PRI-BIL-03', 'PRI-BIL-04', 'PRI-SCH-01', 'PRI-SCH-02', 'PRI-RPT-01', 'PRI-RPT-02',
+    'PRI-MGR-01', 'PRI-INV-03', 'PRI-INV-04', 'PRI-DSP-01', 'PRI-DLR-04', 'PRI-DLR-05', 'PRI-DLR-06',
     'PRI-RET-01', 'PRI-RET-02', 'PRI-SUP-01', 'PRI-SUP-02', 'PRI-SUP-03', 'PRI-USR-01', 'PRI-USR-02', 'PRI-USR-03', 'PRI-PRO-02', 'PRI-NTF-01',
     'AUT-01', 'AUT-02', 'AUT-03', 'AUT-04', 'AUT-05', 'AUT-06', 'AUT-07', 'AUT-08', 'AUT-09'];
 

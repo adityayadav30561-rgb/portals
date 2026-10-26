@@ -102,10 +102,12 @@ a.nv:hover { background: var(--surface-2); color: var(--ink); text-decoration: n
 /* ---------- Tables ---------- */
 .card .table-wrap { border-top: 0; }
 .tbl th { white-space: nowrap; }
+.tbl.wrap th { white-space: normal; vertical-align: bottom; }
 .tbl td { white-space: normal; }
 .tbl td.num, .tbl td .btn, .tbl td .qty, .tbl td .chip, .tbl td.mono, .tbl td.nowrap { white-space: nowrap; }
 .tbl td > a > b { white-space: nowrap; }
 .tbl .prod > div:not(.sw) { min-width: 8rem; }
+.tbl.tight .prod > div:not(.sw) { min-width: 6.5rem; }
 .field > .qty { justify-self: start; }
 .tbl th:first-child, .tbl td:first-child { padding-left: 1.125rem; }
 .tbl th:last-child, .tbl td:last-child { padding-right: 1.125rem; }

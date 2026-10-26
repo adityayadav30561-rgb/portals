@@ -697,3 +697,135 @@ BSCH = [SCH_FESTIVE[:2] + ('Volume Rebate', '01/10/2026', '30/11/2026', 'Active'
         ('SCH-2026-03', 'Monsoon Dealer Incentive', 'Volume Incentive', '01/07/2026', '30/09/2026', 'Completed', 1310, 1200, f'{M(13100)} credited')]
 assert 50 * 15 == 750 and 1310 * 10 == 13100
 B_INCENTIVES = 750 + 13100
+
+
+# =====================================================================================================================
+# Phase 7 data (docs/DATA.md: "Phase 7 data"). Secondary Customer Sales and Inventory Manager (Arjun Nair, Dealer Bravo): retailer orders and
+# deliveries, stock movements, stock count, reorder recommendations, retailer targets and requests. Numbers Bravo issues itself use their own
+# series: retailer requests RRQ-2026-0005 to 0007, deliveries DLV-2026-0401 to 0412 (suffix = the sale number), adjustments ADJ-2026-B0011 to B0015.
+# =====================================================================================================================
+# ---- The retailer order placed today by Retailer Charlie (Imran Sheikh), awaiting confirmation: the Tertiary Sales Entry example of Phase 6 ----
+PEND_ORDER = dict(number='TSL-2026-0413', retailer='CHR', date='26/10/2026', time='11:20', requested='28/10/2026', placed_by='Imran Sheikh',
+                  lines=[('LM-WNT-001', 20), ('LM-ARC-002', 30), ('LM-CAL-003', 5), ('LM-OAK-004', 10)])
+PEND_SHEETS = sum(q for _, q in PEND_ORDER['lines'])
+PEND_SUB = sum(q * rp(s) for s, q in PEND_ORDER['lines']); PEND_GST = round(PEND_SUB * 0.09); PEND_TOTAL = PEND_SUB + 2 * PEND_GST
+assert (PEND_SHEETS, PEND_SUB, PEND_GST, PEND_TOTAL) == (65, 88800, 7992, 104784) and RTL['CHR'][6] - RTL_OWES['CHR'] - PEND_TOTAL == 133216
+
+# ---- Deliveries to retailers: dispatch date, expected delivery (dispatch + days by area), status, actual delivery date, vehicle and driver ----
+RLEAD = {'CHR': 1, 'KIR': 2, 'MEH': 2}                                       # days from dispatch to delivery (Camp 1, Kothrud 2, Pimpri Chinchwad 2)
+DISPATCH_LATE = {'TSL-2026-0412': '26/10/2026'}                              # recorded Sunday 25/10, packed and dispatched Monday 26/10
+LATE_DELIVERY = {'TSL-2026-0404': '08/10/2026', 'TSL-2026-0407': '16/10/2026'}   # delivered one day after the expected date
+BVEHICLES = [('MH 12 PQ 2204', 'Tata Ace', 'Ramesh Kale', '+91 90000 31011'), ('MH 12 RS 7716', 'Mahindra Bolero Pickup', 'Sandeep Jagtap', '+91 90000 31012')]
+for _s in TSALES:
+    _n = int(_s['number'][-4:])
+    _s['delivery'] = f'DLV-2026-{_n:04d}'
+    _s['dispatched'] = DISPATCH_LATE.get(_s['number'], _s['date'])
+    _s['expected'] = fd(pd(_s['dispatched']) + datetime.timedelta(days=RLEAD[_s['retailer']]))
+    _s['fstatus'] = 'Being Packed' if pd(_s['dispatched']) == TODAY else 'Delivered' if pd(_s['expected']) < TODAY else 'In Transit'
+    _s['delivered'] = LATE_DELIVERY.get(_s['number'], _s['expected']) if _s['fstatus'] == 'Delivered' else None
+    _s['vehicle'] = BVEHICLES[_n % 2]
+RDEL = TSALES                                                                # newest first
+R_DELIVERED = [s for s in TSALES if s['fstatus'] == 'Delivered']
+R_ONTIME = [s for s in R_DELIVERED if pd(s['delivered']) <= pd(s['expected'])]
+R_DAYS = {s['number']: (pd(s['delivered']) - pd(s['dispatched'])).days for s in R_DELIVERED}
+R_AVG_DAYS = sum(R_DAYS.values()) / len(R_DAYS)
+assert [s['fstatus'] for s in TSALES[:2]] == ['Being Packed', 'In Transit'] and len(R_DELIVERED) == 10 and len(R_ONTIME) == 8 and R_AVG_DAYS == 1.8
+RSTATUS_COUNT = {st: sum(1 for s in TSALES if s['fstatus'] == st) for st in ('Being Packed', 'In Transit', 'Delivered')}
+RWEEK_VALUE = [sum(s['value'] for s in TSALES if a <= int(s['date'][:2]) <= b) for _, a, b in WEEKS]
+assert RWEEK_VALUE == [183000, 162000, 175000, 110000] and sum(RWEEK_VALUE) == 630000
+
+# ---- Retailer targets (October) ----
+RTARGET = {'CHR': 250000, 'KIR': 220000, 'MEH': 170000}
+RTARGET_TOTAL = sum(RTARGET.values()); assert RTARGET_TOTAL == 640000 != TARGET['BRV']
+def r_ach(k): return RTL[k][9][-1] / RTARGET[k] * 100
+def r_status(k):
+    a = r_ach(k); return 'Above Target' if a >= 100 else 'Near Target' if a >= 95 else 'Below Target'
+assert [r_status(k) for k in RTL] == ['Above Target', 'Near Target', 'Below Target']
+
+# ---- Stock adjustments of Dealer Bravo (October, net -13). Count Correction on 20/10 comes from the full stock count (below). No adjustment touches LM-CAL-003 (BCAL). ----
+BADJ = [('ADJ-2026-B0015', '24/10/2026', 'LM-OAK-004', -4, 'Damaged in Handling'), ('ADJ-2026-B0014', '20/10/2026', 'LM-WNG-011', -3, 'Count Correction'),
+        ('ADJ-2026-B0013', '20/10/2026', 'LM-SLT-005', 2, 'Count Correction'), ('ADJ-2026-B0012', '11/10/2026', 'LM-WNT-001', -3, 'Damaged in Handling'),
+        ('ADJ-2026-B0011', '03/10/2026', 'LM-IVR-008', -5, 'Damaged in Handling')]
+BADJUSTED = sum(a[3] for a in BADJ); assert BADJUSTED == -13
+# opening stock now includes the adjustments (it replaces the Phase 6 B_OPENING, which assumed none)
+B_OPENING = {s: BSTOCK[s]['on_hand'] - B_RECV.get(s, 0) + TSOLD[s] - sum(a[3] for a in BADJ if a[2] == s) for s in BSTOCK}
+assert all(v >= 0 for v in B_OPENING.values()) and B_OPENING['LM-CAL-003'] == BCAL_OPEN
+
+# CPR was received on 07/10 (SAL-2026-3017) but two earlier retail sales carried it; swap those lines with later sales (sheet totals per sale and per product unchanged)
+def _swap(a_no, a_sku, b_no, b_sku, q):
+    A = next(s for s in TSALES if s['number'] == a_no); B = next(s for s in TSALES if s['number'] == b_no)
+    for sale, out_sku, in_sku in ((A, a_sku, b_sku), (B, b_sku, a_sku)):
+        d = dict(sale['lines']); d[out_sku] -= q; d[in_sku] = d.get(in_sku, 0) + q
+        sale['lines'] = [(k, v) for k, v in d.items() if v]
+_swap('TSL-2026-0403', 'LM-CPR-010', 'TSL-2026-0405', 'LM-ARC-002', 6)
+_swap('TSL-2026-0404', 'LM-CPR-010', 'TSL-2026-0405', 'LM-WNT-001', 1)
+assert all(sum(q for _, q in s['lines']) == s['sheets'] for s in TSALES)
+
+# ---- Every stock movement of October (newest first): receipts from Distributor Alpha on their delivery date, sales to retailers, adjustments ----
+BMOVES = []
+for _s in BRV_SALES:
+    if _s['status'] == 'Delivered':
+        for _k, _q in _s['lines']: BMOVES.append(dict(date=_s['expected'], type='Receipt', sku=_k, who='Distributor Alpha', ref=_s['number'], sheets=_q))
+for _s in TSALES:
+    for _k, _q in _s['lines']: BMOVES.append(dict(date=_s['date'], type='Sale to Retailer', sku=_k, who=RTL[_s['retailer']][1], ref=_s['number'], sheets=-_q))
+for _a in BADJ: BMOVES.append(dict(date=_a[1], type='Stock Adjustment', sku=_a[2], who=_a[4], ref=_a[0], sheets=_a[3]))
+_ord = {'Receipt': 0, 'Stock Adjustment': 1, 'Sale to Retailer': 2}
+BMOVES.sort(key=lambda m: (pd(m['date']), _ord[m['type']]), reverse=True)
+BM_RECV = sum(m['sheets'] for m in BMOVES if m['type'] == 'Receipt'); BM_SOLD = -sum(m['sheets'] for m in BMOVES if m['type'] == 'Sale to Retailer')
+assert (BM_RECV, BM_SOLD) == (380, 370) and sum(B_OPENING.values()) == 1061 and sum(B_OPENING.values()) + BM_RECV - BM_SOLD + BADJUSTED == 1058
+BMOVE_BY = {s: dict(received=0, sold=0, adjusted=0) for s in BSTOCK}
+for _m in BMOVES:
+    _d = BMOVE_BY[_m['sku']]
+    if _m['type'] == 'Receipt': _d['received'] += _m['sheets']
+    elif _m['type'] == 'Sale to Retailer': _d['sold'] -= _m['sheets']
+    else: _d['adjusted'] += _m['sheets']
+assert all(B_OPENING[s] + d['received'] - d['sold'] + d['adjusted'] == BSTOCK[s]['on_hand'] for s, d in BMOVE_BY.items())
+assert [(m['date'], m['sheets']) for m in BMOVES if m['sku'] == 'LM-CAL-003' and m['type'] != 'Stock Adjustment'] == [(m['date'], m['sheets']) for m in BCAL]
+def _balance_on(sku, day_end):                                               # system balance at the end of a day (before any count correction on that day)
+    b = B_OPENING[sku]
+    for m in reversed(BMOVES):
+        if m['sku'] == sku and pd(m['date']) <= pd(day_end) and m['type'] != 'Stock Adjustment' or (m['sku'] == sku and m['type'] == 'Stock Adjustment' and m['who'] != 'Count Correction' and pd(m['date']) <= pd(day_end)):
+            b += m['sheets']
+    return b
+_run = dict(B_OPENING)                                                       # stock never goes negative at any point of the month
+for _m in reversed(BMOVES):
+    _run[_m['sku']] += _m['sheets']; assert _run[_m['sku']] >= 0, _m
+
+# ---- Full stock count of 20/10/2026 (all 12 products, Hadapsar Shop and Godown): physical count = system balance plus the Count Correction ----
+COUNT_DATE = '20/10/2026'
+BCOUNT = {s: (_balance_on(s, COUNT_DATE), _balance_on(s, COUNT_DATE) + sum(a[3] for a in BADJ if a[2] == s and a[4] == 'Count Correction')) for s in BSTOCK}
+B_COUNT_SYSTEM = sum(v[0] for v in BCOUNT.values()); B_COUNT_VAR = sum(abs(v[1] - v[0]) for v in BCOUNT.values())
+B_COUNT_ACC = (1 - B_COUNT_VAR / B_COUNT_SYSTEM) * 100
+assert B_COUNT_VAR == 5 and sum(1 for v in BCOUNT.values() if v[0] == v[1]) == 10 and BCOUNT['LM-CAL-003'][0] == BCOUNT['LM-CAL-003'][1]
+
+# ---- Reorder recommendations. Rule: reorder quantity = 2.5 x reorder level to a multiple of 25 (LM-CAL-003: 100, as on Inventory Item Details); recommended when
+#      available is below the reorder level; quantity = reorder quantity, limited to what Distributor Alpha has available, in multiples of 25; value at the dealer price ----
+def _up25(v): return -(-int(v) // 25) * 25
+BLEAD = 2                                                                    # days from Distributor Alpha's dispatch to receipt (Pune)
+BREORDER_QTY = {s: _up25(BSTOCK[s]['level'] * 2.5) for s in BSTOCK}
+def b_cover(s): return None if not TSOLD[s] else BSTOCK[s]['available'] / (TSOLD[s] / 26)
+BREC = {}
+for _s, _b in BSTOCK.items():
+    _alpha = BY[_s][10]
+    if _b['available'] < _b['level']:
+        _q = min(BREORDER_QTY[_s], _alpha // 25 * 25)
+        BREC[_s] = dict(qty=_q, value=_q * dp(_s), action='Order Now' if _q else 'Out at Distributor Alpha')
+    else:
+        BREC[_s] = dict(qty=0, value=0, action='No Order Needed')
+assert BREORDER_QTY['LM-CAL-003'] == 100 and round(b_cover('LM-CAL-003')) == 20
+assert {s: r['qty'] for s, r in BREC.items() if r['action'] != 'No Order Needed'} == {'LM-CAL-003': 100, 'LM-CHR-007': 50, 'LM-STN-009': 0, 'LM-CPR-010': 50}
+BREC_SHEETS = sum(r['qty'] for r in BREC.values()); BREC_VALUE = sum(r['value'] for r in BREC.values())
+assert (BREC_SHEETS, BREC_VALUE) == (200, 335500)
+BLOW = [s for s, b in BSTOCK.items() if b['status'] in ('Low Stock', 'Out of Stock')]; assert len(BLOW) == 4
+BSHORT = sum(BSTOCK[s]['level'] - BSTOCK[s]['available'] for s in BLOW); assert BSHORT == 80
+
+# ---- Pending retailer requests (Add Retailer Request: Dealer Review by Arjun Nair, then Distributor Approval by Kavita Joshi); all submitted by Sunita Rao ----
+RREQUESTS = [  # number, retailer, area, city, owner, submitted, credit requested, expected sheets per month, documents, status
+ ('RRQ-2026-0007', 'Retailer Sahyadri Interiors', 'Baner', 'Pune', 'Anil Pingale', '24/10/2026', 200000, 70, 3, 'Awaiting Your Review'),
+ ('RRQ-2026-0006', 'Retailer Ganesh Furniture Mart', 'Katraj', 'Pune', 'Ganesh Londhe', '22/10/2026', 150000, 50, 2, 'Awaiting Your Review'),
+ ('RRQ-2026-0005', 'Retailer Vishwas Decor', 'Hinjewadi', 'Pune', 'Vishal Thorat', '19/10/2026', 250000, 90, 3, 'Sent to Distributor Alpha'),
+]
+assert sum(r[6] for r in RREQUESTS) == 600000
+STATUS_CHIP.update({'Sent to Distributor Alpha': 'blue'})
+STATUS_CHIP.update({'Order Now': 'warn', 'Out at Distributor Alpha': 'bad', 'No Order Needed': 'plain', 'Receipt': 'ok', 'Sale to Retailer': 'blue',
+                    'Stock Adjustment': 'warn', 'On Time': 'ok', 'Late': 'warn'})

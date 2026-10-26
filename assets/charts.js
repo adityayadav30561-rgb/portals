@@ -24,9 +24,10 @@
   };
   // Axis scale: the smallest step of 1, 2, 2.5 or 5 times a power of ten that reaches the largest value in six intervals or fewer,
   // so a peak of 33.5 lakh gets a 40 lakh axis, not 50 lakh.
-  var scale = function (max) {
+  var scale = function (max, whole) {
     max = max || 1;
     var e0 = Math.floor(Math.log10(max)) - 1;
+    if (whole) e0 = Math.max(e0, 0);          // counts of things never get a fractional step
     for (var e = e0; ; e++) {
       var steps = [1, 2, 2.5, 5];
       for (var k = 0; k < steps.length; k++) {
@@ -39,7 +40,8 @@
   function axes(box, svg, W, H, labels, series, money) {
     var all = [];
     series.forEach(function (s) { s.values.forEach(function (v) { all.push(v); }); });
-    var sc = scale(Math.max.apply(null, all)), top = sc.top, ticks = sc.ticks;
+    var whole = !money && all.every(function (v) { return v === Math.round(v); });
+    var sc = scale(Math.max.apply(null, all), whole), top = sc.top, ticks = sc.ticks;
     var tickLabel = function (v) { return money ? moneyLabel(v) : fmt(v); };
     var widest = 0;
     for (var t = 0; t <= ticks; t++) widest = Math.max(widest, tickLabel((top * t) / ticks).length);

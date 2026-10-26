@@ -4,18 +4,21 @@ _Last updated: 2026-10-26. Update at the end of every task and phase._
 
 ## Where we are
 
-**Phase 6 (Secondary Owner, part 2) is built and verified; waiting for the user's approval before Phase 7** (Secondary Manager). The user said
-"continue" after Phases 4 and 5, taken as approval of both. 96 of 196 screens are built: 9 sign-in screens, the Primary Distributor portal
-(52), and 35 of the 45 Secondary Dealer screens (the Owner's 35 are all built; 10 Manager-only screens remain for Phase 7).
+**Phase 7 (Secondary Manager) is built and verified; waiting for the user's approval before Phase 8** (Tertiary Retailer Owner, part 1). "START THE NEXT
+PHASE" (2026-10-26) was taken as approval of Phase 6. **106 of 196 screens are built:** 9 sign-in screens, the Primary Distributor portal (52) and the
+**Secondary Dealer portal (45, complete)**.
 
-Phase 6 screens (21; generators `tools/author/phase6a.py` and `phase6b.py`): Tertiary Sales Overview, Entry, History; Invoices Overview, Invoice
-Details, Payments Overview, Payment Details; Schemes and Incentives, Scheme Details; Sales Reports, Inventory Reports; Return Requests, Create
-Return Request; Support Ticket List, Create Support Ticket, Support Ticket Details; User Management, Create User, User Details; My Profile;
-Notifications. Tertiary Sales Entry and History, both Returns screens, My Profile and Notifications are shared with the Manager (`?role=MGR`).
-Data: DATA.md, "Phase 6 data". Dealer-level documents carry a "D" (PAY-2026-D0521, RTN-2026-D0508, TKT-2026-D0746).
+Phase 7 screens (10; generators `tools/author/phase7a.py` and `phase7b.py`; Manager Arjun Nair, Dealer Bravo): Dashboard (`sales-and-inventory-manager-dashboard.html`),
+Low Stock Overview, Stock Movement History, Incoming Stock, Reorder Recommendations, Dispatch Management, Retailer Order Activity, Retailer Performance,
+Pending Retailer Requests, Operational Reports. Data: DATA.md, "Phase 7 data". Highlights: the retailer order awaiting confirmation is **TSL-2026-0413**
+(Retailer Charlie, ₹1,04,784, the Tertiary Sales Entry example, so Phase 8 inherits it); retailer deliveries have vehicles, expected and actual dates (two
+one day late: 8 of 10 on time); 67 stock movements reconcile to 1,058 sheets; a stock count of 20/10 (99.6%); reorder rule in one line; retailer targets ₹6,40,000.
+Changes outside the Manager screens: `assets/charts.js` never gives counts a fractional axis step; `assets/app.css` gained `.tbl.wrap` (headings may wrap) and
+`.tbl.tight`; `data.py` now has adjustments in `B_OPENING` (1,061 at the start of October) and two CPR lines of retail sales swapped between sales (no earlier screen shows them).
 
-**Review gaps, stated plainly:** Phases 4 and 5 had no post-commit advisor review. The advisor reviewed the Phase 6 plan before building and
-the finished Phase 6 after the commit.
+**Review gaps, stated plainly:** Phases 4 and 5 had no post-commit advisor review. The advisor reviewed the Phase 6 plan and the finished Phase 6, and the Phase 7 plan.
+Not yet checked in Firefox or Safari. Shared screens were not changed in Phase 7: Inventory Overview and Order History do not link the Manager's new screens
+(Low Stock Overview, Incoming Stock) yet; the sidebar does.
 
 ## What exists
 
@@ -87,14 +90,17 @@ and the ticket description, which are user content).
    own series.
 3. **"D" number series** for documents issued by Distributor Alpha (PAY-2026-D0521, RTN-2026-D0508, TKT-2026-D0746) keep them apart from the
    Crestline series; say if you prefer another format.
-4. Earlier answers applied from my recommendations (change if you disagree): Marble Finish Launch Incentive 140 of 300; Dealer Lakshya not in
+4. **Number series Dealer Bravo issues itself (new in Phase 7):** retailer requests RRQ-2026-0005 to 0007, deliveries DLV-2026-0401 to 0412, stock adjustments
+   ADJ-2026-B0011 to B0015. Say if you prefer another format.
+5. **Retailer order TSL-2026-0413** (Charlie, awaiting confirmation) is both the Phase 6 Tertiary Sales Entry example and the order the Tertiary portal will show; confirm.
+6. **Retailer targets** (Charlie ₹2,50,000; Kiran ₹2,20,000; Mehta ₹1,70,000) and the three pending retailer requests are placeholders.
+7. Earlier answers applied from my recommendations (change if you disagree): Marble Finish Launch Incentive 140 of 300; Dealer Lakshya not in
    Pending Dealer Requests; Financial Reports May to October; May to September tax split kept.
 
 ## Next
 
-**Phase 7: Secondary Manager** (PLAN.md section 5; 10 screens): Dashboard, Low Stock Overview, Stock Movement History, Incoming Stock,
-Reorder Recommendations, Dispatch Management, Retailer Order Activity, Retailer Performance, Pending Retailer Requests, Operational Reports.
-Mirror the Phase 4 Manager screens for Dealer Bravo: reuse `BSTOCK`, `BCAL` (extend to a full movement list like `MOVES`, from `B_RECV`, `TSALES`
-lines and `BRV_SALES`), `TSALES` (retailer orders; delivery status needed), `RETAILERS`, `BRET`, `BRV_ORDERS`. Add to DATA.md first: retailer
-targets, dispatch status and vehicles for retailer deliveries, pending retailer requests, reorder quantities. Call the advisor before starting and
-after committing.
+**Phase 8: Tertiary Retailer Owner, part 1** (PLAN.md, section "Tertiary Retailer"; about 15 screens): Retailer Charlie, Imran Sheikh: Owner Dashboard, Store Profile,
+Product Catalogue, Product Details, My Inventory, Inventory Item Details, Place Order, Order Builder, Order Confirmation, Order History, Order Details, Stock Movement
+History, Reorder Recommendations, Purchase History (check PLAN.md for the exact list and which are shared with the Executives). Charlie buys from Dealer Bravo at the
+retailer price (`rp()`, Retailer Tier C); its orders are Bravo's `TSL` sales (TSL-2026-0401 to 0413; 0413 awaits confirmation). Add the Phase 8 data to DATA.md first.
+Call the advisor before starting and after committing.

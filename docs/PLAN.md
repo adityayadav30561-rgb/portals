@@ -1,6 +1,6 @@
 # Laminates Customer Portal: screen prototype plan
 
-_Drafted 2026-10-26. Status: **waiting for approval** of the merges and additions (open decisions at the end). Live status: [STATUS.md](STATUS.md)._
+_Drafted 2026-10-26. Status: **approved 2026-10-26** (decisions in DECISIONS.md). Live status: [STATUS.md](STATUS.md)._
 
 A static, clickable HTML prototype of every proposed screen in the four portals, for stakeholders to review
 and approve before the real application is built. No backend, login, database, storage or business logic.
@@ -237,8 +237,8 @@ widths, the inventory regenerated, docs/STATUS.md updated, a commit and a push.
 
 | Phase | Scope | Screens | Done when |
 |---|---|---|---|
-| **1. Foundations** | Design system, registry with all 194 screens, shell (sidebar, top bar, review bar), Screen Directory and the four portal directories, shared sign-in screens | 9 | Directory lists every screen; sign-in screens done |
-| **2. Primary Owner, part 1** | Owner Dashboard, Company Profile, Product Catalogue, Product Details, Place Order, Order Builder, Order Confirmation, Order History, Order Details, Inventory Overview, Inventory Item Details | 11 | **Design checkpoint: you approve the look before the rest is built** |
+| **1. Foundations** ✓ done 2026-10-26 | Design system, registry with all 194 screens (including menu group and parent screen), review bar, Screen Directory and the four portal directories, shared sign-in screens, coverage check | 9 | Directory lists every screen; sign-in screens done; check passes |
+| **2. Primary Owner, part 1** | Application sidebar and top bar, Owner Dashboard, Company Profile, Product Catalogue, Product Details, Place Order, Order Builder, Order Confirmation, Order History, Order Details, Inventory Overview, Inventory Item Details | 11 | **Design checkpoint: you approve the look before the rest is built** |
 | **3. Primary Owner, part 2** | Dealer network, secondary sales, invoices and payments, schemes, reports, returns, support, users, profile, notifications | 24 | |
 | **4. Primary Manager and Accountant** | Both dashboards and their own screens | 17 | Primary Distributor complete (52) |
 | **5. Secondary Owner, part 1** | Dashboard, profile, catalogue, ordering, orders, inventory, retailer network | about 17 | |
@@ -255,12 +255,6 @@ widths, the inventory regenerated, docs/STATUS.md updated, a commit and a push.
 Portal naming: screen names use the brief's pattern with the portal as "Primary Customer", "Secondary Customer",
 "Tertiary Customer" and "Company"; the directory cards use the brief's card titles (Primary Distributor, and so on).
 
-## 6. Open decisions
+## 6. Decisions
 
-1. **Merges** in section 1: approve all six and the rename to Portal Settings?
-2. **Additions**: the 17 recommended ones; any of the optional ones?
-3. ~~Brand~~ **Decided 2026-10-26: the official MAVRO.AI logo only**, in every sidebar and on the sign-in screens
-   (see DECISIONS.md).
-4. **Sharing with stakeholders**: is a link needed (for example GitHub Pages), or is the zipped folder enough?
-5. **Branch**: this repository had no commits, so `claude/relaxed-cerf-p4czn7` is currently its only branch. Keep
-   working there, or put the work on `main` as in the website repository?
+All answered on 2026-10-26; see DECISIONS.md. Open: Company My Profile, Tertiary Payment Details, two-part or three-part screen names.

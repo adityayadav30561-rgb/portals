@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Company Login</title>
+<link rel="stylesheet" href="../../assets/fonts.css">
+<link rel="stylesheet" href="../../assets/styles.css">
+</head>
+<body data-screen="AUT-02">
+<main class="auth">
+  <div class="auth-form">
+    <div class="auth-box">
+      <img class="logo" src="../../assets/brand/logo-480.webp" srcset="../../assets/brand/logo-480.webp 480w, ../../assets/brand/logo-960.webp 960w" sizes="10rem" width="172" height="32" alt="MAVRO.AI">
+      <div>
+        <h1>Sign in to Company Administration</h1>
+      </div>
+      <form onsubmit="return false">
+        <div class="field"><label for="email">Email address</label><input class="input" id="email" type="email" value="anita.deshmukh@laminatesco.example" autocomplete="off"></div>
+        <div class="field"><label for="password">Password</label>
+          <div class="input-wrap"><input class="input" id="password" type="password" value="prototype-password" autocomplete="off"><button type="button" data-toggle-password="password" aria-label="Show password"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+        </div>
+        <div class="row"><label class="check"><input type="checkbox" checked> Keep me signed in</label><a href="#" data-link="AUT-06">Forgot password?</a></div>
+        <a class="btn pri block" href="#" data-signin="company">Sign In</a>
+      </form>
+      <p class="small">Signing in to a different portal? <a href="#" data-link="AUT-01">Choose a portal</a></p>
+    </div>
+  </div>
+  <aside class="auth-panel" aria-label="Laminate finishes">
+    <div class="swatches">
+      <div class="swatch walnut"><span>Walnut Woodgrain</span></div>
+      <div class="swatch arctic"><span>Arctic White Matte</span></div>
+      <div class="swatch marble"><span>Calacatta Marble Finish</span></div>
+    </div>
+  </aside>
+</main>
+<script src="../../assets/registry.js"></script>
+<script src="../../assets/shell.js"></script>
+</body>
+</html>

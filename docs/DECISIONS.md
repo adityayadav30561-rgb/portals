@@ -17,13 +17,23 @@ What the user asked for, liked and rejected. Read before any design change; neve
 | Static prototype | HTML/CSS/small JavaScript. No backend, login, database, storage, real logic. Fictional data. | 2026-10-26 |
 | Design language | Light theme, deep navy text, blue accent, Inter, white cards on light grey, as in the MAVRO product screens; responsive (unlike the fixed-size MAVRO captures). | 2026-10-26 |
 
-## Pending approval (asked 2026-10-26, see PLAN.md section 6)
+## Approved by the user (2026-10-26, "go with your recommendations")
 
-- Six merges of duplicate screens and the rename "Prototype Settings" to "Portal Settings".
-- 17 recommended additional screens; any of the 4 optional ones.
-- Branch: the session set `claude/relaxed-cerf-p4czn7`; the repository had no commits, so it is the only branch. The user insisted on `main` only in `mavro-ai`. Working on the session branch until answered.
-- Portal names in screen names: Company, Primary Customer, Secondary Customer, Tertiary Customer (brief's pattern); directory cards use the brief's card titles.
-- Whether stakeholders need a shareable link (for example GitHub Pages) or a zipped folder.
+| Decision | Detail |
+|---|---|
+| Six merges + rename | Company Operations Manager's Order Details and Processing, Dispatch Overview, Support Ticket Queue, Inventory Overview are the Super Admin's screens; Primary Accountant's Invoice List and Payment History are Invoices Overview and Payments Overview. "Prototype Settings" is named **Portal Settings**. |
+| 17 additions | Notifications and Support Ticket Details in all four portals; Return Requests and Create Return Request in Primary, Secondary, Tertiary; Company Invoice Details and Create Scheme; Secondary Payment Details. None of the 4 optional ones. |
+| Sharing | Folder or zip now; hosting (GitHub Pages) is decided in the last phase. |
+| Branch | Stay on `claude/relaxed-cerf-p4czn7`. The `main`-only rule belongs to `mavro-ai`. |
+| Screen name pattern | Three parts, generated from portal, role and screen name: "Primary Customer — Owner — Order Details". Portal labels: Company Administration, Primary Customer, Secondary Customer, Tertiary Customer. Directory cards use the brief's titles (Primary Distributor, Secondary Dealer, Tertiary Retailer). |
+| Role labels | Words, not slashes: Super Admin, Sales Manager, Operations Manager; Owner, Sales and Operations Manager, Accountant; Owner, Sales and Inventory Manager; Retailer Owner, Sales Executive, Inventory and Purchasing Executive. |
+| No localStorage | The brief bans it, including for review-bar settings; use URL parameters only. |
+
+## Raised in Phase 1, waiting for the user
+
+- **My Profile for roles without one.** Primary and Secondary Managers were tagged onto the existing My Profile screen (no new screen). The three Company roles have none; add a Company My Profile (+1 screen)?
+- **Tertiary Payment Details.** Tertiary Payments Overview has nothing to open; add Payment Details (Tertiary 40, total 195)?
+- **Screen name pattern:** three-part (above) or the brief's two-part examples ("Primary Customer — Product Catalogue")? One-line change.
 
 ## Rejected
 

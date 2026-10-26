@@ -12,7 +12,7 @@ const P = sb.window.PORTAL;
 const BANNED = /\b(Qty|Amt|Mgr|Acct|Dept|Cust|Dist|Approx|Misc|YTD|MTD|FY|ETA|PO|CGST|SGST|vs|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|UPI|PAN|GSTIN|PIN|pcs)\b|\d\s?(L|Cr|K)\b|\bInv\.|\bNo\./;
 const SIZES = [[1440, 900], [1366, 768], [390, 844]];
 
-const targets = ['index.html', ...P.portals.filter((p) => p.id !== 'authentication').map((p) => `directory/${p.id}.html`), 'directory/authentication.html'];
+const targets = ['index.html', 'screen-map.html', ...P.portals.filter((p) => p.id !== 'authentication').map((p) => `directory/${p.id}.html`), 'directory/authentication.html'];
 const shots = [];
 for (const p of P.portals) for (const s of p.screens) if (s.built && s.id.startsWith(only)) for (const r of s.roles) {
   targets.push(s.file + (r !== s.roles[0] && r !== 'ALL' ? `?role=${r}` : ''));

@@ -19,6 +19,12 @@ the finished Phase 6 after the commit.
 
 ## What exists
 
+- **Screen Map** (`screen-map.html`, `assets/map.js`, `assets/map.css`; added after Phase 6 at the user's request): a tree from Sign In through Portal
+  Selection, the four login screens, the portals, their roles and menu sections to every screen, with the screens opened from another hanging
+  under it (Place Order, Order Builder, Order Confirmation). Built screens are links (with `?role=` where needed), planned ones are greyed out; each
+  portal, role and section shows "built of total". Search, "Built only" and a detail level (Roles, Sections, Screens) prune the tree. Built from the
+  registry, so it never drifts; linked from the "Screen map" button on the Screen Directory pages; checked by `tools/verify.js`.
+
 - `assets/registry.js`: all 196 screens (ID, name, roles, menu section, kind, parent, description, built flag), plus
   each portal's organisation, portal name and each role's person. A screen is built when its ID is in `BUILT`.
 - `assets/shell.js`: review bar; link helper `P.setLink` (a link is live only if the target is built and, within the

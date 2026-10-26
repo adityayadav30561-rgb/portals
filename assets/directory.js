@@ -30,7 +30,7 @@
   var header = function (crumb) {
     return '<header class="topbar"><div class="in"><a href="' + root + 'index.html" aria-label="Laminates Customer Portal — Screen Directory">' +
       '<img class="logo" src="' + root + 'assets/brand/logo-480.webp" srcset="' + root + 'assets/brand/logo-480.webp 480w, ' + root + 'assets/brand/logo-960.webp 960w" sizes="10rem" width="150" height="28" alt="MAVRO.AI"></a>' +
-      (crumb || '') + '</div></header>';
+      '<a class="btn sm" style="margin-left:auto" href="' + root + 'screen-map.html">Screen map</a>' + (crumb || '') + '</div></header>';
   };
 
   if (page === 'index') {
@@ -96,7 +96,7 @@
   }).join('') + '</nav>';
   var pBuilt = p.screens.filter(function (s) { return s.built; }).length;
 
-  app.innerHTML = header('<a class="btn sm" style="margin-left:auto" href="' + root + 'index.html">All portals</a>') +
+  app.innerHTML = header('<a class="btn sm" href="' + root + 'index.html">All portals</a>') +
     '<main class="dir"><div class="dir-head"><div><h1>' + esc(p.directory) + ' — Screen Directory</h1>' +
     '<div class="facts"><span class="chip blue plain">' + plural(p.screens.length, 'screen', 'screens') + '</span>' +
     (isAuth ? '' : '<span class="chip plain">' + plural(p.roles.length, 'role', 'roles') + '</span>') +

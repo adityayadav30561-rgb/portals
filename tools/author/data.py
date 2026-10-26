@@ -689,7 +689,7 @@ BUSERS = [('Sunita Rao', 'Owner', '31001', '26/10/2026 09:12', 'Active'), ('Arju
           ('Meena Kulkarni', 'Sales and Inventory Manager', '31004', 'Not yet', 'Invited'), ('Rohit Pawar', 'Sales and Inventory Manager', '31005', '30/06/2026', 'Inactive')]
 
 # ---- Dealer schemes issued by Distributor Alpha (Schemes and Incentives): number, name, type, start, end, status, done, goal, reward ----
-BSCH = [SCH_FESTIVE[:2] + ('Volume Rebate', '01/10/2026', '30/11/2026', 'Active', 690, 750, '1% rebate on order value'),
+BSCH = [SCH_FESTIVE[:2] + ('Volume Rebate', '01/10/2026', '30/11/2026', 'Active', 690, 750, '1% rebate'),
         SCH_MARBLE[:2] + ('Product Incentive', '01/10/2026', '31/12/2026', 'Active', 50, 100, f'{M(750)} earned'),
         ('SCH-2026-09', 'Winter Season Dealer Bonus', 'Volume Bonus', '01/12/2026', '31/01/2027', 'Upcoming', 0, 1400, '2% bonus'),
         ('SCH-2026-03', 'Monsoon Dealer Incentive', 'Volume Incentive', '01/07/2026', '30/09/2026', 'Completed', 1310, 1200, f'{M(13100)} credited')]

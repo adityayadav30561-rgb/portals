@@ -4,14 +4,18 @@ _Last updated: 2026-10-26. Update at the end of every task and phase._
 
 ## Where we are
 
-**Phase 5 (Secondary Owner, part 1) is built and verified; waiting for the user's approval before Phase 6** (Secondary Owner, part 2). The user
-said "continue" after Phase 4, taken as approval of Phase 4. 75 of 196 screens are built: 9 sign-in screens, the 11 Phase 2, 24 Phase 3 and
-17 Phase 4 screens (Primary Distributor complete, 52) and the 14 Phase 5 screens of the Secondary Dealer portal.
+**Phase 6 (Secondary Owner, part 2) is built and verified; waiting for the user's approval before Phase 7** (Secondary Manager). The user said
+"continue" after Phases 4 and 5, taken as approval of both. 96 of 196 screens are built: 9 sign-in screens, the Primary Distributor portal
+(52), and 35 of the 45 Secondary Dealer screens (the Owner's 35 are all built; 10 Manager-only screens remain for Phase 7).
 
-Phase 5 screens (14, in `tools/author/phase5a.py`; the ones shared with the Secondary Manager open with `?role=MGR`): Dashboard, Company
-Profile, Product Catalogue, Product Details, Place Order, Order Builder, Order Confirmation, Order History, Order Details, Inventory Overview,
-Inventory Item Details, Retailer Network, Retailer Details, Add Retailer Request. (PLAN.md said "about 17"; the registry has 14 for this scope.)
-Dealer Bravo's data (orders are the Alpha sales ledger rows, stock, retailers, the twelve retailer sales) is in DATA.md, "Phase 5 data".
+Phase 6 screens (21; generators `tools/author/phase6a.py` and `phase6b.py`): Tertiary Sales Overview, Entry, History; Invoices Overview, Invoice
+Details, Payments Overview, Payment Details; Schemes and Incentives, Scheme Details; Sales Reports, Inventory Reports; Return Requests, Create
+Return Request; Support Ticket List, Create Support Ticket, Support Ticket Details; User Management, Create User, User Details; My Profile;
+Notifications. Tertiary Sales Entry and History, both Returns screens, My Profile and Notifications are shared with the Manager (`?role=MGR`).
+Data: DATA.md, "Phase 6 data". Dealer-level documents carry a "D" (PAY-2026-D0521, RTN-2026-D0508, TKT-2026-D0746).
+
+**Review gaps, stated plainly:** the post-commit advisor review was not obtained for Phases 4 and 5 (the tool was unavailable after the Phase 4
+commit; Phase 5 skipped it). The advisor did review the Phase 6 plan before building.
 
 ## What exists
 
@@ -41,13 +45,13 @@ Dealer Bravo's data (orders are the Alpha sales ledger rows, stock, retailers, t
 - To add a screen: write it in a generator, add its ID to `BUILT`, run `node tools/inventory.mjs` and
   `node tools/verify.js <folder> <ID prefix>`, and look at the screenshots.
 
-## Verified in Phase 5
+## Verified in Phase 6
 
-`node tools/verify.js <folder>` with no filter: ALL OK (1440, 1366 × 768 and 390 px over `file://`, every built screen and role). Every Phase 5
-screen's 1440 screenshot was looked at for Dashboard, Order Details, Inventory Item Details, Retailer Network and Retailer Details; the rest
-only passed the automated checks and should be looked at when approving. Not yet checked in Firefox or Safari.
-
-Phase 4 was verified the same way (see git log).
+`node tools/verify.js <folder>` with no filter: ALL OK (every built screen and role at 1440, 1366 × 768 and 390 px over `file://`). Looked at in
+a 1440 screenshot: Tertiary Sales Overview and Entry, Invoice Details, Payments Overview, Schemes and Incentives, Inventory Reports,
+Support Ticket Details, Notifications and My Profile (as Manager) and Return Requests (as Manager); Tertiary Sales Entry also at 390. The rest only
+passed the automated checks. A search of `screens/secondary` for Crestline, Alpha's emails, Bhiwandi, Rajesh Menon, Suresh Iyer and the Crestline
+number series found only legitimate Distributor Alpha references. Not yet checked in Firefox or Safari.
 
 ## Changes to Phase 2 and 3 screens made in Phase 4 (user's answers to the Phase 3 open items, 2026-10-26)
 
@@ -70,23 +74,20 @@ and the ticket description, which are user content).
 
 ## Open items for the user
 
-1. **Decisions applied from my recommendations after "continue" (change if you disagree):** Marble Finish Launch Incentive progress is now
-   140 of 300 sheets, earned ₹3,500 (was 180; it agrees with the stock history). Dealer Lakshya stays out of Pending Dealer Requests (an
-   unsent draft). Financial Reports stay May to October. The May to September tax split stays (DATA.md, "Tax split").
-2. **Bravo's order SAL-2026-3042 awaiting confirmation** also shows on Alpha's Manager screens as the one order awaiting confirmation
-   (Dealer Order Activity, Dashboard), outside the 32 recorded sales.
-3. **Order numbers for dealers** are the Alpha sale numbers (SAL-2026-3040); Bravo's invoice numbers are the same. Say if dealers should have
-   a separate order number series.
-4. Bravo's Dealer Festive Volume Rebate (1% at 750 sheets) and Marble Finish Dealer Incentive (₹15 per sheet) are new (DATA.md); the
-   user did not specify dealer schemes, so these are placeholders to confirm in Phase 6.
+1. **Dealer schemes are placeholders** (SCH-2026-07 Dealer Festive Volume Rebate 1% at 750 sheets; SCH-2026-08 Marble Finish Dealer Incentive
+   ₹15 per sheet; SCH-2026-09 Winter Season Dealer Bonus; SCH-2026-03 Monsoon Dealer Incentive). They now have full screens; confirm or replace.
+2. **Dealer order numbers** are Alpha's sale numbers (SAL-2026-3040) and Bravo's invoice numbers are the same. Say if dealers should have their
+   own series.
+3. **"D" number series** for documents issued by Distributor Alpha (PAY-2026-D0521, RTN-2026-D0508, TKT-2026-D0746) keep them apart from the
+   Crestline series; say if you prefer another format.
+4. Earlier answers applied from my recommendations (change if you disagree): Marble Finish Launch Incentive 140 of 300; Dealer Lakshya not in
+   Pending Dealer Requests; Financial Reports May to October; May to September tax split kept.
 
 ## Next
 
-**Phase 6: Secondary Owner, part 2** (PLAN.md section 5; about 18 screens): Tertiary Sales Overview, Entry and History, Invoices Overview and
-Invoice Details, Payments Overview and Payment Details, Schemes and Incentives and Scheme Details, Sales Reports, Inventory Reports, Return
-Requests and Create Return Request, Support Ticket List, Create and Details, User Management, Create User, User Details, My Profile,
-Notifications. Reuse `TSALES` (twelve October sales to Charlie, Kiran and Mehta), the Alpha ledger rows of Dealer Bravo as Bravo's invoices
-(due 30 days after the sale, `BRV_SALES`), `BSTOCK`, `SCH_FESTIVE` and `SCH_MARBLE` (in phase5a.py; move to data.py when needed). Bravo's
-payments to Alpha: the paid sales (3010, 3017, 3021, 3029) need payment records (add to DATA.md first). Start of the session: read CLAUDE.md,
-this file, DECISIONS.md, DATA.md (Phase 5 data), PLAN.md section 5; write `phase6a.py`; call the advisor before starting and after
-committing.
+**Phase 7: Secondary Manager** (PLAN.md section 5; 10 screens): Dashboard, Low Stock Overview, Stock Movement History, Incoming Stock,
+Reorder Recommendations, Dispatch Management, Retailer Order Activity, Retailer Performance, Pending Retailer Requests, Operational Reports.
+Mirror the Phase 4 Manager screens for Dealer Bravo: reuse `BSTOCK`, `BCAL` (extend to a full movement list like `MOVES`, from `B_RECV`, `TSALES`
+lines and `BRV_SALES`), `TSALES` (retailer orders; delivery status needed), `RETAILERS`, `BRET`, `BRV_ORDERS`. Add to DATA.md first: retailer
+targets, dispatch status and vehicles for retailer deliveries, pending retailer requests, reorder quantities. Call the advisor before starting and
+after committing.

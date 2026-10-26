@@ -241,8 +241,8 @@ widths, the inventory regenerated, docs/STATUS.md updated, a commit and a push.
 | **2. Primary Owner, part 1** ✓ done and approved 2026-10-26 | Application sidebar and top bar, Owner Dashboard, Company Profile, Product Catalogue, Product Details, Place Order, Order Builder, Order Confirmation, Order History, Order Details, Inventory Overview, Inventory Item Details | 11 | **Design checkpoint: you approve the look before the rest is built** |
 | **3. Primary Owner, part 2** ✓ done 2026-10-26 | Dealer network, secondary sales, invoices and payments, schemes, reports, returns, support, users, profile, notifications | 24 | |
 | **4. Primary Manager and Accountant** ✓ done 2026-10-26 | Both dashboards and their own screens | 17 | Primary Distributor complete (52) |
-| **5. Secondary Owner, part 1** ✓ built 2026-10-26, awaiting approval | Dashboard, profile, catalogue, ordering, orders, inventory, retailer network | 14 | |
-| **6. Secondary Owner, part 2** | Tertiary sales, invoices and payments, schemes, reports, returns, support, users, notifications | about 18 | |
+| **5. Secondary Owner, part 1** ✓ done 2026-10-26 | Dashboard, profile, catalogue, ordering, orders, inventory, retailer network | 14 | |
+| **6. Secondary Owner, part 2** ✓ built 2026-10-26, awaiting approval | Tertiary sales, invoices and payments, schemes, reports, returns, support, users, notifications | 21 | |
 | **7. Secondary Manager** | Dashboard and the manager's own screens | 10 | Secondary Dealer complete (45) |
 | **8. Tertiary Retailer Owner, part 1** | Dashboard, store profile, catalogue, ordering, orders, inventory | about 15 | |
 | **9. Tertiary Retailer Owner, part 2** | Retail sales, invoices and payments, schemes, reports, returns, support, users, notifications | about 14 | |

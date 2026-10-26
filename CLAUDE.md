@@ -19,7 +19,10 @@ MAVRO.AI logo only.
   reference for how screens look.
 - Screen names, menus, breadcrumbs, headings and buttons in full; no abbreviations. IDs are reference codes next to
   the full name.
-- No eyebrow text, taglines or paragraphs describing the screen. Text on screen must carry information.
+- No text under page titles, no captions beside card titles, no helper sentences, nothing under 13px. Information is
+  carried by titles, labels, values, chips, meters and tables (docs/DECISIONS.md, "Screen text rules"). Every screen
+  must look finished: no redesign later.
+- Screens are written by the generator scripts in `tools/author/`; change the script, never the generated file.
 - Fictional laminates data only. Logo: `brand/mavro-logo.jpg` and `assets/brand/`, never redrawn or recoloured.
 - Verify in the browser at 1440, 1366 × 768 and 390 px before calling a phase done.
 - Keep the docs current: at the end of every task update docs/STATUS.md (and DECISIONS.md for preferences), then

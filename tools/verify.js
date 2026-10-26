@@ -39,12 +39,16 @@ if (only) targets.splice(0, targets.findIndex((t) => t.startsWith('screens')) < 
           sw: document.documentElement.scrollWidth, iw: innerWidth, font: document.fonts.check('600 16px Inter'),
           hrefs: [...new Set(links.filter((h) => h && !h.startsWith('mailto')))], hash: links.filter((h) => h === '#').length,
           wideTables: innerWidth >= 1366 ? [...document.querySelectorAll('.table-wrap')].filter((t) => t.scrollWidth > t.clientWidth + 1).length : 0,
+          tiny: [...document.querySelectorAll('body *')].filter((e) => e.children.length === 0 && e.textContent.trim() && parseFloat(getComputedStyle(e).fontSize) < 12.99 && !e.closest('script,style')).map((e) => `${e.tagName.toLowerCase()}.${e.className && e.className.baseVal === undefined ? e.className : ''} "${e.textContent.trim().slice(0, 24)}"`).slice(0, 3),
+          prose: [...document.querySelectorAll('main p, main .head p')].filter((e) => !e.closest('.state, .auth-box')).map((e) => e.textContent.trim().slice(0, 40)).slice(0, 3),
           text: document.body.innerText, storage: /localStorage|sessionStorage/.test(document.documentElement.outerHTML)
         };
       });
       const problems = [];
       if (r.sw > r.iw) problems.push(`horizontal scroll ${r.sw} > ${r.iw}`);
       if (!r.font) problems.push('Inter not loaded');
+      if (r.tiny.length) problems.push('text under 13px: ' + r.tiny.join(', '));
+      if (r.prose.length) problems.push('paragraph text on a screen: ' + r.prose.join(' | '));
       if (r.wideTables) problems.push(`${r.wideTables} table(s) scroll sideways inside their card on a desktop screen`);
       if (errs.length) problems.push('errors: ' + errs.join(' | '));
       if (r.hash) problems.push(`${r.hash} link(s) with href="#"`);

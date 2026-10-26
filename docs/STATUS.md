@@ -39,6 +39,11 @@ Inventory Overview, Inventory Item Details. All open by double-click from disk.
 1440, 1366 × 768 and 390 px (also the directory and sign-in pages, after the shell changes). All 11 were looked at in screenshots at 1440; the dashboard, Place Order and Order
 Builder were also looked at at 1366 and 390. Not yet checked in Firefox or Safari.
 
+## Screen text rules
+
+Set by the user after the first Phase 2 review: see DECISIONS.md, "Screen text rules". All 11 screens were redesigned to
+follow them, and `tools/verify.js` now fails on text under 13px and on paragraph text.
+
 ## Open items for the user (also at the design checkpoint)
 
 1. **Manager ordering dead end.** Place Order is shared by Owner and Manager but Order Builder, Order Confirmation
@@ -46,7 +51,9 @@ Builder were also looked at at 1366 and 390. Not yet checked in Firefox or Safar
    tag the Manager onto them (no new screens)? Secondary Manager has the same gap.
 2. Whether the look is approved (sidebar, cards, colours, swatches, charts). Record changes in DECISIONS.md.
 3. In Order History every row opens Order Details for ORD-2026-10447 (documented in DATA.md).
-4. Date and money formats (see DECISIONS.md, "Raised at the Phase 2 design checkpoint"). Record the answers before Phase 3.
+4. The Company Profile still shows the Permanent Account Number row (the user underlined it in a review screenshot with the
+   text to remove; kept because it is a data row, not a caption: confirm).
+5. Date and money formats (see DECISIONS.md, "Raised at the Phase 2 design checkpoint"). Record the answers before Phase 3.
 
 ## Next
 

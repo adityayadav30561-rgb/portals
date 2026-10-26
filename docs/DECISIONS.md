@@ -17,6 +17,20 @@ What the user asked for, liked and rejected. Read before any design change; neve
 | Static prototype | HTML/CSS/small JavaScript. No backend, login, database, storage, real logic. Fictional data. | 2026-10-26 |
 | Design language | Light theme, deep navy text, blue accent, Inter, white cards on light grey, as in the MAVRO product screens; responsive (unlike the fixed-size MAVRO captures). | 2026-10-26 |
 
+## Screen text rules (user, 2026-10-26, after the Phase 2 review: "every block, every phrase, every text should look like a finished product, no redesign later")
+
+Applies to every screen, in every phase. `tools/verify.js` enforces what a machine can.
+
+| Rule | Detail |
+|---|---|
+| Nothing under a page title | No subtitle, description or context line. Organisation is in the sidebar, the period is in its selector, status is a chip beside the title. |
+| Nothing beside a card title | Card header = title plus, at most, an action link or button on the right. No grey captions ("May to October 2026", "sheets on hand"). |
+| Stat tiles | Label, value, and at most one chip (change, status, or exception). No footnote sentences. A comparison period lives in the chip's tooltip, not in visible text. |
+| No helper sentences or banners | Status is carried by chips, icons, colours and meters (an alert banner with a sentence is replaced by a chip). Sentences are allowed only on state screens (confirmation, error) and for user content (notes, activity feed). |
+| Secondary lines | Only record attributes (SKU, city, date), never sentences. |
+| Minimum text size | 13px (0.8125rem), everywhere including chips, table headings, axis labels and avatars. |
+| Layout quality | Cards in a row have equal height; no dead space inside cards; no clipped values; tables never scroll sideways inside a card on desktop; every number has a label. |
+
 ## Approved by the user (2026-10-26, "go with your recommendations")
 
 | Decision | Detail |

@@ -31,7 +31,7 @@ page('company', 'user-directory', 'CMP-USR-01', 'Company Administration — Supe
 
 # ---------- User Details (Vikram Chopra, Sales Manager) ----------
 vc = next(u for u in CRL_USERS if u[0] == 'Vikram Chopra')
-act = [('26/10/2026 09:10', 'Signed in'), ('24/10/2026 10:05', 'Confirmed order ORD-2026-10459'), ('22/10/2026 11:30', 'Opened dealer request DRQ-2026-0017'),
+act = [('26/10/2026 09:10', 'Signed in'), ('23/10/2026 16:10', 'Confirmed order ORD-2026-10459'), ('22/10/2026 11:30', 'Opened dealer request DRQ-2026-0017'),
        ('20/10/2026 09:40', 'Confirmed order ORD-2026-10447'), ('19/10/2026 09:05', 'Signed in'), ('30/09/2026 15:10', 'Approved dealer request DRQ-2026-0014')]
 ACCESS = [('Dashboard', 1), ('Customers', 0), ('Users', 0), ('Products', 0), ('Orders and Dispatch', 0), ('Inventory and Returns', 0), ('Sales Analytics', 0), ('Performance', 1), ('Analysis', 1),
           ('Orders and Campaigns', 1), ('Finance and Schemes', 0), ('Support', 0), ('Administration', 0), ('My Profile and Notifications', 1)]

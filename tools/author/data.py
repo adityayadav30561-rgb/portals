@@ -1220,7 +1220,7 @@ CRL_TICKETS = [('TKT-2026-0731', '24/10/2026', 'Damaged Sheets in ORD-2026-10431
 CRL_TICKETS_OPEN = [t for t in CRL_TICKETS if t[6] not in ('Resolved', 'Closed')]; assert len(CRL_TICKETS_OPEN) == 3
 
 # ---- Order Details (shared by the Super Admin and the Operations Manager): ORD-2026-10459, confirmed, packing and dispatch planned for today ----
-O59 = dict(number='ORD-2026-10459', placed='23/10/2026 14:35', placed_by='Rajesh Menon', confirmed='24/10/2026 10:05', confirmed_by='Vikram Chopra', packing='26/10/2026', dispatch='26/10/2026', expected='29/10/2026',
+O59 = dict(number='ORD-2026-10459', placed='23/10/2026 11:05', placed_by='Kavita Joshi', confirmed='23/10/2026 16:10', confirmed_by='Vikram Chopra', packing='26/10/2026', dispatch='26/10/2026', expected='29/10/2026',
            lines=ORDER_LINES['ORD-2026-10459'], total=336500, ref='DA-2026-121', deliver='Bhiwandi Warehouse, Thane District', transporter='Western Freight Carriers')
 O59_TAX = ORDER_TAX['ORD-2026-10459']
 _w59 = {s: q * slab(s, q) for s, q in O59['lines']}
@@ -1237,3 +1237,150 @@ USERS_OTHER = 2 * (7 + 19)                                   # seven other deale
 USERS_ALL = USERS_NAMED + USERS_OTHER; assert USERS_ALL == 70
 USER_STATUS = {s: sum(1 for o in USER_ORGS for u in o[2] if u[4] == s) for s in ('Active', 'Invited', 'Inactive')}
 USER_STATUS['Active'] += USERS_OTHER; assert USER_STATUS == {'Active': 64, 'Invited': 3, 'Inactive': 3} and sum(USER_STATUS.values()) == USERS_ALL
+
+
+# =====================================================================================================================
+# Phase 12 data (docs/DATA.md: "Phase 12 data"). Company Administration, Super Admin part 2: shipments, company stock totals,
+# the four sales tiers, invoices, Crestline's schemes, tickets, territories, audit activity.
+# =====================================================================================================================
+# ---- Shipments from Crestline to Distributor Alpha (dispatch numbers share one running series with Alpha's dispatches to dealers; each fits its date) ----
+TR_W, TR_K = 'Western Freight Carriers', 'Konkan Roadlines'
+SHIPMENTS = [  # dispatch number, order, transporter, sheets, dispatched, expected, status
+ ('—',              'ORD-2026-10459', TR_W, 280, '26/10/2026', '29/10/2026', 'Being Packed'),
+ ('DSP-2026-5521',  'ORD-2026-10447', TR_W, 360, '24/10/2026', '27/10/2026', 'In Transit'),
+ ('DSP-2026-5501',  'ORD-2026-10431', TR_W, 520, '18/10/2026', '20/10/2026', 'Delivered'),
+ ('DSP-2026-5476',  'ORD-2026-10398', TR_K, 430, '11/10/2026', '13/10/2026', 'Delivered'),
+ ('DSP-2026-5456',  'ORD-2026-10372', TR_W, 400, '04/10/2026', '06/10/2026', 'Delivered'),
+ ('DSP-2026-5427',  'ORD-2026-10341', TR_K, 470, '27/09/2026', '29/09/2026', 'Delivered'),
+ ('DSP-2026-5402',  'ORD-2026-10316', TR_W, 330, '20/09/2026', '22/09/2026', 'Delivered'),
+ ('DSP-2026-5377',  'ORD-2026-10290', TR_W, 500, '13/09/2026', '15/09/2026', 'Delivered'),
+]
+_ord = {o[0]: o for o in ALPHA_ORDERS}
+assert all(sh[3] == _ord[sh[1]][2] and sh[5] == _ord[sh[1]][4] for sh in SHIPMENTS)
+_alpha_d = [(int(s['dispatch'][-4:]), pd(s['date'])) for s in SALES]
+for _sh in SHIPMENTS:                                            # a number between two of Alpha's dispatches must fall between their dates
+    if _sh[0] in ('—', 'DSP-2026-5521'): continue                  # 5521 is the number the earlier phases fixed
+    _n = int(_sh[0][-4:]); _d = pd(_sh[4])
+    assert _n not in {a for a, _ in _alpha_d} and all((pd_ <= _d) if a < _n else (pd_ >= _d) for a, pd_ in _alpha_d), _sh[0]
+SHIP_STATUS = {st: sum(1 for s in SHIPMENTS if s[6] == st) for st in ('Being Packed', 'In Transit', 'Delivered')}
+assert SHIP_STATUS == {'Being Packed': 1, 'In Transit': 1, 'Delivered': 6}
+SHIP_OCT = [s for s in SHIPMENTS if s[4].endswith('/10/2026') and s[6] != 'Being Packed']; assert len(SHIP_OCT) == 3 + 1 == 4
+SHIP_OCT_SHEETS = sum(s[3] for s in SHIP_OCT); assert SHIP_OCT_SHEETS == 360 + 520 + 430 + 400
+STATUS_CHIP.update({'Being Packed': 'warn'})
+
+# ---- Company stock totals ----
+CSTK_ON_HAND = sum(b['on_hand'] for b in CSTK.values()); CSTK_RESERVED = sum(b['reserved'] for b in CSTK.values()); CSTK_AVAIL = sum(b['available'] for b in CSTK.values())
+assert CSTK_RESERVED == 1040 and CSTK_ON_HAND - CSTK_RESERVED == CSTK_AVAIL
+CSTK_VAPI = sum(b['vapi'] for b in CSTK.values()); CSTK_TALOJA = sum(b['taloja'] for b in CSTK.values()); assert CSTK_VAPI + CSTK_TALOJA == CSTK_ON_HAND
+CSTK_FINISH = {}
+for _s, _b in CSTK.items(): CSTK_FINISH[BY[_s][2]] = CSTK_FINISH.get(BY[_s][2], 0) + _b['on_hand']
+assert sum(CSTK_FINISH.values()) == CSTK_ON_HAND
+
+# ---- The four sales tiers ----
+# Tertiary = dealers selling to retailers; Retail = retailers selling to end customers (GST included). Bravo's and Charlie's figures are the earlier ledgers; the others are placeholders.
+RETAIL_SEPT_PURCH = {'CHR': 240000, 'KIR': 195000, 'MEH': 165000}
+_DEALER_SEPT = {'BRV': 600000, 'DLT': 480000, 'FXT': 400000, 'GPL': 340000, 'HRS': 320000, 'IND': 195000, 'JYT': 205000, 'KNL': 0}
+_SEPT_SPLIT = {'GOD': 190000, 'PAN': 155000, 'SIN': 80000, 'DEO': 55000, 'MAJ': 165000, 'KAL': 130000, 'DOM': 105000, 'RAN': 135000, 'ICH': 115000, 'SHA': 90000,
+               'SIT': 195000, 'DHA': 125000, 'KRD': 110000, 'KOR': 85000, 'AKK': 115000, 'PND': 90000, 'FON': 0}
+for _r in NEW_RETAILERS: RETAIL_SEPT_PURCH[_r[0]] = _SEPT_SPLIT[_r[0]]
+for _k in DLR:
+    _mine = [r[0] for r in RETAILERS if _k == 'BRV' for r in [r]] if _k == 'BRV' else [r[0] for r in NEW_RETAILERS if r[6] == _k]
+    assert sum(RETAIL_SEPT_PURCH[x] for x in _mine) == _DEALER_SEPT[_k], _k
+assert sum(_DEALER_SEPT.values()) == 2540000
+NET_TERT_MONTH = [2130000, 2340000, 2010000, 2450000, 2540000, 2800000]
+assert NET_TERT_MONTH[-2] == sum(_DEALER_SEPT.values()) and NET_TERT_MONTH[-1] == sum(RETAIL_OCT.values())
+assert all(NET_TERT_MONTH[m] >= sum(r[9][m] for r in RETAILERS) for m in range(6))
+# retail sales to end customers by store (including GST): Charlie's are the ledger; others = purchases x 1.24 (Charlie's ratio), to the nearest 500
+def _r500(v): return int(round(v / 500)) * 500
+RETAIL_SALES_OCT = {k: _r500(v * 1.24) for k, v in RETAIL_OCT.items()}; RETAIL_SALES_OCT['CHR'] = CRETAIL_OCT
+RETAIL_SALES_SEPT = {k: _r500(v * 1.24) for k, v in RETAIL_SEPT_PURCH.items()}; RETAIL_SALES_SEPT['CHR'] = CHR_RETAIL_SEPT
+RETAIL_OCT_TOTAL = sum(RETAIL_SALES_OCT.values()); RETAIL_SEPT_TOTAL = sum(RETAIL_SALES_SEPT.values())
+NET_RETAIL_MONTH = [_r500(v * 1.24) for v in NET_TERT_MONTH[:4]] + [RETAIL_SEPT_TOTAL, RETAIL_OCT_TOTAL]
+assert CRETAIL_OCT == 327557 and RETAIL_SALES_OCT['KIR'] == 260500
+# sheets by product in the two lower tiers: Bravo's mix (TSOLD, sold to retailers) and Charlie's mix (CSOLD, sold to customers) applied to the network total
+def _alloc(total, weights):
+    w = {k: v for k, v in weights.items() if v}; s = sum(w.values()); raw = {k: total * v / s for k, v in w.items()}
+    out = {k: int(x) for k, x in raw.items()}; short = total - sum(out.values())
+    for k in sorted(raw, key=lambda k: raw[k] - out[k], reverse=True)[:short]: out[k] += 1
+    return {k: out.get(k, 0) for k in weights}
+NET_TERT_SHEETS = round(RETAIL_OCT_TOTAL * 0 + 2800000 / (630000 / 370)); NET_TSOLD = _alloc(NET_TERT_SHEETS, TSOLD)
+_w = {s: q * rp(s) for s, q in NET_TSOLD.items() if q}; NET_TSOLD_VALUE = {s: round(2800000 * w / sum(_w.values())) for s, w in _w.items()}
+NET_TSOLD_VALUE[max(NET_TSOLD_VALUE, key=NET_TSOLD_VALUE.get)] += 2800000 - sum(NET_TSOLD_VALUE.values())
+NET_RSHEETS = round(RETAIL_OCT_TOTAL / (CRETAIL_OCT / 163)); NET_RSOLD = _alloc(NET_RSHEETS, CSOLD)
+_w = {s: q * crp(s) for s, q in NET_RSOLD.items() if q}; NET_RSOLD_VALUE = {s: round(RETAIL_OCT_TOTAL * w / sum(_w.values())) for s, w in _w.items()}
+NET_RSOLD_VALUE[max(NET_RSOLD_VALUE, key=NET_RSOLD_VALUE.get)] += RETAIL_OCT_TOTAL - sum(NET_RSOLD_VALUE.values())
+assert sum(NET_TSOLD.values()) == NET_TERT_SHEETS and sum(NET_TSOLD_VALUE.values()) == 2800000 and sum(NET_RSOLD.values()) == NET_RSHEETS and sum(NET_RSOLD_VALUE.values()) == RETAIL_OCT_TOTAL
+# by finish, for the two tiers and the first two
+def by_finish(sheets): 
+    out = {}
+    for s, q in sheets.items(): out[BY[s][2]] = out.get(BY[s][2], 0) + q
+    return out
+
+# ---- Invoice Management ----
+INV_COUNT = dict(total=134, open=5, overdue=2, paid=129)
+assert len(OPEN_INV) == INV_COUNT['open'] and len(OVERDUE) == INV_COUNT['overdue']
+def inv_chip(i):
+    bal = i[4] - i[5]
+    if bal == 0: return chip('Paid')
+    if pd(i[3]) < TODAY: return chip(f'Overdue {(TODAY - pd(i[3])).days} days', 'bad')
+    return chip('Partly Paid') if i[5] else chip('Unpaid')
+
+# ---- Crestline's schemes to Distributor Alpha (SCH-2026-01, 02, 04, 05, 06; the others are Alpha's schemes to its dealers) ----
+CSCH = [  # number, name, type, start, end, status, done, goal, reward
+ ('SCH-2026-04', 'Festive Volume Rebate', 'Volume Rebate', '01/10/2026', '30/11/2026', 'Active', 2750, 2500, '2% rebate'),
+ ('SCH-2026-05', 'Marble Finish Launch Incentive', 'Product Incentive', '01/09/2026', '31/12/2026', 'Active', 140, 300, f'{M(3500)} earned'),
+ ('SCH-2026-06', 'Winter Season Volume Bonus', 'Volume Bonus', '01/12/2026', '31/01/2027', 'Upcoming', 0, 3500, '3% bonus'),
+ ('SCH-2026-02', 'Monsoon Fast Mover Bonus', 'Product Incentive', '01/07/2026', '30/09/2026', 'Completed', 2550, 2400, f'{M(38250)} credited'),
+ ('SCH-2026-01', 'Summer Stock Incentive', 'Volume Incentive', '01/04/2026', '30/06/2026', 'Completed', 2310, 2000, f'{M(46200)} credited'),
+]
+assert 140 * 25 == 3500 and 2550 * 15 == 38250 and 2310 * 20 == 46200
+SCH_CREDITED = 38250 + 46200; SCH_ACCRUING = 3500 + 16426; assert (SCH_CREDITED, SCH_ACCRUING) == (84450, 19926)
+REBATE_10482 = 16426
+
+# ---- Territories (the five regions of Alpha's dealers): October sales to dealers against the dealers' October targets ----
+TERRITORIES = []
+for _reg in REGION_SALES:
+    _d = [d for d in DEALERS if d[3] == _reg]
+    TERRITORIES.append(dict(name=_reg, dealers=len(_d), retailers=sum(d[6] for d in _d), sales=sum(d[7] for d in _d), sept=sum(d[8] for d in _d), target=sum(TARGET[d[0]] for d in _d), dealer_names=[d[1] for d in _d]))
+assert [t['target'] for t in TERRITORIES] == [1565000, 600000, 450000, 375000, 150000] and sum(t['target'] for t in TERRITORIES) == TARGET_TOTAL
+assert sum(t['dealers'] for t in TERRITORIES) == 8 and sum(t['retailers'] for t in TERRITORIES) == 20
+
+# ---- Audit activity of the last seven days (20 to 26 October): date and time, user, organisation, area, action, record ----
+AUDIT = [
+ ('26/10/2026 11:42', 'Rajesh Menon', 'Distributor Alpha', 'Orders', 'Placed order', 'ORD-2026-10482'),
+ ('26/10/2026 09:40', 'Meera Kapoor', 'Crestline Laminates', 'Support', 'Replied to ticket', 'TKT-2026-0731'),
+ ('26/10/2026 08:30', 'Anita Deshmukh', 'Crestline Laminates', 'Users', 'Signed in', '—'),
+ ('25/10/2026 11:20', 'Rajesh Menon', 'Distributor Alpha', 'Returns', 'Created return request', 'RTN-2026-0412'),
+ ('24/10/2026 16:20', 'Rajesh Menon', 'Distributor Alpha', 'Support', 'Created ticket', 'TKT-2026-0731'),
+ ('24/10/2026 06:32', 'Crestline Laminates', 'Crestline Laminates', 'Invoices', 'Sent invoice by email', 'INV-2026-03318'),
+ ('24/10/2026 06:30', 'Neha Kulkarni', 'Crestline Laminates', 'Dispatch', 'Dispatched shipment', 'DSP-2026-5521'),
+ ('23/10/2026 16:40', 'Neha Kulkarni', 'Crestline Laminates', 'Inventory', 'Reserved stock at Plant Warehouse', 'ORD-2026-10459'),
+ ('23/10/2026 16:10', 'Vikram Chopra', 'Crestline Laminates', 'Orders', 'Confirmed order', 'ORD-2026-10459'),
+ ('22/10/2026 16:30', 'Anita Deshmukh', 'Crestline Laminates', 'Payments', 'Confirmed payment', 'PAY-2026-02217'),
+ ('22/10/2026 11:30', 'Vikram Chopra', 'Crestline Laminates', 'Customers', 'Opened dealer request', 'DRQ-2026-0017'),
+ ('21/10/2026 14:20', 'Suresh Iyer', 'Distributor Alpha', 'Payments', 'Recorded payment', 'PAY-2026-02217'),
+ ('21/10/2026 11:05', 'Kavita Joshi', 'Distributor Alpha', 'Customers', 'Reviewed dealer request', 'DRQ-2026-0017'),
+ ('20/10/2026 09:40', 'Vikram Chopra', 'Crestline Laminates', 'Orders', 'Confirmed order', 'ORD-2026-10447'),
+ ('20/10/2026 09:15', 'Anita Deshmukh', 'Crestline Laminates', 'Products', 'Changed reorder level from 800 to 1,000', 'LM-STN-009'),
+]
+assert [(pd(a[0][:10]), a[0][11:]) for a in AUDIT] == sorted([(pd(a[0][:10]), a[0][11:]) for a in AUDIT], reverse=True)
+# ---- Crestline users' notification preferences, settings tables ----
+CUST_TIERS = [('Primary Distributor Tier A', 'Distributors', 'Crestline price list by quantity (1 to 49, 50 to 199, 200 and above)', '45 days', CUS_TYPE['Distributor']),
+              ('Dealer Tier B', 'Dealers', 'Distributor price list: Crestline 1 to 49 price plus 10%', '30 days', CUS_TYPE['Dealer']),
+              ('Retailer Tier C', 'Retailers', 'Dealer price plus 12%', '15 days', CUS_TYPE['Retailer'])]
+assert all(dp(s) == round(BY[s][4][0] * 1.10 / 5) * 5 and rp(s) == round(dp(s) * 1.12 / 5) * 5 for s in BY)
+
+# ---------- Phase 12 markup helpers ----------
+def change(a, b):
+    if not b: return chip('New', 'blue')
+    v = (a - b) / b * 100
+    return f'<span class="delta {"up" if v >= 0 else "down"}"><i data-icon="trend"></i>{abs(v):.1f}%</span>'
+def prod_cell(s, sid=None):
+    name = f'<a data-link="{sid}"><b>{BY[s][1]}</b></a>' if sid else f'<b>{BY[s][1]}</b>'
+    return f'<div class="prod">{sw(s)}<div>{name}</div></div>'
+def share_cell(v, total, peak):
+    return f'<span class="inline-meter"><span class="meter"><i style="width:{v / peak * 100:.0f}%"></i></span><b>{v / total * 100:.1f}%</b></span>'
+def cancel(sid): return f'<a class="btn" data-link="{sid}">Cancel</a>'
+tick = lambda v: '<i data-icon="check"></i>' if v else '<span class="no">—</span>'
+FIN_COL = {'Matte': '#0a48fd', 'Woodgrain': '#0b8fa8', 'Texture': '#7a36fb', 'Gloss': '#e0a030', 'Suede': '#0c9b6a', 'High Gloss': '#d43a2f', 'Metallic': '#8b93a3'}
+REG_COL = {'West Maharashtra': '#0a48fd', 'North Maharashtra': '#0b8fa8', 'Konkan': '#7a36fb', 'Vidarbha': '#e0a030', 'Goa': '#0c9b6a'}

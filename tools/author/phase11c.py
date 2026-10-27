@@ -43,7 +43,7 @@ item_rows = ''.join(f'<tr><td><div class="prod">{sw(s)}<div><b>{BY[s][1]}</b></d
 assert all(CSTK[s]['vapi_avail'] >= q for s, q in o['lines'])
 acts = ('<button class="btn" type="button" data-role="ADM"><i data-icon="download"></i>Download Order Copy</button><button class="btn danger" type="button" data-role="ADM">Cancel Order</button>'
         '<button class="btn" type="button" data-role="OPS"><i data-icon="download"></i>Download Packing List</button><button class="btn" type="button" data-role="OPS">Plan Dispatch</button><button class="btn pri" type="button" data-role="OPS">Mark as Packed</button>')
-steps = [('Stock Reserved at Plant Warehouse', 'Completed 24/10/2026', 'ok'), ('Packing', f'Planned {o["packing"]}', 'warn'), ('Dispatch', f'Planned {o["dispatch"]}', 'plain')]
+steps = [('Stock Reserved at Plant Warehouse', 'Completed 23/10/2026', 'ok'), ('Packing', f'Planned {o["packing"]}', 'warn'), ('Dispatch', f'Planned {o["dispatch"]}', 'plain')]
 checklist = '<ul class="list">' + ''.join(f'<li><div class="grow"><b>{n}</b></div>{chip(c, k)}</li>' for n, c, k in steps) + '</ul>'
 body = f'''  <div class="head">
     <div class="title-row"><h1>{o["number"]}</h1>{chip("Confirmed")}{chip("Unpaid")}</div>
@@ -59,7 +59,7 @@ body = f'''  <div class="head">
           <div style="padding:1rem 1.125rem"><dl class="kv" style="max-width:22rem;margin-left:auto"><dt>Central GST 9%</dt><dd>{M(t["gst"])}</dd><dt>State GST 9%</dt><dd>{M(t["gst"])}</dd><dt>Freight</dt><dd>{M(t["freight"])}</dd></dl>
           <dl class="kv total" style="max-width:22rem;margin-left:auto"><dt>Total</dt><dd>{M(o["total"])}</dd></dl></div></div></section>
       <section class="card flush"><header><h2>Order Activity</h2></header><div class="body">{table([('Date', ''), ('Event', ''), ('By', '')], [
-        '<tr><td class="nowrap">24/10/2026 11:20</td><td><b>Stock reserved at Plant Warehouse, Vapi</b></td><td>Neha Kulkarni</td></tr>',
+        '<tr><td class="nowrap">23/10/2026 16:40</td><td><b>Stock reserved at Plant Warehouse, Vapi</b></td><td>Neha Kulkarni</td></tr>',
         f'<tr><td class="nowrap">{o["confirmed"]}</td><td><b>Order confirmed</b></td><td>{o["confirmed_by"]}</td></tr>',
         f'<tr><td class="nowrap">{o["placed"]}</td><td><b>Order placed</b></td><td>{o["placed_by"]}</td></tr>'])}</div></section>
       <section class="card"><header><h2>Order Information</h2></header><div class="body">{kv([('Placed By', o['placed_by']), ('Confirmed By', o['confirmed_by']), ('Payment Terms', '45 days'), ('Invoice', 'Not Yet Raised'), ('Scheme', 'None'), ('Reference Number', o['ref'])])}</div></section>

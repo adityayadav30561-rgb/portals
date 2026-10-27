@@ -117,11 +117,11 @@ ADM = (day('Today', n('CMP-ORD-02', 'Order Submitted', 'ORD-2026-10482', '11:42'
        + day('Yesterday', n('CMP-SUP-02', 'Customer Replied on Support Ticket', 'TKT-2026-0731', '11:20', 'help'))
        + day('24 October 2026', n('CMP-BIL-02', 'Invoice Issued', 'INV-2026-03318', '06:32', 'receipt'))
        + day('22 October 2026', n('CMP-BIL-01', 'Payment Confirmed', 'PAY-2026-02217', '16:30', 'cash', 'ok')))
-SAL = (day('Today', n('CMP-ORD-02', 'Order Submitted', 'ORD-2026-10482', '11:42', 'cart', '', True), n('CMP-SCH-02', 'Scheme Target Reached', 'SCH-2026-04', '09:15', 'tag', 'ok', True),
+SAL = (day('Today', n('CMP-SAL-09', 'Order Submitted', 'ORD-2026-10482', '11:42', 'cart', '', True), n('CMP-SAL-01', 'Scheme Target Reached', 'SCH-2026-04', '09:15', 'tag', 'ok', True),
            n('CMP-CUS-03', 'Customer Request Waiting', 'DRQ-2026-0017', '09:00', 'user', 'warn', True))
-       + day('23 October 2026', n('CMP-ORD-02', 'Order Confirmed', 'ORD-2026-10459', '16:10', 'cart', 'ok'))
-       + day('20 October 2026', n('CMP-ORD-02', 'Order Confirmed', 'ORD-2026-10447', '09:40', 'cart', 'ok')))
-OPS = (day('Today', n('CMP-ORD-02', 'Packing Due Today', 'ORD-2026-10459', '08:00', 'box', 'warn', True), n('CMP-DSP-01', 'Shipment Arriving Tomorrow', 'DSP-2026-5521', '08:00', 'truck', '', True),
+       + day('23 October 2026', n('CMP-SAL-09', 'Order Confirmed', 'ORD-2026-10459', '16:10', 'cart', 'ok'))
+       + day('20 October 2026', n('CMP-SAL-09', 'Order Confirmed', 'ORD-2026-10447', '09:40', 'cart', 'ok')))
+OPS = (day('Today', n('CMP-OPS-02', 'Packing Due Today', 'ORD-2026-10459', '08:00', 'box', 'warn', True), n('CMP-OPS-04', 'Shipment Arriving Tomorrow', 'DSP-2026-5521', '08:00', 'truck', '', True),
            n('CMP-INV-01', 'Low Stock', 'LM-STN-009', '07:45', 'warn', 'warn', True))
        + day('Yesterday', n('CMP-OPS-06', 'Return Request Submitted', 'RTN-2026-0412', '11:20', 'ret'))
        + day('24 October 2026', n('CMP-DSP-01', 'Shipment Dispatched', 'DSP-2026-5521', '06:30', 'truck', 'ok'))

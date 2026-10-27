@@ -63,14 +63,18 @@
   P.icon = svg;
   var esc = function (t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var initials = function (name) { return name.split(' ').map(function (w) { return w[0]; }).join('').slice(0, 2); };
-  var iconFor = function (x) { return x.name === 'Dashboard' ? 'home' : (PREFIX[x.code.split('-')[0]] || 'doc'); };
+  var NAME_ICON = { 'Delivery Issues': 'warn', 'Delayed Orders': 'warn', 'Return Requests': 'ret', 'Operational Reports': 'chart', 'Stock Movement History': 'stack', 'Dispatch Management': 'truck' };
+  var iconFor = function (x) { return x.name === 'Dashboard' ? 'home' : (NAME_ICON[x.name] || PREFIX[x.code.split('-')[0]] || 'doc'); };
 
   // ---------- Sidebar ----------
   var active = P.menuScreen(p, s, role);
   var list = P.forRole(p, role).filter(function (x) { return x.kind === 'm'; });
   var groups = [];
   list.forEach(function (x) { var g = P.group(x, role); if (groups.indexOf(g) < 0) groups.push(g); });
-  groups.sort(function (a, b) { return (b === 'Overview') - (a === 'Overview'); });   // the dashboard section is always first, whatever the registry order
+  groups.sort(function (a, b) { return (b === 'Overview') - (a === 'Overview'); });
+  // The Operations Manager's menu follows the order of the work: orders, dispatch, stock, reports.
+  var ORDER = { 'company:OPS': ['Overview', 'Orders', 'Dispatch and Delivery', 'Stock and Returns', 'Reports and Support'] }[p.id + ':' + role];
+  if (ORDER) groups.sort(function (a, b) { return ORDER.indexOf(a) - ORDER.indexOf(b); });   // the dashboard section is always first, whatever the registry order
   var nav = groups.map(function (g) {
     var members = list.filter(function (x) { return P.group(x, role) === g; });
     var items = members.map(function (x) {

@@ -70,6 +70,12 @@ Applies to every screen, in every phase. `tools/verify.js` enforces what a machi
 - **Screen name pattern:** DONE: three-part kept.
 - (was) **Screen name pattern:** three-part (above) or the brief's two-part examples ("Primary Customer — Product Catalogue")? One-line change.
 
+## Answered 2026-10-27 ("do whats recommended by you")
+
+| Decision | Detail |
+|---|---|
+| Sales Manager and approvals | The Sales Manager is tagged onto the Customer Approval Queue (as the Managers were tagged onto existing screens in Phase 2); Sales Order Overview has a Confirm Order action for the order awaiting confirmation. Per-role counts: Sales Manager 11 screens (10 own + the queue). Total stays 196. |
+
 ## Rejected
 
 Nothing yet.

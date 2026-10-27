@@ -31,7 +31,6 @@
     ['ADM-01', 'Dashboard', 'ADM', 'Overview', 'm', 'Orders, customers, sales, dispatch and open support tickets across the whole company'],
     ['CUS-01', 'Customer Directory', 'ADM', 'Customers', 'm', 'Every distributor, dealer and retailer with status, region and parent customer'],
     ['CUS-02', 'Customer Details', 'ADM', 'Customers', 'd', 'One customer: profile, contacts, credit terms, hierarchy, recent orders', 'CUS-01'],
-    ['CUS-03', 'Customer Approval Queue', 'ADM', 'Customers', 'm', 'New customer registrations waiting for review, with documents and decision buttons'],
     ['CUS-04', 'Customer Hierarchy Explorer', 'ADM', 'Customers', 'm', 'Expandable tree from company to distributors, dealers and retailers'],
     ['USR-01', 'User Directory', 'ADM', 'Users', 'm', 'All users across the company and customers with role, organisation and status'],
     ['USR-02', 'User Details', 'ADM', 'Users', 'd', 'One user: profile, role, organisation, access and recent activity', 'USR-01'],
@@ -71,6 +70,7 @@
     ['SAL-08', 'Customer Sales History', 'SAL', 'Analysis', 'm', 'Purchase history of one customer by month, product and order'],
     ['SAL-09', 'Sales Order Overview', 'SAL', 'Orders and Campaigns', 'm', 'Orders in progress across all customers with status and value'],
     ['SAL-10', 'Promotional Campaigns', 'SAL', 'Orders and Campaigns', 'm', 'Running and planned promotions with reach, orders and spend'],
+    ['CUS-03', 'Customer Approval Queue', 'ADM SAL', { ADM: 'Customers', SAL: 'Orders and Campaigns' }, 'm', 'New customer registrations waiting for review, with documents and decision buttons'],
 
     ['OPS-01', 'Dashboard', 'OPS', 'Overview', 'm', 'Orders waiting to be processed, dispatches due today, delays and open returns'],
     ['OPS-02', 'Order Processing Queue', 'OPS', 'Orders', 'm', 'Confirmed orders waiting for stock check, packing and dispatch planning'],
@@ -258,6 +258,8 @@
     'CMP-ADM-01', 'CMP-CUS-01', 'CMP-CUS-02', 'CMP-CUS-03', 'CMP-CUS-04', 'CMP-USR-01', 'CMP-USR-02', 'CMP-PRD-01', 'CMP-PRD-02', 'CMP-PRD-03', 'CMP-PRD-04', 'CMP-ORD-01', 'CMP-ORD-02',
     'CMP-DSP-01', 'CMP-INV-01', 'CMP-ANL-01', 'CMP-RPT-01', 'CMP-RPT-02', 'CMP-RPT-03', 'CMP-RPT-04', 'CMP-BIL-01', 'CMP-BIL-02', 'CMP-SCH-01', 'CMP-SCH-02', 'CMP-SCH-03',
     'CMP-SUP-01', 'CMP-SUP-02', 'CMP-TER-01', 'CMP-AUD-01', 'CMP-SET-01', 'CMP-PRO-02', 'CMP-NTF-01',
+    'CMP-SAL-01', 'CMP-SAL-02', 'CMP-SAL-03', 'CMP-SAL-04', 'CMP-SAL-05', 'CMP-SAL-06', 'CMP-SAL-07', 'CMP-SAL-08', 'CMP-SAL-09', 'CMP-SAL-10',
+    'CMP-OPS-01', 'CMP-OPS-02', 'CMP-OPS-03', 'CMP-OPS-04', 'CMP-OPS-05', 'CMP-OPS-06', 'CMP-OPS-07', 'CMP-OPS-08',
     'AUT-01', 'AUT-02', 'AUT-03', 'AUT-04', 'AUT-05', 'AUT-06', 'AUT-07', 'AUT-08', 'AUT-09'];
 
   function slug(text) { return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }

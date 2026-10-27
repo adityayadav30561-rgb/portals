@@ -1384,3 +1384,118 @@ def cancel(sid): return f'<a class="btn" data-link="{sid}">Cancel</a>'
 tick = lambda v: '<i data-icon="check"></i>' if v else '<span class="no">—</span>'
 FIN_COL = {'Matte': '#0a48fd', 'Woodgrain': '#0b8fa8', 'Texture': '#7a36fb', 'Gloss': '#e0a030', 'Suede': '#0c9b6a', 'High Gloss': '#d43a2f', 'Metallic': '#8b93a3'}
 REG_COL = {'West Maharashtra': '#0a48fd', 'North Maharashtra': '#0b8fa8', 'Konkan': '#7a36fb', 'Vidarbha': '#e0a030', 'Goa': '#0c9b6a'}
+
+
+# =====================================================================================================================
+# Phase 13 data (docs/DATA.md: "Phase 13 data"). Company Sales Manager (Vikram Chopra) and Operations Manager (Neha Kulkarni).
+# =====================================================================================================================
+# ---- Retailer targets (October) for the 17 other retailers (placeholders; Charlie, Kiran and Mehta are the Phase 7 targets) ----
+RTARGET_ALL = dict(RTARGET)
+RTARGET_ALL.update({'GOD': 175000, 'PAN': 160000, 'SIN': 110000, 'DEO': 100000, 'MAJ': 170000, 'KAL': 140000, 'DOM': 115000, 'RAN': 145000, 'ICH': 125000, 'SHA': 95000,
+                    'SIT': 190000, 'DHA': 130000, 'KRD': 120000, 'KOR': 100000, 'AKK': 115000, 'PND': 90000, 'FON': 100000})
+assert len(RTARGET_ALL) == 20
+def rt_ach(k): return RETAIL_OCT[k] / RTARGET_ALL[k] * 100
+def rt_status(k):
+    a = rt_ach(k); return 'Above Target' if a >= 100 else 'Near Target' if a >= 95 else 'Below Target'
+RT_STATUS_COUNT = {st: sum(1 for k in RTARGET_ALL if rt_status(k) == st) for st in ('Above Target', 'Near Target', 'Below Target')}
+RT_TARGET_TOTAL = sum(RTARGET_ALL.values())
+
+# ---- Quarterly targets for sales to dealers (Financial Year 2026–27); Q2 is complete, Q3 is running ----
+QUARTERS = [('Q2 (July to September 2026)', 8200000, SALES_MONTH[2] + SALES_MONTH[3] + SALES_MONTH[4], 'Completed'),
+            ('Q3 (October to December 2026)', 9600000, 3120000, 'In Progress'), ('Q4 (January to March 2027)', 10000000, 0, 'Upcoming')]
+assert QUARTERS[0][2] == 8090000
+
+# ---- Dealer cities as the regional analysis sees them ----
+STATE = lambda d: 'Goa' if d[3] == 'Goa' else 'Maharashtra'
+STATE_SALES = {'Maharashtra': (sum(d[7] for d in DEALERS if STATE(d) == 'Maharashtra'), sum(d[8] for d in DEALERS if STATE(d) == 'Maharashtra')), 'Goa': (155000, 0)}
+assert STATE_SALES['Maharashtra'] == (2965000, 2790000) and sum(v[0] for v in STATE_SALES.values()) == 3120000
+
+# ---- Sales Order Overview: orders in progress across the three tiers (not delivered, not cancelled) ----
+# number, tier, seller, buyer, placed, sheets, value, status. The six orders of other dealers' retailers are placeholders (all recorded in October's 53).
+OTHER_TSL = [('TSL-2026-DLT-0108', 'Retailer Sinnar Wood Works', 'Dealer Delta', '26/10/2026', 44000, 'Being Packed'), ('TSL-2026-DLT-0107', 'Retailer Godavari Interiors', 'Dealer Delta', '24/10/2026', 58000, 'In Transit'),
+             ('TSL-2026-FXT-0091', 'Retailer Kalyan Furniture House', 'Dealer Foxtrot', '24/10/2026', 46000, 'In Transit'), ('TSL-2026-GPL-0079', 'Retailer Rankala Interiors', 'Dealer Gopal', '26/10/2026', 52000, 'Being Packed'),
+             ('TSL-2026-HRS-0066', 'Retailer Sitabuldi Interiors', 'Dealer Harsh', '25/10/2026', 61000, 'Being Packed'), ('TSL-2026-KNL-0004', 'Retailer Fontainhas Interiors', 'Dealer Kunal', '24/10/2026', 35000, 'In Transit')]
+IN_PROGRESS = [('ORD-2026-10482', 'Primary', 'Crestline Laminates', 'Distributor Alpha', '26/10/2026', 760, 949752, 'Awaiting Confirmation'),
+               ('ORD-2026-10459', 'Primary', 'Crestline Laminates', 'Distributor Alpha', '23/10/2026', 280, 336500, 'Confirmed'),
+               ('ORD-2026-10447', 'Primary', 'Crestline Laminates', 'Distributor Alpha', '19/10/2026', 360, 442930, 'In Transit')]
+_sec = [s for s in SALES if s['status'] != 'Delivered']
+IN_PROGRESS.append((NEW_ORDER, 'Secondary', 'Distributor Alpha', 'Dealer Bravo', '26/10/2026', 210, NEW_TOTAL, 'Awaiting Confirmation'))
+for s in _sec: IN_PROGRESS.append((s['number'], 'Secondary', 'Distributor Alpha', DLR[s['dealer']][1], s['date'], s['sheets'], s['value'], s['status']))
+IN_PROGRESS.append((PEND_ORDER['number'], 'Tertiary', 'Dealer Bravo', 'Retailer Charlie', '26/10/2026', PEND_SHEETS, PEND_TOTAL, 'Awaiting Confirmation'))
+for t in TSALES:
+    if t['number'] in ('TSL-2026-0412', 'TSL-2026-0411'): IN_PROGRESS.append((t['number'], 'Tertiary', 'Dealer Bravo', RTL[t['retailer']][1], t['date'], t['sheets'], t['value'], 'Being Packed' if t['number'].endswith('0412') else 'In Transit'))
+_avg_sheet = 630000 / 370
+for n, buyer, seller, dt, v, st in OTHER_TSL: IN_PROGRESS.append((n, 'Tertiary', seller, buyer, dt, round(v / _avg_sheet / 5) * 5, v, st))
+assert [sum(1 for o in IN_PROGRESS if o[1] == t) for t in ('Primary', 'Secondary', 'Tertiary')] == [3, 4, 9] and len(IN_PROGRESS) == 16
+assert sum(1 for o in IN_PROGRESS if o[7] == 'Awaiting Confirmation') == 3
+assert {o[0]: o[7] for o in IN_PROGRESS if o[0] in ('TSL-2026-0412', 'TSL-2026-0411')} == {'TSL-2026-0412': 'Being Packed', 'TSL-2026-0411': 'In Transit'}
+_ORDER_STAGE = {'Awaiting Confirmation': 0, 'Confirmed': 1, 'Being Packed': 2, 'In Transit': 3}
+IN_PROGRESS.sort(key=lambda o: (_ORDER_STAGE[o[7]], ['Primary', 'Secondary', 'Tertiary'].index(o[1])))
+IN_PROGRESS_VALUE = sum(o[6] for o in IN_PROGRESS)
+
+# ---- Promotional Campaigns (marketing, not schemes; numbers PRM-2026-0x; all placeholders): number, name, audience, start, end, reach, orders influenced, budget, spent, status ----
+CAMPAIGNS = [
+ ('PRM-2026-06', 'Winter Bonus Announcement',          'Distributors and dealers', '01/12/2026', '31/01/2027', 0, 0, 150000, 0, 'Planned'),
+ ('PRM-2026-05', 'Festive Showroom Display Kits',      'Retailers',                '01/10/2026', '30/11/2026', 20, 7, 240000, 145000, 'Running'),
+ ('PRM-2026-04', 'Marble Finish Launch Samples',       'Dealers',                  '01/09/2026', '31/12/2026', 8, 5, 180000, 112000, 'Running'),
+ ('PRM-2026-03', 'Monsoon Dealer Roadshow',            'Dealers',                  '01/07/2026', '30/09/2026', 8, 11, 200000, 186000, 'Completed'),
+ ('PRM-2026-02', 'Summer Sample Folder Mailer',        'Dealers and retailers',    '01/04/2026', '30/06/2026', 28, 9, 120000, 118000, 'Completed'),
+]
+CAMP_BUDGET = sum(c[7] for c in CAMPAIGNS); CAMP_SPENT = sum(c[8] for c in CAMPAIGNS)
+CAMP_RUNNING = [c for c in CAMPAIGNS if c[9] == 'Running']
+STATUS_CHIP.update({'Planned': 'blue', 'Running': 'ok', 'Delayed': 'bad', 'Pickup Scheduled': 'blue'})
+assert sum(c[8] for c in CAMP_RUNNING) == 257000 and CAMP_BUDGET == 890000
+
+# ---- Operations: promised and actual dispatch dates of the October and September orders ----
+PROMISED = {'ORD-2026-10459': ('26/10/2026', None), 'ORD-2026-10447': ('24/10/2026', '24/10/2026'), 'ORD-2026-10431': ('18/10/2026', '18/10/2026'), 'ORD-2026-10398': ('10/10/2026', '11/10/2026'),
+            'ORD-2026-10372': ('04/10/2026', '04/10/2026'), 'ORD-2026-10341': ('27/09/2026', '27/09/2026'), 'ORD-2026-10316': ('20/09/2026', '20/09/2026'), 'ORD-2026-10290': ('13/09/2026', '13/09/2026')}
+assert all(sh[1] in PROMISED and (PROMISED[sh[1]][1] or sh[4]) == (sh[4] if sh[6] != 'Being Packed' else sh[4]) for sh in SHIPMENTS)
+ON_TIME_OCT = [o for o in ('ORD-2026-10447', 'ORD-2026-10431', 'ORD-2026-10398', 'ORD-2026-10372') if PROMISED[o][0] == PROMISED[o][1]]
+assert len(ON_TIME_OCT) == 3
+ORDER_PLACED = {o[0]: o[1] for o in ALPHA_ORDERS}
+CYCLE_DAYS = {sh[1]: (pd(sh[5]) - pd(ORDER_PLACED[sh[1]])).days for sh in SHIPMENTS if sh[6] == 'Delivered'}
+assert set(CYCLE_DAYS.values()) == {5}
+
+# ---- Return requests of Distributor Alpha as Crestline's operations see them (the Phase 3 list): number, date, order, sku, sheets, reason, status ----
+CRL_RET = [('RTN-2026-0412', '25/10/2026', 'ORD-2026-10431', 'LM-CAL-003', 12, 'Damaged in Transit', 'Under Review'), ('RTN-2026-0408', '22/10/2026', 'ORD-2026-10431', 'LM-WNT-001', 8, 'Surface Defect', 'Approved'),
+           ('RTN-2026-0396', '16/10/2026', 'ORD-2026-10398', 'LM-ARC-002', 20, 'Wrong Product Delivered', 'Pickup Scheduled'), ('RTN-2026-0377', '09/10/2026', 'ORD-2026-10372', 'LM-OAK-004', 15, 'Damaged in Transit', 'Credit Issued'),
+           ('RTN-2026-0361', '02/10/2026', 'ORD-2026-10341', 'LM-CHR-007', 10, 'Surface Defect', 'Credit Issued'), ('RTN-2026-0342', '26/09/2026', 'ORD-2026-10316', 'LM-SLT-005', 6, 'Shade Mismatch', 'Rejected'),
+           ('RTN-2026-0319', '18/09/2026', 'ORD-2026-10290', 'LM-TEK-006', 14, 'Damaged in Transit', 'Credit Issued')]
+CRL_CREDIT = {r[0]: r[4] * BY[r[3]][4][1] for r in CRL_RET if r[6] == 'Credit Issued'}
+assert sum(CRL_CREDIT.values()) == 42340 and sum(1 for r in CRL_RET if r[6] in ('Under Review', 'Approved', 'Pickup Scheduled')) == 3
+RET_OPEN = [r for r in CRL_RET if r[6] in ('Under Review', 'Approved', 'Pickup Scheduled')]; RET_OPEN_SHEETS = sum(r[4] for r in RET_OPEN); assert RET_OPEN_SHEETS == 40
+RET_OCT = [r for r in CRL_RET if r[1].endswith('/10/2026')]; RET_OCT_SHEETS = sum(r[4] for r in RET_OCT)
+assert (len(RET_OCT), RET_OCT_SHEETS) == (5, 65)
+RET_RATE = RET_OCT_SHEETS / SHIP_OCT_SHEETS * 100; assert round(RET_RATE, 1) == 3.8
+RET_REASON = {}
+for r in CRL_RET: RET_REASON[r[5]] = RET_REASON.get(r[5], (0, 0)); RET_REASON[r[5]] = (RET_REASON[r[5]][0] + 1, RET_REASON[r[5]][1] + r[4])
+
+# ---- Stock movements of Crestline in October (company stock, `CSTK`). Receipts are production receipts at Vapi in three batches; dispatches are the four October shipments; two transfers Vapi to Taloja ----
+_RECV = {'LM-WNT-001': 1200, 'LM-ARC-002': 1500, 'LM-CAL-003': 400, 'LM-OAK-004': 700, 'LM-SLT-005': 450, 'LM-TEK-006': 900, 'LM-CHR-007': 600, 'LM-IVR-008': 800, 'LM-STN-009': 0, 'LM-CPR-010': 150, 'LM-WNG-011': 700, 'LM-SKY-012': 600}
+_BATCH = [('02/10/2026', 'PRC-2026-0187', 0.4), ('12/10/2026', 'PRC-2026-0194', 0.3), ('22/10/2026', 'PRC-2026-0203', 0.3)]
+_TRF = [('08/10/2026', 'STR-2026-0041', {'LM-WNT-001': 300, 'LM-ARC-002': 400, 'LM-OAK-004': 150, 'LM-IVR-008': 200}), ('20/10/2026', 'STR-2026-0044', {'LM-WNT-001': 200, 'LM-ARC-002': 300, 'LM-TEK-006': 250, 'LM-WNG-011': 150, 'LM-SKY-012': 150})]
+CMOVES2 = []
+for s, tot in _RECV.items():
+    if not tot: continue
+    parts = [round(tot * f / 10) * 10 for _, _, f in _BATCH[:2]]; parts.append(tot - sum(parts))
+    for (dt, ref, _), q in zip(_BATCH, parts):
+        if q: CMOVES2.append(dict(date=dt, type='Production Receipt', sku=s, wh='Plant Warehouse, Vapi', ref=ref, sheets=q))
+for sh in SHIPMENTS:
+    if sh[6] == 'Being Packed' or not sh[4].endswith('/10/2026'): continue
+    for s, q in ORDER_LINES[sh[1]]: CMOVES2.append(dict(date=sh[4], type='Dispatch to Customer', sku=s, wh='Plant Warehouse, Vapi', ref=sh[0], sheets=-q))
+for dt, ref, lines in _TRF:
+    for s, q in lines.items():
+        CMOVES2.append(dict(date=dt, type='Transfer', sku=s, wh='Plant Warehouse, Vapi', ref=ref, sheets=-q)); CMOVES2.append(dict(date=dt, type='Transfer', sku=s, wh='Regional Warehouse, Taloja', ref=ref, sheets=q))
+CMOVES2 = [m for m in CMOVES2 if m['date'].endswith('/10/2026')]
+_kind2 = {'Dispatch to Customer': 0, 'Transfer': 1, 'Production Receipt': 2}
+CMOVES2.sort(key=lambda m: (m['sku'], m['wh']))
+CMOVES2.sort(key=lambda m: (pd(m['date']), _kind2[m['type']], m['ref']), reverse=True)
+C_RECEIVED = sum(m['sheets'] for m in CMOVES2 if m['type'] == 'Production Receipt'); C_ISSUED = -sum(m['sheets'] for m in CMOVES2 if m['type'] == 'Dispatch to Customer')
+C_TRANSFERRED = sum(m['sheets'] for m in CMOVES2 if m['type'] == 'Transfer' and m['sheets'] > 0)
+assert (C_RECEIVED, C_ISSUED) == (8000, 1710)
+C_NET = {s: {w: 0 for w in ('Plant Warehouse, Vapi', 'Regional Warehouse, Taloja')} for s in BY}
+for m in CMOVES2: C_NET[m['sku']][m['wh']] += m['sheets']
+CRL_OPENING = {s: (CSTK[s]['vapi'] - C_NET[s]['Plant Warehouse, Vapi'], CSTK[s]['taloja'] - C_NET[s]['Regional Warehouse, Taloja']) for s in BY}
+assert all(v >= 0 for o in CRL_OPENING.values() for v in o), CRL_OPENING
+C_COUNT_VAR = {'Plant Warehouse, Vapi': 280, 'Regional Warehouse, Taloja': 80}
+C_COUNT_ACC = 1 - sum(C_COUNT_VAR.values()) / CSTK_ON_HAND; assert round(C_COUNT_ACC * 100, 1) == 99.6

@@ -103,7 +103,7 @@ returns `RTN-2026-0412`; support tickets `TKT-2026-0731`; schemes `SCH-2026-04`;
 | LM-OAK-004 | 120 | 1,200 | 1,44,000 |
 | LM-SLT-005 | 60 | 1,275 | 76,500 |
 
-760 sheets; subtotal ₹8,21,300; Festive Volume Rebate 2% −₹16,426; taxable ₹8,04,874; Central GST ₹72,439; State GST ₹72,439; freight ₹0 (free above ₹5,00,000); **total ₹9,49,752**. Credit available after the order: ₹15,63,928.
+760 sheets; subtotal ₹8,21,300; Festive Volume Rebate 2% −₹16,426; taxable ₹8,04,874; Central GST ₹72,439; State GST ₹72,439; freight ₹0 (free above ₹4,50,000); **total ₹9,49,752**. Credit available after the order: ₹15,63,928.
 
 ## Order History (Distributor Alpha, newest first)
 
@@ -393,4 +393,4 @@ OFR-2026-04 Winter Season Retailer Bonus 2% at 400 sheets, 01/12/2026 to 31/01/2
 **Support (Crestline's view):** the six tickets of Alpha (agent Meera Kapoor); open 3, high priority 1, awaiting customer reply 1, resolved this month 1; age in days = 26/10 minus created. Details shows TKT-2026-0731 with the Crestline messages on the right-hand (blue) side.
 **Territories = the five regions of Alpha's dealers** (Account Manager Vikram Chopra for all; each dealer's Distributor Manager is Kavita Joshi, her title on Dealer Bravo's profile): targets are the sums of the Phase 4 dealer targets: West Maharashtra ₹15,65,000 (sales ₹15,59,000, 99.6%), North Maharashtra ₹6,00,000 (₹5,92,000, 98.7%), Konkan ₹4,50,000 (₹4,76,000, 105.8%), Vidarbha ₹3,75,000 (₹3,38,000, 90.1%), Goa ₹1,50,000 (₹1,55,000, 103.3%); total ₹31,40,000, 99.4%.
 **Audit Activity (last seven days, 15 entries)** reuses events already on screen (orders placed and confirmed, stock reserved, dispatch and invoice of 24/10, payment recorded and confirmed, ticket and return request, dealer request reviewed and opened, reorder level of LM-STN-009 changed from 800 to 1,000 on 20/10 09:15 by Anita Deshmukh, placeholder).
-**Portal Settings:** customer tiers as in `CUST_TIERS` (credit periods 45, 30 and 15 days; the 10% and 12% markups of `dp()` and `rp()`), free freight above ₹5,00,000 and ₹4,500 below (the freight on ORD-10459 and 10447), dispatch 2 to 3 days, GST 18% (9% + 9%), invoices issued on dispatch and due after 45 days, eight notification rules. **My Profile and Notifications** for the three Crestline roles: three unread each (bell badge 3).
+**Portal Settings:** customer tiers as in `CUST_TIERS` (credit periods 45, 30 and 15 days; the 10% and 12% markups of `dp()` and `rp()`), free freight above an order total of ₹4,50,000 and ₹4,500 below (fits all six October orders: 10459 at ₹3,36,500 and 10447 at ₹4,42,930 carry it; 10372 at ₹4,81,200 and above do not; changed from ₹5,00,000 after review), dispatch 2 to 3 days, GST 18% (9% + 9%), invoices issued on dispatch and due after 45 days, eight notification rules. **My Profile and Notifications** for the three Crestline roles: three unread each (bell badge 3).

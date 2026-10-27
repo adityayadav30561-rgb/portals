@@ -70,6 +70,7 @@
   var list = P.forRole(p, role).filter(function (x) { return x.kind === 'm'; });
   var groups = [];
   list.forEach(function (x) { var g = P.group(x, role); if (groups.indexOf(g) < 0) groups.push(g); });
+  groups.sort(function (a, b) { return (b === 'Overview') - (a === 'Overview'); });   // the dashboard section is always first, whatever the registry order
   var nav = groups.map(function (g) {
     var members = list.filter(function (x) { return P.group(x, role) === g; });
     var items = members.map(function (x) {

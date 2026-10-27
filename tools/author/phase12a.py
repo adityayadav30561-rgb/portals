@@ -6,7 +6,7 @@ from data import *
 PLANT = 'Plant Warehouse, Vapi'
 # ---------- Dispatch Management ----------
 srows = ''.join(f'<tr><td class="mono nowrap">{link("CMP-OPS-04", s[0]) if s[0] != "—" else "—"}</td><td class="nowrap">{link("CMP-ORD-02", s[1])}</td><td>{PLANT}</td><td>{s[2]}</td>'
-                f'<td class="num">{N(s[3])}</td><td>{s[4]}</td><td>{s[5]}</td><td>{chip(s[6])}</td></tr>' for s in SHIPMENTS)
+                f'<td class="num">{N(s[3])}</td><td>{'Planned ' + s[4] if s[6] == 'Being Packed' else s[4]}</td><td>{s[5]}</td><td>{chip(s[6])}</td></tr>' for s in SHIPMENTS)
 wk_ship = [sum(s[3] for s in SHIP_OCT if a <= int(s[4][:2]) <= b) for _, a, b in WEEKS]; assert wk_ship == [400, 430, 520, 360]
 trans = {}
 for s in SHIPMENTS:

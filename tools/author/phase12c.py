@@ -64,7 +64,7 @@ body = f'''  <div class="head">
   </div>
   <section class="card flush"><header><h2>Customer Tiers</h2></header><div class="body">{table([('Price Tier', ''), ('Applies To', ''), ('Price Basis', ''), ('Credit Period', ''), ('Customers', 'num')], [tier_rows], 'wrap')}</div></section>
   <div class="grid g-2">
-    {form('Order Rules', fld('Free Freight Above', 'ff', '₹5,00,000'), fld('Freight Below That', 'fb', '₹4,500'), fld('Dispatch Lead Time', 'dl', '2 to 3 days'), fld('Order Confirmation', 'oc', 'Manual by Sales Manager', 'select', ['Manual by Sales Manager', 'Automatic']),
+    {form('Order Rules', fld('Free Freight Above', 'ff', '₹4,50,000'), fld('Freight Below That', 'fb', '₹4,500'), fld('Dispatch Lead Time', 'dl', '2 to 3 days'), fld('Order Confirmation', 'oc', 'Manual by Sales Manager', 'select', ['Manual by Sales Manager', 'Automatic']),
           fld('Credit Check on Orders', 'cc', 'Yes', 'select', ['Yes', 'No']), fld('Quantity Price Slabs', 'qs', '1 to 49, 50 to 199, 200 and above', full=True))}
     {form('Tax Settings', fld('GST Rate', 'gr', '18%'), fld('Central GST', 'cg', '9%'), fld('State GST', 'sg', '9%'), fld('Company GST Number', 'gn', '24AABCC7782M1Z4'), fld('Invoice Due After', 'id', '45 days', 'select', ['15 days', '30 days', '45 days']),
           fld('Issue Invoice On', 'io', 'Dispatch', 'select', ['Dispatch', 'Order Confirmation']))}

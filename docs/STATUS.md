@@ -78,29 +78,9 @@ and the ticket description, which are user content).
 
 ## Open items for the user
 
-1. **Dealer schemes are placeholders** (SCH-2026-07 Dealer Festive Volume Rebate 1% at 750 sheets; SCH-2026-08 Marble Finish Dealer Incentive
-   ₹15 per sheet; SCH-2026-09 Winter Season Dealer Bonus; SCH-2026-03 Monsoon Dealer Incentive). They now have full screens; confirm or replace.
-2. **Dealer order numbers** are Alpha's sale numbers (SAL-2026-3040) and Bravo's invoice numbers are the same. Say if dealers should have their
-   own series.
-3. **"D" number series** for documents issued by Distributor Alpha (PAY-2026-D0521, RTN-2026-D0508, TKT-2026-D0746) keep them apart from the
-   Crestline series; say if you prefer another format.
-4. **Number series Dealer Bravo issues itself (new in Phase 7):** retailer requests RRQ-2026-0005 to 0007, deliveries DLV-2026-0401 to 0412, stock adjustments
-   ADJ-2026-B0011 to B0015. Say if you prefer another format.
-5. **Retailer order TSL-2026-0413** (Charlie, awaiting confirmation) is both the Phase 6 Tertiary Sales Entry example and the order the Tertiary portal will show; confirm.
-6. **Retailer targets** (Charlie ₹2,50,000; Kiran ₹2,20,000; Mehta ₹1,70,000) and the three pending retailer requests are placeholders.
-7. **Known point:** the Reorder Recommendations total (₹3,35,500, ₹3,95,890 with GST) is above Bravo's credit available after SAL-2026-3042 (₹2,46,180); the rule is unchanged, say if you want it to respect credit.
-8. **Phase 8 placeholders (new):** Charlie's own numbers RSL-2026-xxxx (sales to customers) and ADJ-2026-C000x (adjustments); the 25% selling-price rule (`crp()`); the 38 customer names
-   and payment modes; Charlie's stock levels and reorder levels; the offers OFR-2026-01 and 02 from Dealer Bravo; Store Profile legal name (Charlie Laminates Private Limited), code RTL-0041, established 2018.
-9. **Phase 9 placeholders (new):** the letter "B" for documents Bravo issues to retailers; Charlie's payments, returns and tickets; the offers OFR-2026-03 (Monsoon, ₹1,880) and 04 (Winter); the five users (Mohit Gawande invited, Sneha Ranpise inactive); the 13-area access matrix.
-10. **Phase 11 decisions (new):** the scope and data choices listed under "Where we are"; also the 17 retailer names, owners and purchases, Dealer Omkar's details, DRQ-2026-0014 and 0011, the Taloja warehouse and company stock, Vikram Chopra's user history.
-11. **Sales Manager and approvals (answered 2026-10-27, applied):** the registry gives the Sales Manager neither Order Details (Super Admin and Operations Manager) nor the Customer Approval Queue (Super Admin only), yet Vikram Chopra confirms orders and approves dealer requests in the Phase 11 data. Recommendation: tag the Sales Manager onto Customer Approval Queue (as the Managers were tagged onto existing screens in Phase 2) and give Sales Order Overview (SAL-09) a Confirm action in Phase 13. Adding a role to a screen changes the per-role counts in PLAN.md, so it waits for you.
-12. Order Management's "Orders by Tier" shows an order-count total only (93); a value total across tiers would count the same sheets up to three times.
-13. **Phase 12 placeholders (new):** Konkan Roadlines and the dispatch numbers of the earlier shipments; the 17 retailers' September purchases and retail-sales rule; Create Scheme example SCH-2026-10; audit entries; notification rules; the Taloja stock.
-15. **Phase 13 placeholders (new):** see "Decisions I made" under "Where we are".
-16. Earlier answers applied from my recommendations (change if you disagree): Marble Finish Launch Incentive 140 of 300; Dealer Lakshya not in
-   Pending Dealer Requests; Financial Reports May to October; May to September tax split kept.
+All earlier open items (1 to 13, 15, 16) were answered "do what you recommend" on 2026-10-27 and are applied as recorded in DECISIONS.md, "Answered 2026-10-27 (open items)". Nothing is waiting on the user except the hosting question at the end of Phase 14.
 
 ## Next
 
-**Phase 14: Review and hand-over** (PLAN.md): (1) links between related screens: the gaps above, and a pass over every screen for links that open a different screen than the label says (every list row opens the one Details screen of its type, by design); (2) a full responsive pass at 1440, 1366 × 768 and 390 px with a look at every screen, not only the automated checks; (3) README for stakeholders (how to open the prototype, the four portals, the screen directory and screen map); (4) regenerate `docs/SCREEN-INVENTORY.md` and check the counts against the brief (196); (5) optional hosting (GitHub Pages) once the user decides; (6) check Firefox and Safari if available; (7) a read-through of DECISIONS.md against the screens (money formats, no helper text, full names, 13px). Open items for the user are listed above (1 to 14).
+**Phase 14: Review and hand-over** (PLAN.md): (1) links between related screens: the gaps above, and a pass over every screen for links that open a different screen than the label says (every list row opens the one Details screen of its type, by design); (2) a full responsive pass at 1440, 1366 × 768 and 390 px with a look at every screen, not only the automated checks; (3) README for stakeholders (how to open the prototype, the four portals, the screen directory and screen map); (4) regenerate `docs/SCREEN-INVENTORY.md` and check the counts against the brief (196); (5) optional hosting (GitHub Pages) once the user decides; (6) check Firefox and Safari if available; (7) a read-through of DECISIONS.md against the screens (money formats, no helper text, full names, 13px). Open items: none, except the hosting decision (item 5).
 Call the advisor before starting and after committing.

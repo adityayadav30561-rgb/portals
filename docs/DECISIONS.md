@@ -76,6 +76,29 @@ Applies to every screen, in every phase. `tools/verify.js` enforces what a machi
 |---|---|
 | Sales Manager and approvals | The Sales Manager is tagged onto the Customer Approval Queue (as the Managers were tagged onto existing screens in Phase 2); Sales Order Overview has a Confirm Order action for the order awaiting confirmation. Per-role counts: Sales Manager 13 screens (10 own, the queue, My Profile and Notifications). Total stays 196. |
 
+## Answered 2026-10-27 (open items, "do what you recommend")
+
+Every placeholder listed as an open item in STATUS.md is accepted as built; no screen changed.
+
+| Open item | Resolution |
+|---|---|
+| 1. Dealer schemes | SCH-2026-07, 08, 09 and 03 stay as built (placeholders accepted). |
+| 2. Dealer order numbers | Dealers keep Alpha's sale numbers (SAL-2026-3040 and so on); Bravo's invoice numbers are the same. No separate dealer series. |
+| 3. "D" number series | Documents Distributor Alpha issues keep the "D" series (PAY-2026-D0521, RTN-2026-D0508, TKT-2026-D0746). |
+| 4. Dealer Bravo's series | RRQ-2026-0005 to 0007, DLV-2026-0401 to 0412, ADJ-2026-B0011 to B0015 stay. |
+| 5. Retailer order TSL-2026-0413 | Stays as both the Tertiary Sales Entry example and the order the Tertiary portal shows. |
+| 6. Retailer targets | Charlie ₹2,50,000, Kiran ₹2,20,000, Mehta ₹1,70,000 and the three pending retailer requests stay. |
+| 7. Reorder Recommendations total | Rule unchanged: recommendations come from stock and sales; credit is checked at order time (Order Builder shows Credit Limit, Outstanding Balance, This Order and Credit Available). Not changed to respect credit. |
+| 8, 9. Phase 8 and 9 placeholders | RSL and ADJ series, the 25% selling-price rule, customer names, stock and reorder levels, offers OFR-2026-01 to 04, the letter "B" series, Store Profile details, the five users and the 13-area access matrix stay. |
+| 10. Phase 11 decisions | Stay as built. |
+| 11. Sales Manager and approvals | Already applied (see above). |
+| 12. Orders by Tier | Order-count total only (93); no value total across tiers, because it would count the same sheets up to three times. |
+| 13. Phase 12 placeholders | Konkan Roadlines, earlier dispatch numbers, September retailer purchases, SCH-2026-10, audit entries, notification rules and the Taloja stock stay. |
+| 15. Phase 13 placeholders | The decisions listed under "Where we are" in STATUS.md stay. |
+| 16. Earlier recommended answers | Marble Finish Launch Incentive 140 of 300; Dealer Lakshya not in Pending Dealer Requests; Financial Reports May to October; May to September tax split kept. |
+
+This answers the open items only. It does not approve Phases 10 to 13 (still "awaiting approval" in PLAN.md).
+
 ## Rejected
 
 Nothing yet.

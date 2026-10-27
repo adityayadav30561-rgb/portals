@@ -305,13 +305,14 @@
       f.col = c;
       f.match = function (cell, want) { return cell.toLowerCase().indexOf(want.toLowerCase()) === 0 || cell.toLowerCase() === want.toLowerCase(); };
     }
-    list.filters.push(f);
+    list.filters.push(f); f.label = s.label;
     var optionValues = function () {
       var seen = {}, out = [];
       list.items.forEach(function (it) { var v = String(f.get(it)).trim(); if (v && v !== '—' && !seen[v.toLowerCase()]) { seen[v.toLowerCase()] = 1; out.push(v); } });
       out.sort(function (a, b) { return a.localeCompare(b, 'en', { numeric: true }); });
       return out;
     };
+    f.options = optionValues;
     wireSel(s, function () {
       var vals = optionValues();
       var items = [{ label: s.initial, value: null, show: s.initial }].concat(vals.map(function (v) { return { label: v, value: v }; }));
@@ -434,6 +435,9 @@
     });
     // 3. quantity steppers
     qa('.qty').forEach(wireQty);
+    // 4. ?q=text (from the top-bar search) fills the first search box of the screen
+    var qv = new URLSearchParams(location.search).get('q'), box = q('main .finder input');
+    if (qv && box) { box.value = qv; box.dispatchEvent(new Event('input')); }
   });
 
   // ---------- Quantity steppers ----------

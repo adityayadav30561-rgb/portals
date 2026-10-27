@@ -110,6 +110,8 @@ def page(portal_folder, filename, sid, title, body):
 <script src="../../assets/app-core.js"></script>
 <script src="../../assets/app-lists.js"></script>
 <script src="../../assets/app-orders.js"></script>
+<script src="../../assets/app-forms.js"></script>
+<script src="../../assets/app-files.js"></script>
 <script src="../../assets/app-boot.js"></script>
 </body>
 </html>

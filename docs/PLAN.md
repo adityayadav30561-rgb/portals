@@ -251,6 +251,7 @@ widths, the inventory regenerated, docs/STATUS.md updated, a commit and a push.
 | **11. Company Super Admin, part 1** ✓ done 2026-10-26 | Dashboard, customers, hierarchy explorer, users, products, orders | 13 | |
 | **12. Company Super Admin, part 2** ✓ done 2026-10-27 | Dispatch, inventory, analytics, the four sales reports, invoices, schemes, support, territory, audit, settings, My Profile, notifications | 19 | |
 | **13. Company Sales and Operations Managers** ✓ done 2026-10-27 | Both dashboards and their own screens | 18 | Company Administration complete (50) |
+| **15. Everything works** ✓ done 2026-10-27 | Behaviour layer (docs/BEHAVIOUR.md): order flow, lists, forms, actions, files, screen map | all 196 | `tools/interact.js` reports 0 dead controls; `tools/e2e.js` passes |
 | **14. Review and hand-over** ✓ done 2026-10-27 (hosting not decided; Firefox and Safari not checked) | Links between related screens, full responsive pass, README, screen inventory and counts, optional hosting for stakeholders | | Definition of Done in the brief met |
 
 Portal naming: screen names use the brief's pattern with the portal as "Primary Customer", "Secondary Customer",

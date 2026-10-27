@@ -61,6 +61,7 @@
   // ---------- Small renderers ----------
   var swatch = function (p) { return '<div class="sw ' + p.kind + (p.gloss ? ' gloss' : '') + ' " style="--a:' + p.colour + ';" role="img" aria-label="' + esc(p.name) + ' swatch"></div>'; };
   var qtyHtml = function (v, max) { return '<span class="qty"' + (max ? ' data-max="' + max + '"' : '') + '><span>−</span><input value="' + v + '" aria-label="Sheets" inputmode="numeric"><span>+</span></span>'; };
+  var own = function (el) { el.setAttribute('data-own', '1'); };
   var label = function (el) { return el ? el.textContent.trim() : ''; };
   var setKV = function (root, dt, value, html) {
     qa('dt', root).forEach(function (d) { if (label(d) === dt) { var dd = d.nextElementSibling; if (html) dd.innerHTML = value; else dd.textContent = value; } });
@@ -114,7 +115,7 @@
       if (have && inp) inp.value = have;
       if (box && A.wireQty) { A.wireQty(box); }
       if (box) box.addEventListener('qtychange', refresh);
-      btn.addEventListener('click', function () { if (out) return; if (A.addToOrder(sku, parseInt(inp.value, 10) || 0)) refresh(); });
+      own(btn); btn.addEventListener('click', function () { if (out) return; if (A.addToOrder(sku, parseInt(inp.value, 10) || 0)) refresh(); });
       refresh();
     });
     updateBadge();
@@ -145,7 +146,7 @@
     };
     A.wireQty(box);
     box.addEventListener('qtychange', refresh);
-    btn.addEventListener('click', function () { if (A.addToOrder(sku, parseInt(inp.value, 10) || 0)) refresh(); });
+    own(btn); btn.addEventListener('click', function () { if (A.addToOrder(sku, parseInt(inp.value, 10) || 0)) refresh(); });
     refresh();
   };
 
@@ -185,7 +186,7 @@
     sync();
     var cont = aside ? q('a.btn.pri', aside) : null;
     if (cont) cont.addEventListener('click', function (e) { if (!A.cart.count()) { e.preventDefault(); A.toast('Add at least one product to the order draft', 'warn'); } });
-    qa('button', aside || document).forEach(function (b) { if (/Save Draft/.test(b.textContent)) b.addEventListener('click', function () { A.save(); A.toast('Order draft saved', 'ok'); }); });
+    qa('button', aside || document).forEach(function (b) { if (/Save Draft/.test(b.textContent)) { own(b); b.addEventListener('click', function () { A.save(); A.toast('Order draft saved', 'ok'); }); } });
     // "Reorder from a Previous Order"
     var re = qa('main .sel').filter(function (s) { return /Reorder from a Previous Order/.test(s.textContent); })[0];
     if (re) {
@@ -256,7 +257,7 @@
             if (n > 0 && !stockOk(sku, n)) { n = Math.max(0, Math.min(n, cfg.supply[sku])); }
             A.cart.setQty(sku, n); render();
           });
-          q('.icon-btn', tr).addEventListener('click', function () {
+          own(q('.icon-btn', tr)); q('.icon-btn', tr).addEventListener('click', function () {
             var was = A.cart.qty(sku); A.cart.setQty(sku, 0); render();
             A.toast('Removed ' + PRODUCTS[sku].name + ' from the order', 'warn', { label: 'Undo', fn: function () { A.cart.setQty(sku, was); render(); } });
           });
@@ -279,7 +280,7 @@
     };
     render();
     // buttons
-    qa('main .head .acts button').forEach(function (b) { if (/Save Draft/.test(b.textContent)) b.addEventListener('click', function () { save(); A.toast('Order draft saved', 'ok'); }); });
+    qa('main .head .acts button').forEach(function (b) { if (/Save Draft/.test(b.textContent)) { own(b); b.addEventListener('click', function () { save(); A.toast('Order draft saved', 'ok'); }); } });
     if (submit) submit.addEventListener('click', function (e) {
       e.preventDefault(); save();
       var lines = A.cart.lines(), fm = form(), c = A.calc(lines, fm.transport);
@@ -372,6 +373,7 @@
     // Reorder (works for any order shown here)
     qa('main .head button').forEach(function (b) {
       if (!/Reorder/.test(b.textContent)) return;
+      own(b);
       b.addEventListener('click', function () {
         var no = label(h1), lines = (o ? o.lines : (cfg.prev.filter(function (x) { return x.no === no; })[0] || {}).lines);
         if (!lines) { A.toast('The sheets of this order are not available to copy', 'warn'); return; }
@@ -437,7 +439,7 @@
         var chip = qa('.chip', tr).filter(function (c) { return label(c) === 'Order Now'; })[0]; if (!chip) return;
         var sku = label(tr.cells[sc]), n = parseInt(label(tr.cells[qc]).replace(/[^\d]/g, ''), 10) || 0;
         var b = document.createElement('button'); b.type = 'button'; b.className = 'btn sm'; b.innerHTML = A.icon('plus') + 'Order Now';
-        chip.replaceWith(b);
+        chip.replaceWith(b); own(b);
         b.addEventListener('click', function () { if (A.addToOrder(sku, n)) { b.innerHTML = A.icon('check') + 'In Order Draft'; } });
       });
     });
@@ -446,7 +448,7 @@
     if (rb && /INV-02$/.test(part)) {
       var sku = '', n = 0;
       qa('main dt').forEach(function (d) { var k = label(d); if (k === 'SKU') sku = label(d.nextElementSibling); if (k === 'Reorder Quantity') n = parseInt(label(d.nextElementSibling).replace(/[^\d]/g, ''), 10) || 0; });
-      if (sku) rb.addEventListener('click', function (e) { e.preventDefault(); if (A.addToOrder(sku, n)) { /* stays on the screen; the toast offers the order draft */ } });
+      if (sku) { own(rb); rb.addEventListener('click', function (e) { e.preventDefault(); if (A.addToOrder(sku, n)) { /* stays on the screen; the toast offers the order draft */ } }); }
     }
   };
 

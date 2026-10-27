@@ -4,6 +4,17 @@ _Last updated: 2026-10-27. Update at the end of every task and phase._
 
 ## Where we are
 
+**Phase 15 (everything works) is built and checked (2026-10-27).** The user found the screens were "for look only" (no Add to Order, search, filters or sorting) and asked for every button, filter and list to work. Done, in the browser, with nothing stored and nothing sent (DECISIONS.md, "Everything works"; how it is built: docs/BEHAVIOUR.md):
+- **Behaviour layer:** `assets/app-core.js`, `app-lists.js`, `app-orders.js`, `app-forms.js`, `app-files.js`, `app-boot.js`, `behaviour.css`, and `assets/catalog.js` (written by `tools/author/runtime_data.py` from `data.py`). `page()` in `data.py` loads them on every app screen; the nine hand-written sign-in screens load core, forms and boot. State travels in the URL (`st`), never in browser storage; **Reset Data** in the review bar clears it.
+- **Order flow in Primary, Secondary and Tertiary:** add to order from the catalogue and product details (cards show the draft's quantities, so "Order Draft 5" now agrees with the cards), Place Order, Order Builder (lines, remove with Undo, delivery form, rebate threshold, GST, freight, credit check, stock limits), Order Confirmation, Order History and Order Details for the new order; numbering ORD-2026-10482/10483, SAL-2026-3042/3043, TSL-2026-0413/0414. The designed drafts reproduce the static totals exactly (₹9,49,752; ₹2,93,820; ₹1,04,784).
+- **Lists:** search, dropdown filters (options come from the data), tabs (badges and "Showing x to y of z" count the rows that exist), sortable headings and Sort by, pages, grid and list view, steppers. The top-bar search finds screens and products.
+- **Forms and actions:** validation, created records at the top of their lists (user, ticket, return, dealer and retailer request, sale, payment, product, scheme, campaign, territory, dispute), approve and reject (with reason), confirm, close ticket, replies, deactivate user, edit dialogs, uploads, notifications read, document preview, Export (CSV), Download (PDF), Print.
+- **Screen map rebuilt:** opening a section opens every screen in it (so "5 of 5" shows five), "+N" on screens that open other screens, a scrolling frame that pans by dragging, zoom, fit width, expand and collapse all.
+- **Checks:** `node tools/interact.js` (every control does something: **0 dead controls**, 273 screen views, 3,430 controls), `node tools/e2e.js` (48 flow checks), `node tools/lists-check.js` (tab badges, search and filter options tell the truth over 395 lists), `node tools/verify.js` (ALL OK, all roles and widths, no storage, no errors).
+- **Known limits:** rows in a list open the one Details screen of their type (the sample record); only orders placed in the session get their own details. Lists hold the sample rows that exist. `Period` offers October 2026 only, so KPI tiles and charts do not recompute. Dashboard tiles do not change after an order or approval (Order History tiles do). Firefox and Safari not checked.
+
+Earlier phases:
+
 **Phase 14 (Review and hand-over) is done except the hosting decision.** All 196 screens built and checked; `node tools/verify.js` over every screen, role and width (1440, 1366 × 768, 390 px, `file://`): ALL OK. Done in Phase 14 (2026-10-27):
 - **Open items answered** ("do what you recommend") and recorded in DECISIONS.md; none remain.
 - **Links added:** Bravo's Manager screens now reach Low Stock Overview ("Low stock overview" on Inventory Overview; the dashboard's Low Stock Products tile is not linked, to keep tile labels uniform) and Incoming Stock ("All incoming stock" on Inventory Overview); Charlie's "Delivery Arriving Tomorrow" notification and My Inventory's Incoming Shipments card ("All deliveries", Inventory and Purchasing Executive only) open Incoming Deliveries.
@@ -96,4 +107,4 @@ All earlier open items (1 to 13, 15, 16) were answered "do what you recommend" o
 
 ## Next
 
-Phase 14 is complete except the hosting decision (GitHub Pages: yes or no) and a Firefox and Safari check if either becomes available. After that, the prototype is ready for stakeholder review; changes requested go into the generator scripts (never the generated screens), then re-run `node tools/verify.js`.
+Phases 14 and 15 are complete except the hosting decision (GitHub Pages: yes or no) and a Firefox and Safari check if either becomes available. After that, the prototype is ready for stakeholder review; changes requested go into the generator scripts (never the generated screens), then re-run `node tools/verify.js`.

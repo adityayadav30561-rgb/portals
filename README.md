@@ -25,6 +25,19 @@ own by double-click. Share it by zipping the whole folder. All 196 screens are b
    SAL (Sales Manager), OPS (Operations Manager), SLS (Sales Executive), PUR (Inventory and Purchasing Executive),
    ADM (Super Admin).
 
+## What works
+
+Everything is clickable and does what it says, in the browser, with nothing stored and nothing sent anywhere (docs/BEHAVIOUR.md):
+
+- **Ordering** (Primary, Secondary, Tertiary): add to order from the catalogue or a product, change sheets, remove lines, see the price, rebate, GST,
+  freight and credit recalculate, submit, and find the order in Order History with its own details. Stock limits and credit limits are enforced.
+- **Lists:** search, dropdown filters, tabs, sorting (click a column heading), pages, grid and list view.
+- **Forms:** validation, then the new user, ticket, return, request, sale, payment, product or scheme appears at the top of its list.
+- **Actions:** approve, reject (with a reason), confirm, close a ticket, reply to a ticket, deactivate a user, mark notifications as read, edit details,
+  upload files; **Export** downloads a CSV of the rows listed, **Download** a PDF of the screen, **Print** opens the print dialog.
+- **Search** in the top bar finds screens and products.
+- What you change travels in the address (the `st` part), so it survives moving between screens and reloading. **Reset Data** in the review bar starts again.
+
 All data on the screens is fictional. It is a prototype of screens only: there is no sign-in, storage or business
 logic, and the buttons that would save or send something do nothing.
 
@@ -41,7 +54,8 @@ logic, and the buttons that would save or send something do nothing.
 | `docs/` | Plan, status, decisions, generated `SCREEN-INVENTORY.md` |
 | `assets/app.css`, `assets/chrome.js`, `assets/charts.js` | Application layout, sidebar and top bar, charts |
 | `tools/inventory.mjs` | Optional (needs Node): checks the registry against the brief and rewrites the inventory |
-| `tools/verify.js` | Optional (needs Playwright): opens every built screen from disk at three sizes and checks it |
+| `tools/verify.js`, `tools/interact.js`, `tools/e2e.js` | Optional (needs Playwright): open every screen from disk at three sizes and check it; click every control and report dead ones; run the order, list, form and download flows |
+| `assets/app-*.js`, `assets/catalog.js`, `assets/behaviour.css` | The behaviour layer (docs/BEHAVIOUR.md); `catalog.js` is written by `tools/author/runtime_data.py` |
 | `tools/author/` | Optional (Python): helpers used to generate screen HTML |
 
 Progress and next steps: `docs/STATUS.md`.

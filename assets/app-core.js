@@ -32,12 +32,22 @@
   };
   var params = new URLSearchParams(location.search);
   A.state = params.get('st') ? dec(params.get('st')) : {};
-  A.encoded = function () { return Object.keys(A.state).length ? enc(A.state) : ''; };
-  A.save = function () {
+  // Empty containers are left out of the URL (the state object itself keeps them, so modules can always write into it).
+  var clean = function () {
+    var o = {};
     Object.keys(A.state).forEach(function (k) {
       var v = A.state[k];
-      if (v == null || (Array.isArray(v) && !v.length) || (typeof v === 'object' && !Array.isArray(v) && !Object.keys(v).length)) delete A.state[k];
+      if (v == null || (Array.isArray(v) && !v.length)) return;
+      if (typeof v === 'object' && !Array.isArray(v)) {
+        var inner = {}; Object.keys(v).forEach(function (j) { var w = v[j]; if (!(w == null || (Array.isArray(w) && !w.length && k !== 'c') || (typeof w === 'object' && !Array.isArray(w) && !Object.keys(w).length))) inner[j] = w; });
+        if (!Object.keys(inner).length) return; v = inner;
+      }
+      o[k] = v;
     });
+    return o;
+  };
+  A.encoded = function () { var c = clean(); return Object.keys(c).length ? enc(c) : ''; };
+  A.save = function () {
     var u = new URL(location.href), e = A.encoded();
     if (e) u.searchParams.set('st', e); else u.searchParams.delete('st');
     try { history.replaceState(null, '', u.toString()); } catch (x) { /* some browsers refuse on file:// with a long query; links still carry the state */ }
@@ -173,7 +183,7 @@
   A.closeMenu = function () { if (openMenu) { openMenu.el.remove(); openMenu.anchor.setAttribute('aria-expanded', 'false'); openMenu = null; } };
   A.menu = function (anchor, items, o) {
     o = o || {};
-    if (openMenu && openMenu.anchor === anchor) { A.closeMenu(); return; }
+    if (openMenu && openMenu.anchor === anchor && !o.noFocus) { A.closeMenu(); return; }
     A.closeMenu();
     var el = document.createElement('div'); el.className = 'pop'; el.setAttribute('role', 'listbox');
     el.innerHTML = items.map(function (it, i) {
@@ -192,11 +202,11 @@
     openMenu = { el: el, anchor: anchor };
     var btns = A.qa('.opt:not([disabled])', el);
     var cur = btns.filter(function (b) { return b.classList.contains('on'); })[0] || btns[0];
-    if (cur) cur.focus();
+    if (cur && !o.noFocus) cur.focus();
     el.addEventListener('click', function (e) {
       var b = e.target.closest('.opt'); if (!b) return;
       var it = items[+b.getAttribute('data-i')];
-      A.closeMenu(); anchor.focus();
+      A.closeMenu(); if (!o.noFocus) anchor.focus();
       if (o.onPick) o.onPick(it);
     });
     el.addEventListener('keydown', function (e) {
@@ -239,7 +249,7 @@
     if (/^(paid|delivered|active|approved|resolved|confirmed payment|credit issued|credit applied|applied|target reached|above target|completed|received|in stock|reached|closed won|on time|accepted|online|reviewed|issued|cleared|done|available|complete|free|current session|passed|met)/.test(l)) return 'ok';
     if (/^(rejected|cancelled|out of stock|overdue|failed|late|below target|deactivated|high|returned|damaged|declined|expired|critical|withdrawn|not applicable|no stock)/.test(l)) return /not applicable/.test(l) ? 'plain' : 'bad';
     if (/^(awaiting|pending|under review|partly paid|low stock|near target|waiting|medium|invited|in progress|draft|planned|upcoming|on hold|due|being packed|pickup scheduled|new|open)/.test(l)) return /^(new|open)/.test(l) ? 'blue' : /^(draft|planned|upcoming)/.test(l) ? 'blue' : 'warn';
-    if (/^(in transit|confirmed|sent|dispatched|submitted|scheduled|blue|shipped)/.test(l)) return 'blue';
+    if (/^(in transit|confirmed|sent|dispatched|submitted|scheduled|blue|shipped|packed|received|dispatch planned|pickup scheduled|information requested|upcoming)/.test(l)) return 'blue';
     return 'plain';
   };
   A.chipHtml = function (t, cls) { return '<span class="chip ' + (cls || A.chipClass(t)) + '">' + A.esc(t) + '</span>'; };

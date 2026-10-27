@@ -1414,7 +1414,7 @@ assert STATE_SALES['Maharashtra'] == (2965000, 2790000) and sum(v[0] for v in ST
 # number, tier, seller, buyer, placed, sheets, value, status. The six orders of other dealers' retailers are placeholders (all recorded in October's 53).
 OTHER_TSL = [('TSL-2026-DLT-0108', 'Retailer Sinnar Wood Works', 'Dealer Delta', '26/10/2026', 44000, 'Being Packed'), ('TSL-2026-DLT-0107', 'Retailer Godavari Interiors', 'Dealer Delta', '24/10/2026', 58000, 'In Transit'),
              ('TSL-2026-FXT-0091', 'Retailer Kalyan Furniture House', 'Dealer Foxtrot', '24/10/2026', 46000, 'In Transit'), ('TSL-2026-GPL-0079', 'Retailer Rankala Interiors', 'Dealer Gopal', '26/10/2026', 52000, 'Being Packed'),
-             ('TSL-2026-HRS-0066', 'Retailer Sitabuldi Interiors', 'Dealer Harsh', '25/10/2026', 61000, 'Being Packed'), ('TSL-2026-KNL-0004', 'Retailer Fontainhas Interiors', 'Dealer Kunal', '24/10/2026', 35000, 'In Transit')]
+             ('TSL-2026-HRS-0066', 'Retailer Sitabuldi Interiors', 'Dealer Harsh', '25/10/2026', 61000, 'Being Packed'), ('TSL-2026-KNL-0002', 'Retailer Fontainhas Interiors', 'Dealer Kunal', '24/10/2026', 35000, 'In Transit')]
 IN_PROGRESS = [('ORD-2026-10482', 'Primary', 'Crestline Laminates', 'Distributor Alpha', '26/10/2026', 760, 949752, 'Awaiting Confirmation'),
                ('ORD-2026-10459', 'Primary', 'Crestline Laminates', 'Distributor Alpha', '23/10/2026', 280, 336500, 'Confirmed'),
                ('ORD-2026-10447', 'Primary', 'Crestline Laminates', 'Distributor Alpha', '19/10/2026', 360, 442930, 'In Transit')]

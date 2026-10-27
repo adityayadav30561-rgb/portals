@@ -10,7 +10,6 @@ chain_rows = ''.join(f'<tr><td><b>{t}</b></td><td>{s}</td><td>{b}</td><td class=
 chain_foot = f'<tfoot><tr><td colspan="3">Total</td><td class="num">{ORDERS_ALL}</td><td></td><td class="num">3</td></tr></tfoot>'
 AW_DATE = {'ORD-2026-10482': '26/10/2026', NEW_ORDER: '26/10/2026', PEND_ORDER['number']: '26/10/2026'}
 aw_rows = ''.join(f'<tr><td class="mono nowrap"><b>{o[0]}</b></td><td>{o[1]}</td><td>{o[3]}</td><td>{o[2]}</td><td>{AW_DATE[o[0]]}</td><td class="num"><b>{M(o[4])}</b></td></tr>' for o in AWAITING)
-aw_foot = f'<tfoot><tr><td colspan="5">Total</td><td class="num">{M(sum(o[4] for o in AWAITING))}</td></tr></tfoot>'
 prim = ''.join(f'<tr><td class="nowrap">{link("CMP-ORD-02", o[0])}</td><td>Distributor Alpha</td><td>{o[1]}</td><td class="num">{N(o[2])}</td><td class="num"><b>{M(o[3])}</b></td><td>{o[4]}</td><td>{chip(o[5])}</td><td>{chip(o[6])}</td></tr>' for o in ALPHA_ORDERS[:6])
 prim_foot = f'<tfoot><tr><td colspan="3">Total</td><td class="num">{N(sum(o[2] for o in ALPHA_ORDERS[:6]))}</td><td class="num">{M(sum(o[3] for o in ALPHA_ORDERS[:6]))}</td><td colspan="3"></td></tr></tfoot>'
 body = f'''  <div class="head">
@@ -25,7 +24,7 @@ body = f'''  <div class="head">
   </div>
   <div class="stack">
     <section class="card flush"><header><h2>Orders by Tier</h2></header><div class="body">{table([('Tier', ''), ('Seller', ''), ('Buyer', ''), ('Orders', 'num'), ('Value', 'num'), ('Awaiting', 'num')], [chain_rows], 'wrap', foot=chain_foot)}</div></section>
-    <section class="card flush"><header><h2>Awaiting Confirmation</h2></header><div class="body">{table([('Order Number', ''), ('Tier', ''), ('Seller', ''), ('Buyer', ''), ('Order Date', ''), ('Value', 'num')], [aw_rows], 'wrap', foot=aw_foot)}</div></section>
+    <section class="card flush"><header><h2>Awaiting Confirmation</h2></header><div class="body">{table([('Order Number', ''), ('Tier', ''), ('Seller', ''), ('Buyer', ''), ('Order Date', ''), ('Value', 'num')], [aw_rows], 'wrap')}</div></section>
   </div>
   <section class="card flush">
     {tabs([('Primary Orders', ORDERS_BY_TIER['Primary'], True), ('Secondary Orders', ORDERS_BY_TIER['Secondary'], False), ('Tertiary Orders', ORDERS_BY_TIER['Tertiary'], False)])}

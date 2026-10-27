@@ -4,7 +4,7 @@ Design rule: no text under page titles, no captions beside card titles, no helpe
 from data import *
 
 SQ = chr(0x2212)
-STATUS_CHIP.update({'Fast Mover': 'ok', 'Slow Mover': 'warn', 'Steady': 'plain', 'No Sales': 'bad'})
+STATUS_CHIP.update({'Fast Mover': 'ok', 'Slow Mover': 'warn', 'Steady': 'plain'})
 def meter_ach(a): return f'<span class="inline-meter"><span class="meter {"ok" if a >= 100 else "warn" if a >= 95 else "bad"}"><i style="width:{min(a, 100):.0f}%"></i></span><b>{a:.1f}%</b></span>'
 def nm(n): return f'<b>{n}</b>'
 RET_NAME = {r[0]: r[1] for r in RETAILERS}; RET_NAME.update({r[0]: r[1] for r in NEW_RETAILERS})
@@ -27,7 +27,7 @@ body = f'''  <div class="head">
     {kpi('Sales to Dealers', ML(3120000), up('11.8%'))}
     {kpi('Target Achievement', f'{3120000 / TARGET_TOTAL * 100:.1f}%', chip('Near Target', 'warn'))}
     {kpi('Orders by Distributors', ML(PURCH_MONTH[-1]), up(pct(PURCH_MONTH[-1], PURCH_MONTH[-2])))}
-    {kpi('Orders Awaiting Confirmation', str(len(AWAIT)), chip(ML(sum(o[6] for o in AWAIT)), 'warn'))}
+    {kpi('Orders Awaiting Confirmation', str(len(AWAIT)), chip('1 at Crestline', 'warn'))}
   </div>
   <div class="grid g-main-side" style="--side:24rem">
     {card('Sales Against Target by Territory', chart('bars', [t['name'] for t in TERRITORIES], [{'name': 'Sales to dealers', 'values': [t['sales'] for t in TERRITORIES], 'color': 'var(--accent)'}, {'name': 'Target', 'values': [t['target'] for t in TERRITORIES], 'color': '#c9ccd3'}], money=True, height=330))}
@@ -98,7 +98,7 @@ body = f'''  <div class="head">
     {kpi('Target Achievement', f'{2800000 / RT_TARGET_TOTAL * 100:.1f}%', chip('Near Target', 'warn'))}
     {kpi('Retailers Above Target', f'{RT_STATUS_COUNT["Above Target"]} <small>of 20</small>')}
   </div>
-  {card('Sales Against Target, Top Ten Retailers', chart('bars', [RET_NAME[k] for k in rrank[:10]], [{'name': 'Sales', 'values': [RETAIL_OCT[k] for k in rrank[:10]], 'color': '#7a36fb'}, {'name': 'Target', 'values': [RTARGET_ALL[k] for k in rrank[:10]], 'color': '#c9ccd3'}], money=True, height=320))}
+  {card('Sales Against Target, Top Ten Retailers', chart('bars', [RET_NAME[k].replace('Retailer ', '') for k in rrank[:10]], [{'name': 'Sales', 'values': [RETAIL_OCT[k] for k in rrank[:10]], 'color': '#7a36fb'}, {'name': 'Target', 'values': [RTARGET_ALL[k] for k in rrank[:10]], 'color': '#c9ccd3'}], money=True, height=320))}
   <section class="card flush"><header><h2>Retailers Ranked by Sales</h2></header>
     <div class="body">{table([('Rank', 'num'), ('Retailer', ''), ('Dealer', ''), ('City', ''), ('Sales This Month', 'num'), ('Growth Over September', ''), ('Sales Target', 'num'), ('Target Achievement', ''), ('Status', '')], [rrows], 'wrap',
       foot=f'<tfoot><tr><td colspan="4">Total</td><td class="num">{M(2800000)}</td><td></td><td class="num">{M(RT_TARGET_TOTAL)}</td><td colspan="2"></td></tr></tfoot>')}</div></section>
@@ -106,7 +106,7 @@ body = f'''  <div class="head">
 page('company', 'retailer-performance', 'CMP-SAL-04', 'Company Administration — Sales Manager — Retailer Performance (CMP-SAL-04)', body)
 
 # ---------- Sales Targets ----------
-q_rows = ''.join(f'<tr><td><b>{n}</b></td><td class="num">{M(t)}</td><td class="num"><b>{M(act) if act else "—"}</b></td><td>{meter_ach(act / t * 100) if act else "—"}</td></tr>' for n, t, act, st in QUARTERS)
+q_rows = ''.join(f'<tr><td><b>{n}</b></td><td class="num">{M(t)}</td><td class="num"><b>{M(act) if act else "—"}</b></td><td>{(meter_ach(act / t * 100) if st == 'Completed' else f'<span class="inline-meter"><span class="meter"><i style="width:{act / t * 100:.0f}%"></i></span><b>{act / t * 100:.1f}%</b></span>') if act else "—"}</td></tr>' for n, t, act, st in QUARTERS)
 t_rows = ''.join(f'<tr><td><b>{t["name"]}</b></td><td class="num">{t["dealers"]}</td><td class="num"><b>{M(t["sales"])}</b></td><td class="num">{M(t["target"])}</td><td>{meter_ach(t["sales"] / t["target"] * 100)}</td><td class="num">{M(t["sales"] - t["target"]) if t["sales"] >= t["target"] else SQ + M(t["target"] - t["sales"])}</td></tr>' for t in TERRITORIES)
 d_rows = ''.join(f'<tr><td>{nm(d[1])}</td><td>{d[3]}</td><td class="num"><b>{M(d[7])}</b></td><td class="num">{M(TARGET[d[0]])}</td><td>{meter_ach(achievement(d[0]))}</td><td>{chip(perf_status(d[0]))}</td></tr>' for d in sorted(DEALERS, key=lambda d: -achievement(d[0])))
 gap = TARGET_TOTAL - 3120000; assert gap == 20000
@@ -151,8 +151,8 @@ body = f'''  <div class="head">
 page('company', 'regional-sales-analysis', 'CMP-SAL-06', 'Company Administration — Sales Manager — Regional Sales Analysis (CMP-SAL-06)', body)
 
 # ---------- Product Sales Analysis ----------
-def mover(s): return 'No Sales' if not SOLD[s] else 'Fast Mover' if SOLD[s] >= 250 else 'Slow Mover' if SOLD[s] < 120 else 'Steady'
-assert [s for s in SOLD if mover(s) == 'Fast Mover'] == ['LM-WNT-001', 'LM-ARC-002', 'LM-SKY-012'] and sorted(s for s in SOLD if mover(s) in ('Slow Mover', 'No Sales')) == ['LM-CHR-007', 'LM-CPR-010', 'LM-SLT-005', 'LM-STN-009']
+def mover(s): return 'Fast Mover' if SOLD[s] >= 250 else 'Slow Mover' if SOLD[s] < 120 else 'Steady'
+assert [s for s in SOLD if mover(s) == 'Fast Mover'] == ['LM-WNT-001', 'LM-ARC-002', 'LM-SKY-012'] and sorted(s for s in SOLD if mover(s) == 'Slow Mover') == ['LM-CHR-007', 'LM-CPR-010', 'LM-SLT-005', 'LM-STN-009']
 p_rows = ''.join(f'<tr><td>{prod_cell(s)}</td><td class="mono nowrap">{s}</td><td>{BY[s][2]}</td><td>{BY[s][3]}</td><td class="num">{N(SOLD[s]) if SOLD[s] else "—"}</td><td class="num"><b>{M(SOLD_VALUE[s]) if SOLD[s] else "—"}</b></td><td>{share_cell(SOLD_VALUE[s], 3120000, max(SOLD_VALUE.values()))}</td><td>{chip(mover(s))}</td></tr>' for s in sorted(SOLD, key=lambda x: -SOLD[x]))
 fin_v = {}
 for s, v in SOLD_VALUE.items(): fin_v[BY[s][2]] = fin_v.get(BY[s][2], 0) + v
@@ -213,8 +213,8 @@ body = f'''  <div class="head">
     <div class="acts"><button class="btn" type="button"><i data-icon="download"></i>Export Orders</button></div>
   </div>
   <div class="kpis">
-    {kpi('Orders in Progress', str(len(IN_PROGRESS)), chip(ML(IN_PROGRESS_VALUE), 'plain'))}
-    {kpi('Awaiting Confirmation', str(len(AWAIT)), chip(ML(sum(o[6] for o in AWAIT)), 'warn'))}
+    {kpi('Orders in Progress', str(len(IN_PROGRESS)))}
+    {kpi('Awaiting Confirmation', str(len(AWAIT)), chip('1 at Crestline', 'warn'))}
     {kpi('Being Packed', str(sum(1 for o in IN_PROGRESS if o[7] == 'Being Packed')))}
     {kpi('In Transit', str(sum(1 for o in IN_PROGRESS if o[7] == 'In Transit')))}
   </div>
@@ -227,8 +227,7 @@ body = f'''  <div class="head">
   <section class="card flush">
     {tabs([('All in Progress', len(IN_PROGRESS), True), ('Primary', cnt_t('Primary'), False), ('Secondary', cnt_t('Secondary'), False), ('Tertiary', cnt_t('Tertiary'), False)])}
     {filters('Search by order number or customer', 'Search orders', ('Status', 'All'), ('Tier', 'All'), ('Sort by', 'Status'))}
-    <div class="body">{table([('Order Number', ''), ('Tier', ''), ('Seller', ''), ('Buyer', ''), ('Order Date', ''), ('Sheets', 'num'), ('Value', 'num'), ('Status', '')], [io_rows], 'wrap',
-      foot=f'<tfoot><tr><td colspan="5">Total</td><td class="num">{N(sum(o[5] for o in IN_PROGRESS))}</td><td class="num">{M(IN_PROGRESS_VALUE)}</td><td></td></tr></tfoot>')}
+    <div class="body">{table([('Order Number', ''), ('Tier', ''), ('Seller', ''), ('Buyer', ''), ('Order Date', ''), ('Sheets', 'num'), ('Value', 'num'), ('Status', '')], [io_rows], 'wrap')}
       {pager(f'Showing 1 to {len(IN_PROGRESS)} of {len(IN_PROGRESS)} orders', 1)}</div>
   </section>
 '''

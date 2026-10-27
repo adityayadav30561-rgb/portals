@@ -31,6 +31,7 @@
     ['ADM-01', 'Dashboard', 'ADM', 'Overview', 'm', 'Orders, customers, sales, dispatch and open support tickets across the whole company'],
     ['CUS-01', 'Customer Directory', 'ADM', 'Customers', 'm', 'Every distributor, dealer and retailer with status, region and parent customer'],
     ['CUS-02', 'Customer Details', 'ADM', 'Customers', 'd', 'One customer: profile, contacts, credit terms, hierarchy, recent orders', 'CUS-01'],
+    ['CUS-03', 'Customer Approval Queue', 'ADM SAL', { ADM: 'Customers', SAL: 'Orders and Campaigns' }, 'm', 'New customer registrations waiting for review, with documents and decision buttons'],
     ['CUS-04', 'Customer Hierarchy Explorer', 'ADM', 'Customers', 'm', 'Expandable tree from company to distributors, dealers and retailers'],
     ['USR-01', 'User Directory', 'ADM', 'Users', 'm', 'All users across the company and customers with role, organisation and status'],
     ['USR-02', 'User Details', 'ADM', 'Users', 'd', 'One user: profile, role, organisation, access and recent activity', 'USR-01'],
@@ -70,7 +71,6 @@
     ['SAL-08', 'Customer Sales History', 'SAL', 'Analysis', 'm', 'Purchase history of one customer by month, product and order'],
     ['SAL-09', 'Sales Order Overview', 'SAL', 'Orders and Campaigns', 'm', 'Orders in progress across all customers with status and value'],
     ['SAL-10', 'Promotional Campaigns', 'SAL', 'Orders and Campaigns', 'm', 'Running and planned promotions with reach, orders and spend'],
-    ['CUS-03', 'Customer Approval Queue', 'ADM SAL', { ADM: 'Customers', SAL: 'Orders and Campaigns' }, 'm', 'New customer registrations waiting for review, with documents and decision buttons'],
 
     ['OPS-01', 'Dashboard', 'OPS', 'Overview', 'm', 'Orders waiting to be processed, dispatches due today, delays and open returns'],
     ['OPS-02', 'Order Processing Queue', 'OPS', 'Orders', 'm', 'Confirmed orders waiting for stock check, packing and dispatch planning'],

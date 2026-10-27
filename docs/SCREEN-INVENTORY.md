@@ -41,6 +41,7 @@ A screen used by several roles is designed once and listed under each role; it c
 | CMP-ADM-01 | Company Administration — Super Admin — Dashboard | Overview | Built | Orders, customers, sales, dispatch and open support tickets across the whole company |
 | CMP-CUS-01 | Company Administration — Super Admin — Customer Directory | Customers | Built | Every distributor, dealer and retailer with status, region and parent customer |
 | CMP-CUS-02 | Company Administration — Super Admin — Customer Details | Customers | Built | One customer: profile, contacts, credit terms, hierarchy, recent orders |
+| CMP-CUS-03 | Company Administration — Super Admin — Customer Approval Queue | Customers | Built | New customer registrations waiting for review, with documents and decision buttons |
 | CMP-CUS-04 | Company Administration — Super Admin — Customer Hierarchy Explorer | Customers | Built | Expandable tree from company to distributors, dealers and retailers |
 | CMP-USR-01 | Company Administration — Super Admin — User Directory | Users | Built | All users across the company and customers with role, organisation and status |
 | CMP-USR-02 | Company Administration — Super Admin — User Details | Users | Built | One user: profile, role, organisation, access and recent activity |
@@ -69,12 +70,12 @@ A screen used by several roles is designed once and listed under each role; it c
 | CMP-SET-01 | Company Administration — Super Admin — Portal Settings | Administration | Built | Customer tiers, order rules, tax settings and notification rules |
 | CMP-PRO-02 | Company Administration — Super Admin — My Profile | Account | Built | Your name, contact details, password and notification preferences |
 | CMP-NTF-01 | Company Administration — Super Admin — Notifications | Account | Built | Alerts and updates for the signed-in user, grouped by day |
-| CMP-CUS-03 | Company Administration — Super Admin — Customer Approval Queue | Customers | Built | New customer registrations waiting for review, with documents and decision buttons |
 
 ### Sales Manager
 
 | ID | Screen name | Menu section | Status | Description |
 |---|---|---|---|---|
+| CMP-CUS-03 | Company Administration — Sales Manager — Customer Approval Queue | Orders and Campaigns | Built | New customer registrations waiting for review, with documents and decision buttons |
 | CMP-PRO-02 | Company Administration — Sales Manager — My Profile | Account | Built | Your name, contact details, password and notification preferences |
 | CMP-NTF-01 | Company Administration — Sales Manager — Notifications | Account | Built | Alerts and updates for the signed-in user, grouped by day |
 | CMP-SAL-01 | Company Administration — Sales Manager — Dashboard | Overview | Built | Sales against target, top regions and products, and customers needing attention |
@@ -87,7 +88,6 @@ A screen used by several roles is designed once and listed under each role; it c
 | CMP-SAL-08 | Company Administration — Sales Manager — Customer Sales History | Analysis | Built | Purchase history of one customer by month, product and order |
 | CMP-SAL-09 | Company Administration — Sales Manager — Sales Order Overview | Orders and Campaigns | Built | Orders in progress across all customers with status and value |
 | CMP-SAL-10 | Company Administration — Sales Manager — Promotional Campaigns | Orders and Campaigns | Built | Running and planned promotions with reach, orders and spend |
-| CMP-CUS-03 | Company Administration — Sales Manager — Customer Approval Queue | Orders and Campaigns | Built | New customer registrations waiting for review, with documents and decision buttons |
 
 ### Operations Manager
 

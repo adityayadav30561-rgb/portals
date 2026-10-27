@@ -202,7 +202,10 @@ page('company', 'delivery-issues', 'CMP-OPS-07', 'Company Administration — Ope
 
 # ---------- Operational Reports ----------
 cyc = ''.join(f'<tr><td>{link("CMP-ORD-02", s[1])}</td><td>{ORDER_PLACED[s[1]]}</td><td>{PROMISED[s[1]][0]}</td><td>{PROMISED[s[1]][1] or s[4]}</td><td>{s[5]}</td><td class="num">{CYCLE_DAYS[s[1]] if s[1] in CYCLE_DAYS else "—"}</td><td>{chip("On Time" if PROMISED[s[1]][0] == (PROMISED[s[1]][1] or s[4]) else "Late")}</td></tr>' for s in SHIPMENTS if s[6] != 'Being Packed')
-reas = ''.join(f'<tr><td><b>{k}</b></td><td class="num">{v[0]}</td><td class="num">{v[1]}</td></tr>' for k, v in sorted(RET_REASON.items(), key=lambda x: -x[1][1]))
+OCT_REASON = {}
+for r in RET_OCT: OCT_REASON[r[5]] = (OCT_REASON.get(r[5], (0, 0))[0] + 1, OCT_REASON.get(r[5], (0, 0))[1] + r[4])
+assert sum(v[1] for v in OCT_REASON.values()) == RET_OCT_SHEETS == 65
+reas = ''.join(f'<tr><td><b>{k}</b></td><td class="num">{v[0]}</td><td class="num">{v[1]}</td></tr>' for k, v in sorted(OCT_REASON.items(), key=lambda x: -x[1][1]))
 acc = ''.join(f'<tr><td><b>{w}</b></td><td class="num">{N(CSTK_VAPI if "Vapi" in w else CSTK_TALOJA)}</td><td class="num">{v}</td><td class="num"><b>{(1 - v / (CSTK_VAPI if "Vapi" in w else CSTK_TALOJA)) * 100:.1f}%</b></td></tr>' for w, v in C_COUNT_VAR.items())
 reason_col = ['#0a48fd', '#0b8fa8', '#e0a030', '#7a36fb']
 body = f'''  <div class="head">
@@ -217,11 +220,11 @@ body = f'''  <div class="head">
   </div>
   <div class="grid g-2">
     {card('Dispatched On Time, Percentage by Month', chart('bars', ['September', 'October'], [{'name': 'On time', 'values': [100, round(len(ON_TIME_OCT) / len(SHIP_OCT) * 100)], 'color': 'var(--ok)'}], height=260))}
-    <section class="card"><header><h2>Sheets Returned by Reason</h2></header><div class="body center">{chart('donut', series=[{'name': k, 'value': v[1], 'color': c} for (k, v), c in zip(sorted(RET_REASON.items(), key=lambda x: -x[1][1]), reason_col)], center=str(sum(v[1] for v in RET_REASON.values())), caption='sheets')}</div></section>
+    <section class="card"><header><h2>Sheets Returned by Reason</h2></header><div class="body center">{chart('donut', series=[{'name': k, 'value': v[1], 'color': c} for (k, v), c in zip(sorted(OCT_REASON.items(), key=lambda x: -x[1][1]), reason_col)], center=str(RET_OCT_SHEETS), caption='sheets')}</div></section>
   </div>
   <section class="card flush"><header><h2>Order Cycle by Order</h2></header><div class="body">{table([('Order Number', ''), ('Placed', ''), ('Promised Dispatch', ''), ('Dispatched', ''), ('Delivery', ''), ('Days to Deliver', 'num'), ('Dispatch', '')], [cyc], 'wrap')}</div></section>
   <div class="grid g-2">
-    <section class="card flush"><header><h2>Returns by Reason</h2></header><div class="body">{table([('Reason', ''), ('Requests', 'num'), ('Sheets', 'num')], [reas], 'wrap', foot=f'<tfoot><tr><td>Total</td><td class="num">{len(CRL_RET)}</td><td class="num">{sum(v[1] for v in RET_REASON.values())}</td></tr></tfoot>')}</div></section>
+    <section class="card flush"><header><h2>Returns by Reason</h2></header><div class="body">{table([('Reason', ''), ('Requests', 'num'), ('Sheets', 'num')], [reas], 'wrap', foot=f'<tfoot><tr><td>Total</td><td class="num">{len(RET_OCT)}</td><td class="num">{RET_OCT_SHEETS}</td></tr></tfoot>')}</div></section>
     <section class="card flush"><header><h2>Stock Count of 19/10/2026</h2></header><div class="body">{table([('Warehouse', ''), ('Sheets on Hand', 'num'), ('Variance', 'num'), ('Accuracy', 'num')], [acc], 'wrap')}</div></section>
   </div>
 '''

@@ -72,8 +72,8 @@
   var groups = [];
   list.forEach(function (x) { var g = P.group(x, role); if (groups.indexOf(g) < 0) groups.push(g); });
   groups.sort(function (a, b) { return (b === 'Overview') - (a === 'Overview'); });
-  // The Operations Manager's menu follows the order of the work: orders, dispatch, stock, reports.
-  var ORDER = { 'company:OPS': ['Overview', 'Orders', 'Dispatch and Delivery', 'Stock and Returns', 'Reports and Support'] }[p.id + ':' + role];
+  // The Operations Manager's and the Sales Manager's menus follow the order of their work.
+  var ORDER = { 'company:OPS': ['Overview', 'Orders', 'Dispatch and Delivery', 'Stock and Returns', 'Reports and Support'], 'company:SAL': ['Overview', 'Performance', 'Analysis', 'Orders and Campaigns'] }[p.id + ':' + role];
   if (ORDER) groups.sort(function (a, b) { return ORDER.indexOf(a) - ORDER.indexOf(b); });   // the dashboard section is always first, whatever the registry order
   var nav = groups.map(function (g) {
     var members = list.filter(function (x) { return P.group(x, role) === g; });

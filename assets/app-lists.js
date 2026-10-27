@@ -265,8 +265,13 @@
     var s = prepSel(el), label = s.label.toLowerCase();
     var sel = { value: s.initial };
     var lbl = s.label || el.getAttribute('aria-label') || '';
-    if (/^(period|as on|day|month|financial year|year)$/.test(label)) {          // one period of data exists: October 2026
-      wireSel(s, function () { return { items: [{ label: s.initial, value: s.initial }], selected: s.initial, footer: 'The prototype holds data for this period only.' }; }, function () {});
+    if (label === 'period' && /^October 2026$/.test(s.initial)) {                 // one month of data exists: the others are listed, greyed out
+      var months = ['October 2026', 'September 2026', 'August 2026', 'July 2026', 'June 2026', 'May 2026'];
+      wireSel(s, function () { return { items: months.map(function (m, i) { return { label: m, value: m, disabled: i > 0, hint: i > 0 ? 'No data' : '' }; }), selected: 'October 2026' }; }, function () {});
+      return;
+    }
+    if (/^(period|as on|day|month|financial year|year)$/.test(label)) {          // a single value
+      wireSel(s, function () { return { items: [{ label: s.initial, value: s.initial }], selected: s.initial }; }, function () {});
       return;
     }
     if (label === 'compared with') {

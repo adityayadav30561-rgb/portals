@@ -108,12 +108,11 @@
         var c = tr.cells[i]; if (!c) return;
         var v = rec[h]; if (v === undefined) { if (h) c.innerHTML = '—'; return; }
         if (/^(status|order status|fulfilment|decision)$/i.test(h) || /^(Payment|Payment Mode|Priority)$/.test(h) && /^(Paid|Partly Paid|Unpaid|High|Medium|Low)$/.test(v)) c.innerHTML = A.chipHtml(v);
-        else if (i === 0) c.innerHTML = '<a><b>' + esc(v) + '</b></a>';
+        else if (i === 0) c.innerHTML = '<b>' + esc(v) + '</b>';
         else if (/^(sheets|value|amount|credit amount|requested credit|price per sheet)$/i.test(h)) c.innerHTML = '<b>' + esc(v) + '</b>';
         else c.textContent = v;
       });
-      qa('a', tr).forEach(function (a) { a.removeAttribute('aria-disabled'); a.removeAttribute('title'); });
-      qa('.row-actions', tr).forEach(function (ra) { ra.innerHTML = '<a class="btn sm" href="' + esc(A.link(sidOf((/USR/.test(sid) ? 'USR-03' : /SUP/.test(sid) ? 'SUP-03' : sid.split('-').slice(1).join('-')))) ) + '">View</a>'; });
+      qa('.row-actions', tr).forEach(function (ra) { ra.innerHTML = '<button class="btn sm" type="button">View</button>'; });
       tbody.insertBefore(tr, tbody.firstChild);
     });
   };
@@ -151,7 +150,7 @@
     (A.state.r[listId] = A.state.r[listId] || []).push(rec);
     A.state.t = { m: cfg.msg(rec) };
     persist();
-    A.go2(listId);
+    A.goList(listId);
     return true;
   };
 
@@ -443,8 +442,8 @@
   var setupSaleEntry = function () {
     var table = q('main table.tbl'); if (!table) return;
     var heads = qa('thead th', table).map(text), pc = heads.indexOf(heads.filter(function (h) { return /Price per Sheet/.test(h); })[0]), ac = heads.indexOf('Amount');
-    var rows = qa('tbody tr', table), sumCard, creditCard, payCard;
-    qa('main section.card').forEach(function (s) { var h = text(q('header h2', s)); if (h === 'Sale Summary') sumCard = q('.body', s); if (h === 'Dealer Credit') creditCard = q('.body', s); if (h === 'Payment') payCard = q('.body', s); });
+    var rows = qa('tbody tr', table), sumCard, creditCard, payCard, party = (window.CATALOG && window.CATALOG.parties || {})[pid] || {};
+    qa('main section.card').forEach(function (s) { var h = text(q('header h2', s)); if (h === 'Sale Summary') sumCard = q('.body', s); if (/^(Dealer|Retailer) Credit$/.test(h)) creditCard = q('.body', s); if (h === 'Payment') payCard = q('.body', s); });
     var kv = function (root, label, html) { qa('dt', root).forEach(function (d) { if (text(d) === label) d.nextElementSibling.innerHTML = html; }); };
     var calc = function () {
       var sheets = 0, sub = 0;
@@ -452,20 +451,31 @@
       var gst = A.roundHE(sub * 0.09), total = sub + 2 * gst;
       if (sumCard) { kv(sumCard, 'Sheets', A.fmtN(sheets)); kv(sumCard, 'Subtotal', A.fmtM(sub)); kv(sumCard, 'Central GST 9%', A.fmtM(gst)); kv(sumCard, 'State GST 9%', A.fmtM(gst)); kv(sumCard, 'Total', A.fmtM(total)); }
       if (payCard) kv(payCard, 'Amount to Receive', '<b>' + A.fmtM(total) + '</b>');
-      return { sheets: sheets, sub: sub, total: total };
+      var sel = q('#dl, #rt'), pr = sel && party[sel.value], credit = null;
+      if (creditCard && pr) {
+        var used = Math.round((pr.owes + total) / pr.limit * 100), avail = pr.limit - pr.owes - total, m = q('.meter', creditCard);
+        kv(creditCard, 'Credit Limit', A.fmtML(pr.limit)); kv(creditCard, 'Owes', A.fmtML(pr.owes)); kv(creditCard, 'This Sale', A.fmtM(total));
+        kv(creditCard, 'Credit Available', avail < 0 ? '−' + A.fmtML(-avail) : A.fmtML(avail));
+        qa('dt', creditCard).forEach(function (d) { if (text(d) === 'Credit Available') d.nextElementSibling.style.color = avail < 0 ? 'var(--bad)' : ''; });
+        if (m) { m.className = 'meter ' + (avail < 0 ? 'bad' : used >= 80 ? 'bad' : used >= 50 ? 'warn' : 'ok'); q('i', m).style.width = Math.min(100, used) + '%'; }
+        credit = { avail: avail, name: sel.value };
+      }
+      return { sheets: sheets, sub: sub, total: total, credit: credit };
     };
     rows.forEach(function (tr) { var box = q('.qty', tr); if (box) { A.wireQty(box); box.addEventListener('qtychange', calc); } });
     var mode = q('#pm'); if (mode && payCard) mode.addEventListener('change', function () { kv(payCard, 'Payment Mode', esc(mode.value)); });
+    var psel = q('#dl, #rt'); if (psel) psel.addEventListener('change', calc);
     calc();
     var rec = qa('main .head .acts button').filter(function (b) { return /^Record Sale$/.test(text(b)); })[0];
     if (!rec) return; rec._act = 1;
     rec.addEventListener('click', function () {
       var scope = q('main'); if (!A.validate(scope, { required: qa('.field label', q('main section.card')).map(text).filter(function (l) { return /Name|Dealer|Retailer|Date/.test(l); }) })) { A.toast('Complete the highlighted fields', 'warn'); return; }
       var c = calc(); if (!c.sheets) { A.toast('Enter the sheets sold for at least one product', 'warn'); return; }
+      if (c.credit && c.credit.avail < 0) { A.toast('This sale is ' + A.fmtML(-c.credit.avail) + ' above the credit available for ' + c.credit.name.split(',')[0], 'bad'); return; }
       var v = A.formValues(scope), list = sidOf(SALE_TARGET[pid][1]), n = numberFor('sale', list);
       var who = v.Dealer || v.Retailer || v['Customer Name'] || '', pay = v['Payment Mode'] || v.__radio || (v['Payment Terms'] ? 'Unpaid' : 'Paid');
       var r = { 'Sale Number': n, Date: v['Sale Date'] || today, Dealer: who, Retailer: who, Customer: who, Sheets: A.fmtN(c.sheets), Value: A.fmtM(c.total), Payment: /Immediate|Paid/.test(pay) && !v['Payment Terms'] ? 'Paid' : 'Unpaid', 'Payment Mode': pay, 'Dispatch Number': '—' };
-      (A.state.r[list] = A.state.r[list] || []).push(r); A.state.t = { m: 'Sale ' + n + ' recorded for ' + who.split(',')[0] }; persist(); A.go2(list);
+      (A.state.r[list] = A.state.r[list] || []).push(r); A.state.t = { m: 'Sale ' + n + ' recorded for ' + who.split(',')[0] }; persist(); A.goList(list);
     });
   };
   var setupPaymentEntry = function () {
@@ -500,7 +510,7 @@
         A.state.x[sidOf('BIL-01') + '|' + no] = st; A.state.x[sidOf('BIL-07') + '|' + no] = st;
         (A.state.r[list] = A.state.r[list] || []).push({ 'Payment Number': numberFor('payment', list), Date: date, Mode: mode, 'Invoice Number': no, Amount: A.fmtM(amt(tr)), Status: 'Confirmed' });
       });
-      A.state.t = { m: 'Payment of ' + A.fmtM(c.total) + ' recorded' }; persist(); A.go2(list);
+      A.state.t = { m: 'Payment of ' + A.fmtM(c.total) + ' recorded' }; persist(); A.goList(list);
     });
   };
 

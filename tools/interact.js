@@ -21,11 +21,13 @@ for (const p of P.portals) for (const s of p.screens) if (s.built && s.id.starts
 
 // Everything that is meant to be clicked.
 const CONTROLS = [
-  'main button:not([disabled]):not(.on)', 'main a.btn:not([href]):not([aria-disabled])', 'main .sel', 'main .tabs [data-tab]:not(.on)', 'main .qty > span[role=button]:not([aria-disabled=true])',
+  'main button:not([disabled]):not(.on)', 'main a.btn:not([href]):not([aria-disabled])', 'main a:not([href]):not([aria-disabled]):not(.btn)', 'main .sel', 'main .tabs [data-tab]:not(.on)', 'main .qty > span[role=button]:not([aria-disabled=true])',
   'main input[type=checkbox]', 'main input[type=radio]:not(:checked)', 'main th[data-sort]', 'main .pg .pages button:not([disabled]):not(.on)', 'main .view-toggle [role=button]:not(.on)',
   'main [role=button]:not([aria-disabled=true]):not(.on)', 'main summary', 'main label.radio:not(.on)', '.top .icon-btn:not([href])', '.top .who > button', 'main .chip[role=button]'
 ].join(',');
 
+// Messages a handler shows when it has nothing to do: a control that only says this is dead.
+const FALLBACK = /Nothing to edit|no table on this screen|not recorded in the prototype|not available to copy/i;
 const signature = () => {
   const main = document.querySelector('main') || document.body;
   const vals = [...document.querySelectorAll('input, select, textarea')].map((i) => (i.type === 'checkbox' || i.type === 'radio' ? i.checked : i.value)).join('|');
@@ -79,6 +81,8 @@ const describe = (el) => {
           const gone = !(await page.evaluate(() => window.__marker === 1).catch(() => false));
           let after, changed = false;
           try { after = await page.evaluate(signature); changed = after !== before; } catch (e) { changed = true; }
+          const fb = await page.$$eval('.toast .tt', (t) => t.map((x) => x.textContent)).catch(() => []);
+          if (fb.some((x) => FALLBACK.test(x))) { dead.push({ id: t.id, role: t.role, control: await handle.evaluate((el) => (el.getAttribute('aria-label') || el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 50)).catch(() => '?'), why: 'only shows: ' + fb.join(' | ') }); }
           const extra = downloaded > d0 || chooser > c0 || (await page.evaluate(() => window.__print).catch(() => 1)) > p0;
           if (!(changed || gone || extra)) {
             const label = await handle.evaluate((el) => { const t = (el.getAttribute('aria-label') || el.textContent || el.getAttribute('placeholder') || '').replace(/\s+/g, ' ').trim().slice(0, 50); return el.tagName.toLowerCase() + ([...el.classList].length ? '.' + [...el.classList].slice(0, 3).join('.') : '') + ' "' + t + '"'; }).catch(() => '?');

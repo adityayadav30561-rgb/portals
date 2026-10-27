@@ -72,6 +72,15 @@
     return A.withState(h);
   };
   A.go2 = function (sid) { location.href = A.link(sid); };
+  // Open the list that receives a new record, unless the signed-in role cannot see it (then the form's parent, then the dashboard):
+  // a form must never switch the person into another role.
+  A.goList = function (listId) {
+    var t = P.find(listId);
+    if (t && t.screen.built && t.screen.roles.indexOf(A.role) >= 0) { A.go2(listId); return; }
+    var par = P.parent ? P.parent(A.portal, P.current.screen, A.role) : null;
+    if (par && par.built && par.roles.indexOf(A.role) >= 0) { A.go2(par.id); return; }
+    A.go2(P.dashboard(A.portal, A.role).id);
+  };
   // Links pick up the latest state right before they are used (click, middle click, keyboard, hover for "open in new tab").
   var refresh = function (e) {
     var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;

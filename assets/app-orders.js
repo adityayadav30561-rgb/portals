@@ -42,11 +42,11 @@
     var s = cfg.slabs[sku]; return qty >= 200 ? s[2] : qty >= 50 ? s[1] : s[0];
   };
   var sessionSheets = function () { return orders().reduce(function (n, o) { return n + o.sheets; }, 0); };
-  A.calc = function (lines, transport) {
+  A.calc = function (lines, transport, noRebate) {
     var rows = lines.map(function (l) { var p = price(l[0], l[1]); return { sku: l[0], qty: l[1], price: p, amount: l[1] * p }; });
     var sheets = rows.reduce(function (n, r) { return n + r.qty; }, 0), sub = rows.reduce(function (n, r) { return n + r.amount; }, 0);
     var rebate = 0, rb = cfg.rebate;
-    if (rb && sheets && rb.before + sessionSheets() + sheets >= rb.target) rebate = A.roundHE(sub * rb.pct / 100);
+    if (rb && !noRebate && sheets && rb.before + sessionSheets() + sheets >= rb.target) rebate = A.roundHE(sub * rb.pct / 100);
     var taxable = sub - rebate, gst = A.roundHE(taxable * cfg.gst / 100);
     var pickup = transport === 'pickup';
     var freight = !sub || pickup ? 0 : (cfg.freight.free_at && sub < cfg.freight.free_at ? cfg.freight.fee : 0);
@@ -193,7 +193,7 @@
       re.setAttribute('data-own', '1'); re.setAttribute('role', 'button'); re.setAttribute('tabindex', '0'); re.setAttribute('aria-haspopup', 'listbox');
       var open = function () {
         var items = cfg.prev.map(function (o) { var sh = o.lines.reduce(function (n, l) { return n + l[1]; }, 0); return { label: o.no, value: o.no, hint: N(sh) + ' sheets, ' + o.date }; });
-        A.menu(re, items, { footer: 'Replaces the current order draft', onPick: function (it) {
+        A.menu(re, items, { onPick: function (it) {
           var o = cfg.prev.filter(function (x) { return x.no === it.value; })[0];
           A.cart.set(o.lines.map(function (l) { return [l[0], l[1]]; })); sync(); A.toast('Order draft now holds the sheets of ' + o.no, 'ok');
         } });
@@ -366,38 +366,71 @@
     ['In Transit', 'Awaiting Confirmation', 'Being Packed'].forEach(function (st) { tile(st, rows.filter(function (r) { return val(r, 'Order Status') === st; }).length); });
   };
 
+  // ---------- Order links carry the order they belong to ----------
+  var DETAIL_FILE = (function () { var t = P_find(pid.slice(0, 3).toUpperCase() + '-ORD-02'); return t ? t.screen.file.split('/').pop() : 'order-details.html'; })();
+  function P_find(id) { return window.PORTAL.find(id); }
+  var NO = /^[A-Z]{3}-\d{4}-[A-Z]?\d+$/;
+  var decorateOrderLinks = function () {
+    qa('main a[href]').forEach(function (a) {
+      var href = a.getAttribute('href') || ''; if (href.indexOf(DETAIL_FILE) < 0 || /[?&]ord=/.test(href)) return;
+      var tr = a.closest('tr'), no = text0(a).split(' ')[0];
+      if (tr && !NO.test(no)) no = text0(tr.cells[0]).split(' ')[0];
+      if (!NO.test(no)) return;
+      var u = new URL(href, location.href); u.searchParams.set('ord', no);
+      if (tr && tr.closest('table')) {
+        var heads = qa('thead th', tr.closest('table')).map(text0), pick = function (re) { var i = -1; heads.forEach(function (h, k) { if (i < 0 && re.test(h)) i = k; }); return i >= 0 && tr.cells[i] ? text0(tr.cells[i]) : ''; };
+        [['d', /^(order )?date$/i], ['r', /delivery date|expected/i], ['s', /status|fulfilment/i], ['p', /^payment$/i], ['n', /^sheets$/i], ['v', /^(value|amount|total)$/i]].forEach(function (m) { var v = pick(m[1]); if (v && v !== '—') u.searchParams.set(m[0], v); });
+      }
+      a.setAttribute('href', u.toString());
+    });
+  };
+  function text0(el) { return el ? el.textContent.replace(/\s+/g, ' ').trim() : ''; }
+
   // ---------- Order Details ----------
+  // The order to show: one placed in this session, or one from the history (its lines come from catalog.js, its dates and status from the clicked row).
+  var STAGE = { 'Awaiting Confirmation': 1, 'Confirmed': 2, 'Being Packed': 2, 'Packed': 2, 'In Transit': 3, 'Delivered': 5, 'Cancelled': 0 };
+  var detailsOrder = function () {
+    var no = params.get('ord'); if (!no) return null;
+    var o = findOrder(no); if (o) return o;
+    if (no === label(q('main h1'))) return null;                                   // the order this screen already shows in full
+    var pv = cfg.prev.filter(function (x) { return x.no === no; })[0], date = params.get('d') || (pv && pv.date) || '26/10/2026';
+    var seed = cfg.series.prefix + String(cfg.series.first).padStart(cfg.series.width, '0');   // the designed pending order is the designed draft
+    var lines = pv ? pv.lines : (no === seed ? cfg.draft : null), c = lines ? A.calc(lines, '', no !== seed) : null, v = params.get('v') ? A.parseMoney(params.get('v')) : (c ? c.total : 0);
+    return { no: no, date: date, time: '', lines: lines, sheets: params.get('n') ? parseInt(params.get('n').replace(/,/g, ''), 10) : (c ? c.sheets : 0), total: v, req: params.get('r') || addDays(date, 5),
+      status: params.get('s') || 'Delivered', pay: params.get('p') || 'Paid', loc: cfg.loc, history: true, calc: c, by: '—', ref: '', transport: cfg.transport };
+  };
   var setupOrderDetails = function () {
-    var o = findOrder(params.get('ord'));
     var h1 = q('main h1');
-    // Reorder (works for any order shown here)
-    qa('main .head button').forEach(function (b) {
+    qa('main .head button').forEach(function (b) {                                  // Reorder
       if (!/Reorder/.test(b.textContent)) return;
       own(b);
       b.addEventListener('click', function () {
-        var no = label(h1), lines = (o ? o.lines : (cfg.prev.filter(function (x) { return x.no === no; })[0] || {}).lines);
-        if (!lines) { A.toast('The sheets of this order are not available to copy', 'warn'); return; }
+        var o = detailsOrder(), no = label(h1), lines = o ? o.lines : (cfg.prev.filter(function (x) { return x.no === no; })[0] || {}).lines;
+        if (!lines) { A.toast('The sheets of ' + no + ' are not recorded in the prototype', 'warn'); return; }
         A.cart.set(lines.map(function (l) { return [l[0], l[1]]; }));
         go(pid.slice(0, 3).toUpperCase() + '-ORD-03', {});
       });
     });
-    if (!o) return;
-    var P = PRODUCTS;
+    var o = detailsOrder(); if (!o) return;
+    var P = PRODUCTS, stage = STAGE[o.status] === undefined ? 1 : STAGE[o.status], cancelled = o.status === 'Cancelled';
     h1.textContent = o.no;
-    var chips = qa('.title-row .chip'); if (chips[0]) A.applyChip(chips[0], o.status); if (chips[1]) A.applyChip(chips[1], 'Unpaid');
+    var chips = qa('.title-row .chip'); if (chips[0]) A.applyChip(chips[0], o.status); if (chips[1]) A.applyChip(chips[1], o.pay || 'Unpaid');
     var tr = qa('ol.track li');
     if (tr.length === 5) {
-      var t = cfg.track, spans = tr.map(function (li) { return q('span', li); });
-      tr.forEach(function (li, i) { li.className = i === 0 ? 'done' : i === 1 ? 'now' : 'todo'; });
-      spans[0].textContent = o.date + ' ' + o.time; spans[1].textContent = 'Pending';
-      spans[2].textContent = addDays(o.req, t[0]); spans[3].textContent = addDays(o.req, t[1]); spans[4].textContent = o.req;
+      var t = cfg.track, spans = tr.map(function (li) { return q('span', li); }), planned = [o.date, addDays(o.date, 1), addDays(o.req, t[0]), addDays(o.req, t[1]), o.req];
+      tr.forEach(function (li, i) { li.className = stage >= 5 || i < stage ? 'done' : i === stage ? 'now' : 'todo'; });
+      spans.forEach(function (sp, i) { sp.textContent = cancelled && i ? '—' : (i === 0 ? planned[0] + (o.time ? ' ' + o.time : '') : (i === 1 && stage === 1 ? 'Pending' : planned[i])); });
     }
     qa('main section.card').forEach(function (s) {
       var h = label(q('header h2', s)), body = q('.body', s);
       if (h === 'Items') {
-        var heads = qa('thead th', body).map(label), tb = q('tbody', body);
+        if (!o.lines) { body.innerHTML = '<div style="padding:1rem 1.125rem">' + kvHtml([['Sheets', N(o.sheets)], ['Order Value', M(o.total)]], '') + '</div>'; return; }
+        var c = o.calc || A.calc(o.lines, o.transport === 'Self Pickup' ? 'pickup' : ''), exact = !o.history || c.total === o.total;
+        var heads = qa('thead th', body).map(label), tb = q('tbody', body), keep = heads.map(function (hd) { return exact || !/^(Price per Sheet|Amount)$/.test(hd); });
+        if (!exact) qa('thead th', body).forEach(function (th, i) { if (!keep[i]) th.remove(); });     // old orders were priced on other terms: show what is recorded, not derived prices
         tb.innerHTML = o.lines.map(function (l) {
-          var p = P[l[0]], pr = price(l[0], l[1]), cells = heads.map(function (hd) {
+          var p = P[l[0]], pr = price(l[0], l[1]), cells = heads.map(function (hd, i) {
+            if (!keep[i]) return '';
             if (hd === 'Product') return '<td><div class="prod">' + swatch(p) + '<div><b>' + esc(p.name) + '</b></div></div></td>';
             if (hd === 'SKU') return '<td class="mono nowrap">' + l[0] + '</td>';
             if (hd === 'Sheets') return '<td class="num">' + N(l[1]) + '</td>';
@@ -405,18 +438,31 @@
             return '<td class="num"><b>' + M(l[1] * pr) + '</b></td>';
           }); return '<tr>' + cells.join('') + '</tr>';
         }).join('');
-        var tf = q('tfoot td.num', body); if (tf) tf.textContent = M(o.sub);
-        var kvs = qa('dl.kv', body);
+        var tf = q('tfoot', body), kvs = qa('dl.kv', body);
+        if (!exact) {
+          if (tf) tf.remove();
+          if (kvs[0]) kvs[0].remove();
+          if (kvs[1]) setKV(body, 'Total', M(o.total));
+          return;
+        }
+        var tfc = q('tfoot td.num', body); if (tfc) tfc.textContent = M(o.sub !== undefined ? o.sub : c.sub);
         if (kvs.length) {
-          var rows = [];
-          if (cfg.rebate && o.rebate) rows.push([cfg.rebate.label, '−' + M(o.rebate), 'color:var(--ok)'], ['Taxable Amount', M(o.taxable)]);
-          rows.push(['Central GST ' + cfg.gst + '%', M(o.gst)], ['State GST ' + cfg.gst + '%', M(o.gst)]);
-          if (o.freight) rows.push(['Freight', M(o.freight)]);
+          var gst = o.gst !== undefined ? o.gst : c.gst, rebate = o.rebate !== undefined ? o.rebate : c.rebate, fr = o.freight !== undefined ? o.freight : c.freight, rows = [];
+          if (cfg.rebate && rebate) rows.push([cfg.rebate.label, '−' + M(rebate), 'color:var(--ok)'], ['Taxable Amount', M(c.taxable)]);
+          rows.push(['Central GST ' + cfg.gst + '%', M(gst)], ['State GST ' + cfg.gst + '%', M(gst)]);
+          if (fr) rows.push(['Freight', M(fr)]);
           kvs[0].outerHTML = kvHtml(rows).replace('<dl class="kv"', '<dl class="kv" style="max-width:22rem;margin-left:auto"');
           if (kvs[1]) setKV(body, 'Total', M(o.total));
         }
       }
-      if (h === 'Order Activity') q('tbody', s).innerHTML = '<tr><td class="nowrap">' + o.date + ' ' + o.time + '</td><td><b>Order placed</b></td><td>' + esc(o.by) + '</td></tr>';
+      if (h === 'Order Activity') {
+        var ev = [[o.date + (o.time ? ' ' + o.time : ''), 'Order placed', o.by === '—' ? A.portal.org : o.by]];
+        if (!cancelled && stage >= 2 || stage >= 5) ev.push([addDays(o.date, 1), 'Order confirmed', cfg.supplier]);
+        if (stage >= 3 && !cancelled) ev.push([addDays(o.req, cfg.track[1]), 'Shipment dispatched', cfg.supplier]);
+        if (stage >= 5) ev.push([o.req, 'Delivered', A.portal.org]);
+        if (cancelled) ev.push([addDays(o.date, 1), 'Order cancelled', cfg.supplier]);
+        q('tbody', s).innerHTML = ev.reverse().map(function (r) { return '<tr><td class="nowrap">' + r[0] + '</td><td><b>' + r[1] + '</b></td><td>' + esc(r[2]) + '</td></tr>'; }).join('');
+      }
       if (h === 'Delivery') qa('dt', body).forEach(function (d) {
         var k = label(d), dd = d.nextElementSibling;
         if (k === 'Deliver To') dd.textContent = o.loc; else if (k === 'Expected') dd.textContent = o.req; else dd.innerHTML = '—';
@@ -460,6 +506,7 @@
     if (/^ORD-05$/.test(part)) setupConfirmation();
     if (/^ORD-01$/.test(part)) setupHistory();
     if (/^ORD-02$/.test(part)) setupOrderDetails();
+    decorateOrderLinks();
     setupReorder();
     updateBadge();
   });

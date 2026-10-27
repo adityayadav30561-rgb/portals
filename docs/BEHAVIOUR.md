@@ -51,7 +51,11 @@ by list screen, `x` status changes (`"SCREEN|row key"` and `"SCREEN|page"`), `d`
 
 ## Known limits (stated plainly)
 
-- Rows in a list open the one Details screen of their type (the sample record), as before; only orders placed in the session get their own details.
+- **Period selectors do not change data.** The `Period` dropdown lists May to October 2026 and only October is selectable (the only month with data), so KPI tiles
+  and charts never recompute. Building this means a monthly series per tile on about 40 screens; not done.
+- Rows in a list open their own order (Order History, dashboards: orders carry their row data in the link; lines come from `catalog.js`), but every other
+  record type (users, tickets, invoices, customers ...) still opens the one sample Details screen of its type. A record you create is not a link.
+- Older orders were priced on other terms, so their details show the recorded total and sheets, not derived prices.
 - Lists contain the sample rows that exist; the prototype has no further pages of data.
-- Period selectors offer October 2026 only; KPI tiles and charts do not recompute.
 - Dashboard tiles are not recomputed after an order or approval (Order History tiles are).
+- Firefox and Safari have not been checked.

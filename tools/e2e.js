@@ -81,6 +81,24 @@ const ok = (c, m) => { if (c) passes++; else { fails++; console.log('FAIL ' + m)
   await p.fill('.reply textarea', 'Thanks, please collect on Friday.'); await p.click('button:has-text("Send Reply")'); ok((await txt('.thread .msg:last-child')).includes('please collect on Friday'), 'reply joins the conversation');
   await p.click('main .head button:has-text("Close Ticket")'); await p.click('.modal [data-ok]'); ok((await p.$$eval('.title-row .chip', (c) => c.map((x) => x.innerText))).includes('Closed'), 'ticket closes');
 
+  // ---- the Owner stays the Owner after a form that lists elsewhere
+  await p.goto(R + 'primary/add-dealer-request.html'); await p.click('main .head .acts button:has-text("Submit Request")'); await p.waitForURL('**/dealer-network.html*');
+  ok((await txt('.who .nm')) === 'Rajesh Menon', 'Add Dealer Request returns the Owner to Dealer Network, not to the Manager\'s list');
+  await p.goto(R + 'primary/pending-dealer-requests.html?role=MGR&' + (await search()).replace(/^role=[^&]*&?/, '')); ok((await txt('main table.tbl tbody tr:first-child')).includes('Dealer Omkar') || (await txt('main table.tbl tbody tr:first-child')).includes('Awaiting'), 'the Manager sees the request in the pending list');
+  // ---- rows open their own record
+  await p.goto(R + 'primary/order-history.html'); await p.click('main table.tbl tbody tr:nth-child(4) a'); await p.waitForURL('**/order-details.html*');
+  ok((await txt('h1')) === 'ORD-2026-10431', 'a history row opens its own order'); ok((await p.$$eval('.title-row .chip', (c) => c.map((x) => x.innerText))).join() === 'Delivered,Partly Paid', 'with its own status and payment');
+  ok((await p.$$('main table.tbl tbody tr')).length >= 3, 'and its own lines');
+  await p.goto(R + 'secondary/order-history.html'); await p.click('main table.tbl tbody tr:nth-child(2) a'); await p.waitForURL('**/order-details.html*'); ok((await txt('h1')) === 'SAL-2026-3040', 'secondary row opens its own order');
+  // ---- sale entry: the credit card follows the sale
+  await p.goto(R + 'primary/secondary-sales-entry.html'); const before = await txt('dl.kv:has(dt:text("This Sale")) dd:nth-of-type(3)');
+  const wnt = 'tr:has(td.mono:text("LM-WNT-001"))'; await p.fill(wnt + ' .qty input', '300'); await p.press(wnt + ' .qty input', 'Tab');
+  ok((await txt('dl.kv:has(dt:text("This Sale")) dd:nth-of-type(3)')) !== before, 'dealer credit card follows the quantities');
+  await p.selectOption('#dl', { label: 'Dealer Kunal, Panaji' }); ok((await txt('dl.kv:has(dt:text("This Sale")) dd:nth-of-type(1)')) !== '₹8.00 lakh', 'dealer credit card follows the dealer');
+  await p.fill(wnt + ' .qty input', '900'); await p.press(wnt + ' .qty input', 'Tab'); await p.click('main .head .acts button:has-text("Record Sale")'); ok((await txt('.toasts .toast:last-child .tt')).includes('above the credit available'), 'a sale above the dealer credit is refused');
+  // ---- top-bar search
+  await p.goto(R + 'primary/owner-dashboard.html'); await p.fill('.top .search input', 'walnut'); ok((await p.$$('.pop .opt')).length >= 1, 'top-bar search suggests'); await p.press('.top .search input', 'Enter'); await p.waitForURL('**/product-catalogue.html*');
+  ok((await p.$$('.pcard:not([hidden])')).length === 1, 'search for walnut lands on the catalogue with one card');
   // ---- downloads
   await p.goto(R + 'primary/order-history.html'); const [d1] = await Promise.all([p.waitForEvent('download'), p.click('button:has-text("Export Orders")')]);
   ok(/\.csv$/.test(d1.suggestedFilename()) && fs.readFileSync(await d1.path(), 'utf8').includes('Order Number,Order Date'), 'CSV export');

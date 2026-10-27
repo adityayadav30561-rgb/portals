@@ -97,7 +97,14 @@ Every placeholder listed as an open item in STATUS.md is accepted as built; no s
 | 15. Phase 13 placeholders | The decisions listed under "Where we are" in STATUS.md stay. |
 | 16. Earlier recommended answers | Marble Finish Launch Incentive 140 of 300; Dealer Lakshya not in Pending Dealer Requests; Financial Reports May to October; May to September tax split kept. |
 
-This answers the open items only. It does not approve Phases 10 to 13 (still "awaiting approval" in PLAN.md).
+No phase approval step: Phases 10 to 13 are done without a separate approval (user, 2026-10-27: "i dont have to give any approvals").
+
+## Answered 2026-10-27 (hand-over)
+
+| Decision | Detail |
+|---|---|
+| No approvals | The user does not give phase approvals; every built phase counts as done once verified. Nothing is marked "awaiting approval". |
+| Branch | Final work is pushed to `main` of the portals repository (user, 2026-10-27), and a zip of the prototype is handed over for download. |
 
 ## Rejected
 

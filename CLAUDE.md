@@ -30,4 +30,4 @@ MAVRO.AI logo only.
 - Fictional laminates data only. Logo: `brand/mavro-logo.jpg` and `assets/brand/`, never redrawn or recoloured.
 - Verify in the browser at 1440, 1366 × 768 and 390 px before calling a phase done.
 - Keep the docs current: at the end of every task update docs/STATUS.md (and DECISIONS.md for preferences), then
-  commit and push to `claude/relaxed-cerf-p4czn7`.
+  commit and push to `claude/relaxed-cerf-p4czn7`; the finished prototype is also pushed to `main` (user, 2026-10-27).

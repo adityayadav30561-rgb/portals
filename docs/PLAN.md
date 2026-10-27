@@ -247,10 +247,10 @@ widths, the inventory regenerated, docs/STATUS.md updated, a commit and a push.
 | **7. Secondary Manager** ✓ done 2026-10-26 | Dashboard and the manager's own screens | 10 | Secondary Dealer complete (45) |
 | **8. Tertiary Retailer Owner, part 1** ✓ done 2026-10-26 | Dashboard, store profile, catalogue, ordering, orders, inventory | about 15 | |
 | **9. Tertiary Retailer Owner, part 2** ✓ done 2026-10-26 | Retail sales, invoices and payments, schemes, reports, returns, support, users, notifications | about 14 | |
-| **10. Tertiary Sales Executive and Inventory and Purchasing Executive** ✓ built 2026-10-26, awaiting approval | Both dashboards and their own screens | 5 | Tertiary Retailer complete (40) |
-| **11. Company Super Admin, part 1** ✓ built 2026-10-26, awaiting approval | Dashboard, customers, hierarchy explorer, users, products, orders | 13 | |
-| **12. Company Super Admin, part 2** ✓ built 2026-10-27, awaiting approval | Dispatch, inventory, analytics, the four sales reports, invoices, schemes, support, territory, audit, settings, My Profile, notifications | 19 | |
-| **13. Company Sales and Operations Managers** ✓ built 2026-10-27, awaiting approval | Both dashboards and their own screens | 18 | Company Administration complete (50) |
+| **10. Tertiary Sales Executive and Inventory and Purchasing Executive** ✓ done 2026-10-26 | Both dashboards and their own screens | 5 | Tertiary Retailer complete (40) |
+| **11. Company Super Admin, part 1** ✓ done 2026-10-26 | Dashboard, customers, hierarchy explorer, users, products, orders | 13 | |
+| **12. Company Super Admin, part 2** ✓ done 2026-10-27 | Dispatch, inventory, analytics, the four sales reports, invoices, schemes, support, territory, audit, settings, My Profile, notifications | 19 | |
+| **13. Company Sales and Operations Managers** ✓ done 2026-10-27 | Both dashboards and their own screens | 18 | Company Administration complete (50) |
 | **14. Review and hand-over** ✓ done 2026-10-27 (hosting not decided; Firefox and Safari not checked) | Links between related screens, full responsive pass, README, screen inventory and counts, optional hosting for stakeholders | | Definition of Done in the brief met |
 
 Portal naming: screen names use the brief's pattern with the portal as "Primary Customer", "Secondary Customer",

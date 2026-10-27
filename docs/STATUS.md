@@ -14,7 +14,7 @@ _Last updated: 2026-10-27. Update at the end of every task and phase._
 - **Not checked:** Firefox and Safari (only Chromium is installed here). The brief's "Definition of Done" is not in this repository, so the checks above follow PLAN.md and DECISIONS.md.
 - **Decision for the user:** hosting. GitHub Pages would make the prototype public at a web address stakeholders can open without a zip; it is not enabled. Say if you want it.
 
-Phases 10 to 13 are still "awaiting approval" in PLAN.md; the answers to the open items do not approve them.
+Phases 10 to 13 need no separate approval (user, 2026-10-27: "i dont have to give any approvals"); they are marked done in PLAN.md.
 
 Earlier phases:
 
@@ -96,4 +96,4 @@ All earlier open items (1 to 13, 15, 16) were answered "do what you recommend" o
 
 ## Next
 
-Phase 14 is complete except the hosting decision (GitHub Pages: yes or no) and a Firefox and Safari check if either becomes available. After that, the prototype waits for stakeholder review of Phases 10 to 13; changes requested go into the generator scripts (never the generated screens), then re-run `node tools/verify.js`.
+Phase 14 is complete except the hosting decision (GitHub Pages: yes or no) and a Firefox and Safari check if either becomes available. After that, the prototype is ready for stakeholder review; changes requested go into the generator scripts (never the generated screens), then re-run `node tools/verify.js`.

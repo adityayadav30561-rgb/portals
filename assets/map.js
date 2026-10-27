@@ -99,9 +99,11 @@
     var cls = n.b === n.t ? 'ok' : n.b === 0 ? 'plain' : 'warn';
     return '<span class="chip ' + cls + ' plain cnt" title="' + n.b + ' of ' + n.t + ' screens built">' + n.b + ' of ' + n.t + '</span>';
   };
+  var below = function (n) { var c = 0; n.kids.forEach(function (k) { c += 1 + below(k); }); return c; };
   var toggle = function (n, kids, isO) {
     if (!kids.length) return '';
-    return '<button type="button" class="tg" data-k="' + n.key + '" aria-expanded="' + isO + '" aria-label="' + (isO ? 'Collapse ' : 'Expand ') + esc(n.title) + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>';
+    var more = n.kind === 'screen' ? '<span class="more">+' + below(n) + '</span>' : '';
+    return '<button type="button" class="tg' + (more ? ' has-more' : '') + '" data-k="' + n.key + '" aria-expanded="' + isO + '" aria-label="' + (isO ? 'Collapse ' : 'Expand ') + esc(n.title) + (more ? ', ' + below(n) + ' screens opened from it' : '') + '" title="' + (more ? below(n) + ' screens opened from this screen' : (isO ? 'Collapse' : 'Expand')) + '">' + more + '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>';
   };
   var body = function (n) {
     if (n.id) {
@@ -138,31 +140,46 @@
     '<div class="tools"><input class="input" id="q" type="search" placeholder="Search by ID or name" aria-label="Search screens">' +
     '<div class="seg" role="group" aria-label="Filter"><button type="button" aria-pressed="true" data-f="all">All screens</button><button type="button" aria-pressed="false" data-f="built">Built only</button></div>' +
     '<div class="seg" role="group" aria-label="Detail level" id="lvl"><button type="button" aria-pressed="true" data-l="0">Roles</button><button type="button" aria-pressed="false" data-l="1">Sections</button><button type="button" aria-pressed="false" data-l="2">Screens</button></div>' +
+    '<div class="seg" role="group" aria-label="Expand or collapse"><button type="button" data-x="expand">Expand all</button><button type="button" data-x="collapse">Collapse all</button></div>' +
+    '<div class="seg zoom" role="group" aria-label="Zoom"><button type="button" data-z="out" aria-label="Zoom out">−</button><span id="zv" aria-live="polite">100%</span><button type="button" data-z="in" aria-label="Zoom in">+</button><button type="button" data-z="fit">Fit width</button></div>' +
     '<span class="legend"><span class="key built">Built</span><span class="key planned">Planned</span></span></div>' +
-    '<div class="map" id="map" tabindex="0" aria-label="Screen map"></div></main>';
+    '<div class="map-frame"><div class="map" id="map" tabindex="0" aria-label="Screen map. Scroll or drag to move around."></div>' +
+    '<div class="hint" id="hint">Drag to move around · scroll for more · use Zoom to fit more on screen</div></div></main>';
   document.title = 'Laminates Customer Portal — Screen Map';
 
   var render = function () {
-    var x = $('#map'), sl = x.scrollLeft;
+    var x = $('#map'), sl = x.scrollLeft, st = x.scrollTop;
     var html = keep(tree) ? '<ul class="tr">' + draw(tree) + '</ul>' : '';
     x.innerHTML = html || '<div class="card empty">No screens match.</div>';
-    x.scrollLeft = sl;
+    x.scrollLeft = sl; x.scrollTop = st;
+  };
+  // After the tree changes shape, bring the sign-in node (the root of the tree) into the middle of the frame.
+  var centreRoot = function () {
+    var x = $('#map'), r = x.querySelector('.n.start > .nd'); if (!r) return;
+    var a = r.getBoundingClientRect(), f = x.getBoundingClientRect();
+    x.scrollTop += (a.top - f.top) - (f.height / 2 - a.height / 2);
+    x.scrollLeft = 0;
   };
   var all = function (n, fn) { fn(n); n.kids.forEach(function (k) { all(k, fn); }); };
+  var byKey = {}; all(tree, function (n) { byKey[n.key] = n; });
 
   $('#map').addEventListener('click', function (e) {
     var b = e.target.closest ? e.target.closest('.tg') : null;
     if (!b) return;
     var k = b.getAttribute('data-k'), cur = b.getAttribute('aria-expanded') === 'true';
+    var before = b.getBoundingClientRect().top;
     open[k] = !cur;
+    // Opening a menu section opens the screens inside it as well, so its count and what is drawn agree.
+    if (!cur) all(byKey[k], function (x) { if (x.kind === 'group' || x.kind === 'screen') open[x.key] = true; });
     render();
-    var again = document.querySelector('.tg[data-k="' + k + '"]'); if (again) again.focus({ preventScroll: true });
+    var again = document.querySelector('.tg[data-k="' + k + '"]');
+    if (again) { $('#map').scrollTop += again.getBoundingClientRect().top - before; again.focus({ preventScroll: true }); }
   });
   $('#q').addEventListener('input', function (e) { query = e.target.value.trim().toLowerCase(); render(); });
-  Array.prototype.forEach.call(document.querySelectorAll('.seg button'), function (b) {
+  Array.prototype.forEach.call(document.querySelectorAll('.seg button[data-f]'), function (b) {
     b.addEventListener('click', function () {
       onlyBuilt = b.getAttribute('data-f') === 'built';
-      Array.prototype.forEach.call(document.querySelectorAll('.seg button'), function (y) { y.setAttribute('aria-pressed', String(y === b)); });
+      Array.prototype.forEach.call(document.querySelectorAll('.seg button[data-f]'), function (y) { y.setAttribute('aria-pressed', String(y === b)); });
       render();
     });
   });
@@ -174,10 +191,57 @@
       else if (n.kind === 'group' || n.kind === 'screen') open[n.key] = l >= 2;
     });
     Array.prototype.forEach.call(document.querySelectorAll('#lvl button'), function (y) { y.setAttribute('aria-pressed', String(+y.getAttribute('data-l') === l)); });
-    render();
+    render(); centreRoot();
   };
   Array.prototype.forEach.call(document.querySelectorAll('#lvl button'), function (b) {
     b.addEventListener('click', function () { setLevel(+b.getAttribute('data-l')); });
   });
-  render();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-x]'), function (b) {
+    b.addEventListener('click', function () {
+      var ex = b.getAttribute('data-x') === 'expand';
+      open = {};
+      all(tree, function (n) { if (n.kids.length) open[n.key] = ex ? true : (n.kind === 'start' || n.kind === 'sg' || n.kind === 'portal'); });
+      Array.prototype.forEach.call(document.querySelectorAll('#lvl button'), function (y) { y.setAttribute('aria-pressed', 'false'); });
+      render(); centreRoot();
+    });
+  });
+
+  // Zoom: CSS zoom keeps the scrolling frame honest (scroll extents follow the zoomed tree).
+  var zoom = 1, zv = $('#zv'), mapEl = $('#map');
+  var setZoom = function (z) {
+    zoom = Math.max(0.4, Math.min(1.6, Math.round(z * 100) / 100));
+    mapEl.style.setProperty('--z', zoom); zv.textContent = Math.round(zoom * 100) + '%';
+  };
+  var fit = function () {
+    setZoom(1);
+    var w = mapEl.firstElementChild ? mapEl.firstElementChild.scrollWidth : 0, avail = mapEl.clientWidth - 48;
+    if (w > avail) setZoom(avail / w);
+  };
+  Array.prototype.forEach.call(document.querySelectorAll('[data-z]'), function (b) {
+    b.addEventListener('click', function () {
+      var k = b.getAttribute('data-z');
+      if (k === 'fit') fit(); else setZoom(zoom + (k === 'in' ? 0.1 : -0.1));
+      centreRoot();
+    });
+  });
+  mapEl.addEventListener('wheel', function (e) {
+    if (!(e.ctrlKey || e.metaKey)) return;
+    e.preventDefault(); setZoom(zoom + (e.deltaY < 0 ? 0.1 : -0.1));
+  }, { passive: false });
+
+  // Drag to pan (mouse and pen); touch scrolls natively.
+  var drag = null;
+  mapEl.addEventListener('pointerdown', function (e) {
+    if (e.pointerType === 'touch' || e.button !== 0 || e.target.closest('a, button, input')) return;
+    drag = { x: e.clientX, y: e.clientY, l: mapEl.scrollLeft, t: mapEl.scrollTop };
+    mapEl.classList.add('grab'); mapEl.setPointerCapture(e.pointerId);
+  });
+  mapEl.addEventListener('pointermove', function (e) {
+    if (!drag) return;
+    mapEl.scrollLeft = drag.l - (e.clientX - drag.x); mapEl.scrollTop = drag.t - (e.clientY - drag.y);
+  });
+  var endDrag = function (e) { if (!drag) return; drag = null; mapEl.classList.remove('grab'); try { mapEl.releasePointerCapture(e.pointerId); } catch (x) { /* already released */ } };
+  mapEl.addEventListener('pointerup', endDrag); mapEl.addEventListener('pointercancel', endDrag);
+  mapEl.addEventListener('scroll', function () { var h = $('#hint'); if (h) h.classList.add('gone'); }, { passive: true });
+  render(); centreRoot();
 })();

@@ -160,7 +160,7 @@
     var prev = document.activeElement;
     var wrap = document.createElement('div'); wrap.className = 'modal';
     wrap.innerHTML = '<div class="box" role="dialog" aria-modal="true" aria-labelledby="dlg-t"><header><h2 id="dlg-t">' + A.esc(o.title) + '</h2><button type="button" class="icon-btn" data-x aria-label="Close">' + A.icon('x') + '</button></header>' +
-      '<div class="dbody">' + (o.body || '') + '</div><footer>' + (o.cancel === false ? '' : '<button type="button" class="btn" data-c>' + A.esc(o.cancel || 'Cancel') + '</button>') +
+      '<div class="dbody">' + (o.body || '') + '</div><footer>' + (o.extra || []).map(function (e, i) { return '<button type="button" class="btn' + (i ? '' : ' left') + '" data-e="' + i + '">' + A.esc(e.label) + '</button>'; }).join('') + (o.cancel === false ? '' : '<button type="button" class="btn" data-c>' + A.esc(o.cancel || 'Cancel') + '</button>') +
       '<button type="button" class="btn ' + (o.danger ? 'danger' : 'pri') + '" data-ok>' + A.esc(o.ok || 'OK') + '</button></footer></div>';
     document.body.appendChild(wrap);
     var box = wrap.firstChild;
@@ -178,6 +178,7 @@
     document.addEventListener('keydown', key, true);
     wrap.addEventListener('mousedown', function (e) { if (e.target === wrap) close(); });
     A.qa('[data-x], [data-c]', box).forEach(function (b) { b.addEventListener('click', close); });
+    A.qa('[data-e]', box).forEach(function (b) { b.addEventListener('click', function () { var e = o.extra[+b.getAttribute('data-e')]; if (e.fn(box) !== false) close(); }); });
     A.q('[data-ok]', box).addEventListener('click', function () {
       if (o.onOk && o.onOk(box) === false) return;
       close();

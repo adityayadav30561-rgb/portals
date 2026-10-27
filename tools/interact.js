@@ -23,7 +23,7 @@ for (const p of P.portals) for (const s of p.screens) if (s.built && s.id.starts
 const CONTROLS = [
   'main button:not([disabled]):not(.on)', 'main a.btn:not([href]):not([aria-disabled])', 'main a:not([href]):not([aria-disabled]):not(.btn)', 'main .sel', 'main .tabs [data-tab]:not(.on)', 'main .qty > span[role=button]:not([aria-disabled=true])',
   'main input[type=checkbox]', 'main input[type=radio]:not(:checked)', 'main th[data-sort]', 'main .pg .pages button:not([disabled]):not(.on)', 'main .view-toggle [role=button]:not(.on)',
-  'main [role=button]:not([aria-disabled=true]):not(.on)', 'main summary', 'main label.radio:not(.on)', '.top .icon-btn:not([href])', '.top .who > button', 'main .chip[role=button]'
+  'main [role=button]:not([aria-disabled=true]):not(.on)', 'main summary', 'main label.radio:not(.on)', '.top .icon-btn:not([href])', '.top .who > button', 'main .chip[role=button]', 'main .kpi[role=link]'
 ].join(',');
 
 // Messages a handler shows when it has nothing to do: a control that only says this is dead.
@@ -71,6 +71,7 @@ const describe = (el) => {
             return { skip: false };
           }, [CONTROLS, i]);
           if (!info || info.skip) continue;
+          if (await page.evaluate(([sel, i]) => !!document.querySelectorAll(sel)[i].closest('.kpi'), [CONTROLS, i]).catch(() => false)) { await page.reload(); await page.waitForTimeout(100); }   // a tile's result must not depend on earlier clicks
           const before = await page.evaluate(signature), d0 = downloaded, c0 = chooser, p0 = await page.evaluate(() => window.__print);
           const handle = (await page.$$(CONTROLS))[i];
           if (!handle) continue;

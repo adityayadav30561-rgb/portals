@@ -53,7 +53,13 @@
   var colText = function (item, i) { var c = item.cells[i]; return c ? c.textContent.replace(/\s+/g, ' ').trim() : ''; };
 
   // ---------- Matching ----------
-  var chipTexts = function (item) { return qa('.chip', item).map(function (c) { return norm(c.textContent); }); };
+  var chipTexts = function (item) {
+    var c = qa('.chip', item).map(function (x) { return norm(x.textContent); });
+    if (qa('button, a.btn', item).some(function (b) { return /^(Approve|Reject)/.test(b.textContent.trim()); })) c.push('awaiting your review');     // rows waiting for a decision
+    return c;
+  };
+  var CLOSED = /^(closed|resolved|credit issued|rejected|cancelled|delivered|paid|completed|withdrawn|received|applied|inactive|expired|ended|refunded|not applicable)/;
+  var PENDING = /^(pending|awaiting|waiting|under review|invited|draft|decision)/;
   var rowText = function (item) {
     var t = '';
     qa('input, select', item).forEach(function (i) { if (i.type !== 'checkbox' && i.type !== 'radio') t += ' ' + i.value; });
@@ -68,6 +74,8 @@
       tab.byChip = list.items.some(function (it) { return chipTexts(it).some(function (c) { return c === key || c.indexOf(key + ' ') === 0; }); });
     }
     if (tab.byChip) return chips.some(function (c) { return c === key || c.indexOf(key + ' ') === 0; });
+    if (key === 'open' && chips.length) return !chips.some(function (c) { return CLOSED.test(c); });                       // "Open" = not yet closed, whatever the open status is called
+    if (key === 'pending' && chips.length) return chips.some(function (c) { return PENDING.test(c); });
     var kw = words(tab.label.replace(STOP, ' ')).filter(function (w) { return w; });
     if (!kw.length) return true;
     var rt = words(rowText(item));
@@ -94,6 +102,7 @@
       var v = f.get(item);
       if (f.match ? !f.match(v, f.value) : String(v).trim().toLowerCase() !== String(f.value).trim().toLowerCase()) return false;
     }
+    if (this.more) for (var k = 0; k < this.more.length; k++) if (this.more[k].fn && !this.more[k].fn(item)) return false;
     return inDateRange(this, item);
   };
 
@@ -288,14 +297,28 @@
     }
     if (/^(date range|submitted|since|date)$/.test(label)) {
       var col = -1; list.heads.forEach(function (h, i) { if (col < 0 && /date|submitted|raised|issued|reported/i.test(h.textContent)) col = i; });
-      var items = DATE_OPTIONS.map(function (o) { return { label: o[0], value: o[1] }; });
-      var initialIdx = -1; items.forEach(function (it, i) { if (it.label.toLowerCase() === s.initial.toLowerCase()) initialIdx = i; });
-      if (initialIdx < 0) items.unshift({ label: s.initial, value: -1 });
-      var cur = initialIdx < 0 ? -1 : items[initialIdx].value;
+      var D = A.DAY, t0 = A.today, endOf = t0 + D - 1, m0 = new Date(2026, 9, 1).getTime(), p0 = new Date(2026, 8, 1).getTime();
+      var items = [{ label: 'Today', from: t0, to: endOf }, { label: 'Yesterday', from: t0 - D, to: t0 - 1 }, { label: 'Last 7 days', from: t0 - 6 * D, to: endOf }, { label: 'Last 14 days', from: t0 - 13 * D, to: endOf },
+        { label: 'Last 30 days', from: t0 - 29 * D, to: endOf }, { label: 'Last 90 days', from: t0 - 89 * D, to: endOf }, { label: 'This month', from: m0, to: endOf }, { label: 'Last month', from: p0, to: m0 - 1 },
+        { label: 'Last 12 months', from: t0 - 364 * D, to: endOf }, { label: 'All time', all: true }, { label: 'Custom range…', custom: true }];
+      items.forEach(function (it) { it.value = it.label; });
+      var init = s.initial.toLowerCase(), sinceM = s.initial.match(/^since\s+(\d{2}\/\d{2}\/\d{4})$/i);
+      var cur = init === 'october 2026' ? 'This month' : null;
+      items.forEach(function (it) { if (it.label.toLowerCase() === init) cur = it.label; });
+      if (sinceM) { items.unshift({ label: s.initial, value: s.initial, from: A.parseDate(sinceM[1]), to: endOf }); cur = s.initial; }
+      else if (!cur) { items.unshift({ label: s.initial, value: s.initial, all: true }); cur = s.initial; }
+      var apply = function (it) { list.date = it.all ? null : { col: col, from: it.from, to: it.to }; list.apply(true); };
       wireSel(s, function () { return { items: items, selected: cur }; }, function (it) {
-        cur = it.value;
-        list.date = it.value === -1 || it.value === 100000 ? null : { col: col, from: A.today - it.value * A.DAY, to: A.today + 400 * A.DAY };
-        list.apply(true);
+        if (!it.custom) { cur = it.value; apply(it); return; }
+        setSelValue(s.el, cur);                                                            // keep the old label until the range is accepted
+        A.formDialog({ title: 'Custom Range', ok: 'Apply Range', fields: [{ label: 'From', value: A.fmtDate(t0 - 29 * D), placeholder: 'dd/mm/yyyy' }, { label: 'To', value: A.fmtDate(t0), placeholder: 'dd/mm/yyyy' }], onOk: function (v) {
+          var f = A.parseDate(v.From), e = A.parseDate(v.To);
+          if (f === null || e === null || !/^\d{2}\/\d{2}\/\d{4}$/.test(v.From) || !/^\d{2}\/\d{2}\/\d{4}$/.test(v.To)) { A.toast('Enter both dates as dd/mm/yyyy', 'warn'); return false; }
+          if (f > e) { A.toast('The start date is after the end date', 'warn'); return false; }
+          var label = v.From + ' to ' + v.To, custom = { label: label, value: label, from: f, to: e + D - 1 };
+          items = items.filter(function (x) { return !x.isCustom; }); custom.isCustom = true; items.splice(items.length - 1, 0, custom);
+          cur = label; setSelValue(s.el, label); apply(custom);
+        } });
       });
       return;
     }
@@ -375,6 +398,101 @@
     });
   };
 
+  // ---------- More Filters ----------
+  // Text columns with a few distinct values become dropdowns, money and number columns get a minimum and a maximum, date columns a from and a to.
+  var setupMore = function (list) {
+    var bar = null; qa('.filters', list.card).forEach(function (f) { if (!bar && q('.finder', f) && (f.compareDocumentPosition(list.el) & 4 || list.card.contains(f))) bar = f; });
+    if (!bar || list.items.length < 3) return;
+    var spec = [];                                                                             // { label, kind, col | attr, options }
+    if (list.kind === 'table') {
+      var used = list.filters.map(function (f) { return f.col; });
+      list.heads.forEach(function (th, i) {
+        var h = text0(th); if (!h || i === 0 || q('input', th) || used.indexOf(i) >= 0 || /^(Sort by)$/i.test(h)) return;
+        var type = colType(list, i), vals = [];
+        list.items.forEach(function (it) { var v = cellValue(list, it, i); if (v && v !== '—' && vals.indexOf(v) < 0) vals.push(v); });
+        if (type === 'text') { if (vals.length >= 2 && vals.length <= 12 && vals.every(function (v) { return v.length <= 34; })) spec.push({ label: h, kind: 'select', col: i, options: vals.sort(function (a, b) { return a.localeCompare(b, 'en', { numeric: true }); }) }); }
+        else if (type === 'money' || type === 'number') spec.push({ label: h, kind: 'range', col: i, type: type });
+        else if (type === 'date') spec.push({ label: h, kind: 'dates', col: i });
+      });
+    } else if (list.kind === 'cards') {
+      spec.push({ label: 'Price per Sheet', kind: 'range', card: 'price', type: 'money' });
+    }
+    if (!spec.length) return;
+    var btn = document.createElement('span'); btn.className = 'sel more'; btn.setAttribute('role', 'button'); btn.setAttribute('tabindex', '0'); btn.setAttribute('aria-haspopup', 'dialog');
+    btn.innerHTML = A.icon('filter') + 'More Filters';
+    var anchor = q('.view-toggle', bar); if (anchor) bar.insertBefore(btn, anchor); else bar.appendChild(btn);
+    var state = {};                                                                             // label -> value(s)
+    var text0b = text0;
+    var build = function () {
+      var preds = [], n = 0;
+      spec.forEach(function (sp) {
+        var v = state[sp.label]; if (!v) return;
+        if (sp.kind === 'select' && v.v) { n++; preds.push({ fn: function (it) { return cellValue(list, it, sp.col).toLowerCase() === v.v.toLowerCase(); } }); }
+        if (sp.kind === 'range' && (v.min !== undefined || v.max !== undefined)) {
+          n++; preds.push({ fn: function (it) {
+            var x = sp.card ? cardPrice(it) : sortKey(sp.type, cellValue(list, it, sp.col)); if (x === null || isNaN(x)) return true;
+            return (v.min === undefined || x >= v.min) && (v.max === undefined || x <= v.max);
+          } });
+        }
+        if (sp.kind === 'dates' && (v.from !== undefined || v.to !== undefined)) {
+          n++; preds.push({ fn: function (it) { var x = A.parseDate(cellValue(list, it, sp.col)); if (x === null) return true; return (v.from === undefined || x >= v.from) && (v.to === undefined || x <= v.to); } });
+        }
+      });
+      list.more = preds; btn.classList.toggle('active', n > 0);
+      btn.innerHTML = A.icon('filter') + 'More Filters' + (n ? '<b>' + n + '</b>' : '');
+      list.apply(true);
+    };
+    var open = function () {
+      var fields = [];
+      spec.forEach(function (sp) {
+        var v = state[sp.label] || {};
+        if (sp.kind === 'select') fields.push({ label: sp.label, type: 'select', options: ['All'].concat(sp.options), value: v.v || 'All', required: false });
+        else if (sp.kind === 'range') { fields.push({ label: 'Minimum ' + sp.label, value: v.min !== undefined ? String(v.min) : '', placeholder: sp.type === 'money' ? '₹ amount' : 'number', required: false, type: 'number' }); fields.push({ label: 'Maximum ' + sp.label, value: v.max !== undefined ? String(v.max) : '', placeholder: sp.type === 'money' ? '₹ amount' : 'number', required: false, type: 'number' }); }
+        else fields.push({ label: sp.label + ' From', value: v.from !== undefined ? A.fmtDate(v.from) : '', placeholder: 'dd/mm/yyyy', required: false }, { label: sp.label + ' To', value: v.to !== undefined ? A.fmtDate(v.to) : '', placeholder: 'dd/mm/yyyy', required: false });
+      });
+      A.formDialog({ title: 'More Filters', ok: 'Apply Filters', fields: fields, extra: [{ label: 'Clear All', fn: function () { state = {}; build(); } }], onOk: function (val) {
+        var next = {};
+        for (var i = 0; i < spec.length; i++) {
+          var sp = spec[i];
+          if (sp.kind === 'select') { if (val[sp.label] && val[sp.label] !== 'All') next[sp.label] = { v: val[sp.label] }; }
+          else if (sp.kind === 'range') {
+            var lo = val['Minimum ' + sp.label].replace(/[^\d.]/g, ''), hi = val['Maximum ' + sp.label].replace(/[^\d.]/g, ''), r = {};
+            if (lo) r.min = parseFloat(lo); if (hi) r.max = parseFloat(hi);
+            if (r.min !== undefined && r.max !== undefined && r.min > r.max) { A.toast('The minimum ' + sp.label.toLowerCase() + ' is above the maximum', 'warn'); return false; }
+            if (r.min !== undefined || r.max !== undefined) next[sp.label] = r;
+          } else {
+            var f = val[sp.label + ' From'], t = val[sp.label + ' To'], r2 = {};
+            if (f) { var fd = A.parseDate(f); if (fd === null || !/^\d{2}\/\d{2}\/\d{4}$/.test(f)) { A.toast('Enter the dates as dd/mm/yyyy', 'warn'); return false; } r2.from = fd; }
+            if (t) { var td = A.parseDate(t); if (td === null || !/^\d{2}\/\d{2}\/\d{4}$/.test(t)) { A.toast('Enter the dates as dd/mm/yyyy', 'warn'); return false; } r2.to = td + A.DAY - 1; }
+            if (r2.from !== undefined && r2.to !== undefined && r2.from > r2.to) { A.toast('The start date is after the end date', 'warn'); return false; }
+            if (r2.from !== undefined || r2.to !== undefined) next[sp.label] = r2;
+          }
+        }
+        state = next; build();
+      } });
+    };
+    btn.addEventListener('click', open);
+    btn.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+  };
+  function text0(el) { return el ? el.textContent.replace(/\s+/g, ' ').trim() : ''; }
+
+  // The tab whose words are all in the given text (a tile label): used by tiles. Returns the list when a tab was opened.
+  var NOUNS = /\b(orders?|requests?|tickets?|invoices?|users?|movements?|products?|notifications?|issues?|payments?|shipments?|campaigns?|schemes?|offers?|returns?|retailers?|dealers?|deliveries|dispatches|sales|items?|this|month|today|total|of|to|and|in|the)\b/g;
+  A.openTab = function (textIn) {
+    var want = words(String(textIn).toLowerCase().replace(NOUNS, ' ')), hit = null;
+    if (!want.length) return null;
+    A.lists.forEach(function (l) {
+      if (hit || !l.tabs) return;
+      l.tabs.forEach(function (t) {
+        if (hit || t.all && t.initial) return;
+        var tw = words(t.label.toLowerCase().replace(NOUNS, ' ')); if (!tw.length || /^all\b/i.test(t.label)) return;
+        if (tw.every(function (w) { return want.indexOf(w) >= 0; }) && (!t.b || +t.b.textContent > 0)) hit = { list: l, tab: t };
+      });
+    });
+    if (!hit) return null;
+    hit.tab.el.click(); return hit.list;
+  };
+
   // ---------- Pager clicks ----------
   var setupPager = function (list) {
     if (!list.pg) return;
@@ -428,6 +546,8 @@
     A.lists.forEach(function (l) { setupHeaders(l); setupPager(l); setupSelection(l); });
     // feeds: the "unread" tab needs the unread class; nothing else to do
     A.lists.forEach(function (l) { if (l.tabs || l.pg) l.apply(false); });
+    // 1b. "More Filters": a dialog with a filter for every column that can be filtered
+    A.lists.forEach(function (l) { setupMore(l); });
     // 2. grid and list view
     qa('main .view-toggle').forEach(function (vt) {
       var spans = qa(':scope > span', vt), grid = collectionFor(vt);
@@ -440,6 +560,9 @@
     });
     // 3. quantity steppers
     qa('.qty').forEach(wireQty);
+    // 3b. ?tab=words (from a tile on another screen) opens the matching tab
+    var tv = new URLSearchParams(location.search).get('tab');
+    if (tv) A.openTab(tv);
     // 4. ?q=text (from the top-bar search) fills the first search box of the screen
     var qv = new URLSearchParams(location.search).get('q'), box = q('main .finder input');
     if (qv && box) { box.value = qv; box.dispatchEvent(new Event('input')); }

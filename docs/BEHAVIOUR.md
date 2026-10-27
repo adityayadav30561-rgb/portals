@@ -41,6 +41,14 @@ by list screen, `x` status changes (`"SCREEN|row key"` and `"SCREEN|page"`), `d`
 - **Orders.** Totals come from `A.calc` (slab or flat price, rebate, GST split, freight, credit). The designed draft must reproduce the static
   totals exactly (Primary ₹9,49,752, Secondary ₹2,93,820, Tertiary ₹1,04,784); `node tools/e2e.js` checks it.
 
+## Tiles, filters and dates
+
+- **Tiles** (`.kpi`) are links: `A.openTab(label)` opens a tab on the same screen whose words are all in the tile label; otherwise `tileTarget` finds the screen
+  (hand rules in `TILE_TO`, then a word match against screen names and descriptions) and opens it with `?tab=<label>`; otherwise the closest card is scrolled into view.
+- **More Filters** (`setupMore` in app-lists.js) is built from the table's own columns: nothing to declare. Text columns with 2 to 12 values become dropdowns, money and
+  number columns become minimum and maximum, date columns from and to.
+- **Date Range** options are computed from "today" (26/10/2026); `Custom range…` adds the entered range to the menu.
+
 ## Checks
 
 | Command | What it checks |

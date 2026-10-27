@@ -99,6 +99,21 @@ const ok = (c, m) => { if (c) passes++; else { fails++; console.log('FAIL ' + m)
   // ---- top-bar search
   await p.goto(R + 'primary/owner-dashboard.html'); await p.fill('.top .search input', 'walnut'); ok((await p.$$('.pop .opt')).length >= 1, 'top-bar search suggests'); await p.press('.top .search input', 'Enter'); await p.waitForURL('**/product-catalogue.html*');
   ok((await p.$$('.pcard:not([hidden])')).length === 1, 'search for walnut lands on the catalogue with one card');
+  // ---- more filters, custom dates, tiles, the plus icon
+  await p.goto(R + 'primary/order-history.html'); const n0 = (await rows()).length;
+  await p.click('.sel.more'); ok((await p.$$('.modal .field')).length >= 3, 'More Filters offers a field for each filterable column');
+  await p.selectOption('.modal select >> nth=0', { index: 1 }); await p.click('.modal [data-ok]'); const n1 = (await rows()).length; ok(n1 > 0 && n1 < n0, 'a More Filters choice narrows the rows'); ok(await p.$eval('.sel.more b', (b) => +b.innerText) === 1, 'the button counts active filters');
+  await p.click('.sel.more'); await p.click('.modal [data-e="0"]'); ok((await rows()).length === n0, 'Clear All restores the rows');
+  await p.click('.sel.more'); await p.fill('.modal .field:has(label:text-is("Minimum Value")) input', '500000'); await p.click('.modal [data-ok]'); ok((await rows()).length < n0, 'a minimum value filters the rows');
+  await p.click('.sel.more'); await p.click('.modal [data-e="0"]');
+  await p.goto(R + 'primary/secondary-sales-history.html'); const m0 = (await rows()).length;
+  await p.click('.sel:has-text("Date Range")'); await p.click('.pop .opt:has-text("Custom range")'); await p.fill('.modal .field:has(label:text-is("From")) input', '15/10/2026'); await p.fill('.modal .field:has(label:text-is("To")) input', '20/10/2026'); await p.click('.modal [data-ok]');
+  const m1 = (await rows()).length; ok(m1 > 0 && m1 < m0, 'custom date range filters the rows'); ok((await txt('.sel:has-text("Date Range") .v')) === '15/10/2026 to 20/10/2026', 'the dropdown shows the range');
+  await p.click('.sel:has-text("Date Range")'); await p.click('.pop .opt:has-text("Custom range")'); await p.fill('.modal .field:has(label:text-is("From")) input', '20/10/2026'); await p.fill('.modal .field:has(label:text-is("To")) input', '15/10/2026'); await p.click('.modal [data-ok]'); ok((await p.$$('.modal')).length === 1, 'a backwards range is refused');
+  await p.click('.modal [data-x]');
+  await p.goto(R + 'company/super-admin-dashboard.html'); await p.click('.kpi:has-text("Customers")'); await p.waitForURL('**/customer-directory.html*'); ok((await txt('h1')) === 'Customer Directory', 'a tile opens the screen it counts');
+  await p.goto(R + 'primary/order-history.html'); await p.click('.kpi:has-text("In Transit")'); ok((await rows()).length === 1, 'a tile on a list screen opens the matching tab');
+  await p.goto(R + 'primary/product-catalogue.html'); ok((await p.$eval('.pcard:first-child .buy button', (b) => b.innerHTML.includes('M8 3v10M3 8h10') && /Update Order/.test(b.textContent))), 'Update Order keeps the plus icon');
   // ---- downloads
   await p.goto(R + 'primary/order-history.html'); const [d1] = await Promise.all([p.waitForEvent('download'), p.click('button:has-text("Export Orders")')]);
   ok(/\.csv$/.test(d1.suggestedFilename()) && fs.readFileSync(await d1.path(), 'utf8').includes('Order Number,Order Date'), 'CSV export');

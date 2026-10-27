@@ -103,7 +103,7 @@
       var refresh = function () {
         var inCart = A.cart.qty(sku);
         card.classList.toggle('in-order', inCart > 0);
-        btn.innerHTML = A.icon(inCart ? 'check' : 'plus') + (out ? 'Out of Stock' : inCart ? 'Update Order' : 'Add to Order');
+        btn.innerHTML = A.icon('plus') + (out ? 'Out of Stock' : inCart ? 'Update Order' : 'Add to Order');
         btn.disabled = out; if (out) btn.setAttribute('aria-disabled', 'true');
         var slabs = qa('.slabs > div', card);
         if (slabs.length) { var v = parseInt(inp.value, 10) || 0, i = v >= 200 ? 2 : v >= 50 ? 1 : 0; slabs.forEach(function (s, k) { s.classList.toggle('cur', k === i); }); }
@@ -141,7 +141,7 @@
         tr.classList.toggle('hl', n >= lo && n <= hi);
       });
       var inCart = A.cart.qty(sku);
-      btn.innerHTML = A.icon(inCart ? 'check' : 'plus') + (out ? 'Out of Stock' : inCart ? 'Update Order' : 'Add to Order');
+      btn.innerHTML = A.icon('plus') + (out ? 'Out of Stock' : inCart ? 'Update Order' : 'Add to Order');
       btn.disabled = out;
     };
     A.wireQty(box);

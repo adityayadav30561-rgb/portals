@@ -62,7 +62,7 @@
       else ctl = '<input class="input" id="' + id + '" value="' + esc(f.value || '') + '" placeholder="' + esc(f.placeholder || '') + '"' + (f.type === 'number' ? ' inputmode="numeric"' : '') + '>';
       return '<div class="field' + (f.full ? ' full' : '') + '"><label for="' + id + '">' + esc(f.label) + '</label>' + ctl + '</div>';
     }).join('') + '</div>';
-    return A.dialog({ title: o.title, body: (o.intro ? '<p>' + esc(o.intro) + '</p>' : '') + html, ok: o.ok || 'Save', danger: o.danger, onOk: function (box) {
+    return A.dialog({ title: o.title, body: (o.intro ? '<p>' + esc(o.intro) + '</p>' : '') + html, ok: o.ok || 'Save', danger: o.danger, extra: o.extra, onOk: function (box) {
       var req = o.fields.filter(function (f) { return f.required !== false && f.type !== 'textarea' || f.required; }).map(function (f) { return f.label; });
       if (!A.validate(box, { required: req })) return false;
       var v = {}; o.fields.forEach(function (f, i) { v[f.label] = q('#fd' + i, box).value.trim(); });
@@ -514,6 +514,52 @@
     });
   };
 
+  // ---------- Tiles open what they count ----------
+  var TSTOP = /\b(this|month|week|year|in|of|to|and|the|total|today|current|by|for|with|all|new|open|awaiting|pending|your|you|per|average|sheets?)\b/g;
+  var tiles = function (str) { return str.toLowerCase().replace(/[^a-z ]+/g, ' ').replace(TSTOP, ' ').split(/\s+/).filter(Boolean).map(function (w) { return w.replace(/ies$/, 'y').replace(/([^s])s$/, '$1'); }); };
+  // Tiles that the generic word match gets wrong: label -> screens that show it, in order of preference.
+  var TILE_TO = [[/outstanding balance|^overdue|\bowes\b/i, ['Outstanding Balances', 'Invoices Overview']], [/purchases/i, ['Purchase History', 'Order History']], [/sales to (dealers|retailers)/i, ['Secondary Sales Overview', 'Tertiary Sales Overview']],
+    [/sales to customers|^sales (today|this month)|sheets sold today/i, ['Retail Sales History']], [/stock on hand/i, ['Inventory Overview', 'My Inventory']], [/dispatch|in transit|shipment/i, ['Dispatch Management', 'Dispatch Overview']],
+    [/suggested order|to reorder/i, ['Reorder Recommendations']], [/^orders this month|^order value this month/i, ['Order Management', 'Order History']], [/low stock|running low/i, ['Low Stock Overview']], [/incoming/i, ['Incoming Stock', 'Incoming Deliveries']]];
+  var tileTarget = function (label) {
+    for (var i = 0; i < TILE_TO.length; i++) if (TILE_TO[i][0].test(label)) {
+      for (var j = 0; j < TILE_TO[i][1].length; j++) {
+        var hit = P.forRole(A.portal, A.role).filter(function (x) { return x.built && x.name === TILE_TO[i][1][j] && x.id !== sid; })[0];
+        if (hit) return hit;
+      }
+    }
+    var lt = tiles(label); if (!lt.length) return null;
+    var best = null;
+    P.forRole(A.portal, A.role).forEach(function (x) {
+      if (!x.built || x.kind !== 'm' || x.id === sid || /Dashboard|Profile|Notifications/.test(x.name)) return;
+      var nt = tiles(x.name), dt = tiles(x.description || ''), no = nt.filter(function (w) { return lt.indexOf(w) >= 0; }).length, dd = dt.filter(function (w) { return lt.indexOf(w) >= 0; }).length;
+      var score = 3 * no + dd; if (score < 2 || (!no && dd < 2)) return;
+      var rank = score * 100 - nt.length * 10;
+      if (!best || rank > best.rank) best = { screen: x, rank: rank };
+    });
+    return best && best.screen;
+  };
+  var setupTiles = function () {
+    qa('main .kpi').forEach(function (k) {
+      if (q('a[href], button', k) || k.hasAttribute('data-own')) return;
+      var label = text(q('label', k)); if (!label) return;
+      var chip = text(q('.chip, .delta', k)), full = label + ' ' + chip;
+      k.setAttribute('role', 'link'); k.setAttribute('tabindex', '0'); k.setAttribute('aria-label', label + ': ' + text(q('strong', k)) + '. Open details'); k._act = 1;
+      var go = function () {
+        var hit = A.openTab && A.openTab(label);
+        if (hit) { hit.card.scrollIntoView({ block: 'center', behavior: 'smooth' }); hit.card.classList.remove('flash'); void hit.card.offsetWidth; hit.card.classList.add('flash'); return; }
+        var t = tileTarget(label) || tileTarget(full);
+        if (t) { var u = new URL(A.link(t.id), location.href); u.searchParams.set('tab', label); location.href = u.toString(); return; }
+        // nothing else counts this: bring the closest card on this screen into view
+        var lt = tiles(full), card = qa('main section.card, main aside.card').map(function (c) { var h = tiles(text(q('header h2', c))), n = h.filter(function (w) { return lt.indexOf(w) >= 0; }).length; return { c: c, n: n }; }).sort(function (a, b) { return b.n - a.n; })[0];
+        var target = card && card.c || q('main section.card');
+        if (target) { target.scrollIntoView({ block: 'center', behavior: 'smooth' }); target.classList.remove('flash'); void target.offsetWidth; target.classList.add('flash'); var tt = text(q('header h2', target)); A.toast(tt ? 'Showing ' + tt + ' for ' + label : label + ': ' + text(q('strong', k)), 'ok'); }
+      };
+      k.addEventListener('click', go);
+      k.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+    });
+  };
+
   // ---------- Top-bar search: screens and products ----------
   var setupGlobalSearch = function () {
     var box = q('.top .search'), inp = box && q('input', box); if (!inp || !P.forRole) return;
@@ -615,7 +661,7 @@
   A.onReady(10, function () { if (!A.screen) return; A.hydrate(); addRows(); });
   A.onReady(25, function () {
     if (!q('main')) { setupAuth(); return; }
-    setupGlobalSearch(); syncRadios(); wireDocuments(); wireUploads(); setupThread(); setupNotifications(); wireStatusActions(); wireFiles(); wireEdit(); wireDialogs(); wireSubmits(); wireRowButtons(); wireRemoveRows(); wireTree();
+    setupTiles(); setupGlobalSearch(); syncRadios(); wireDocuments(); wireUploads(); setupThread(); setupNotifications(); wireStatusActions(); wireFiles(); wireEdit(); wireDialogs(); wireSubmits(); wireRowButtons(); wireRemoveRows(); wireTree();
     if (/^(SAL-02|TSL-02|RTS-01)$/.test(part)) setupSaleEntry();
     if (/^BIL-08$/.test(part) && pid === 'primary') setupPaymentEntry();
     bell();

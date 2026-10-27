@@ -33,7 +33,7 @@ body = f'''  <div class="head">
   </div>
   <div class="kpis">
     {kpi('Retailer Orders This Month', str(len(TSALES)), chip(ML(630000), 'blue'))}
-    {kpi(link('SEC-INV-03', 'Low Stock Products', False), str(len(BLOW)), '<span class="delta down">1 Out of Stock</span>')}
+    {kpi('Low Stock Products', str(len(BLOW)), '<span class="delta down">1 Out of Stock</span>')}
     {kpi('Incoming Stock', f'{N(310)} <small>sheets</small>', chip('1 Arriving Today', 'plain'))}
     {kpi('Pending Retailer Requests', str(len(RREQUESTS)), '<span class="delta down">2 Awaiting Your Review</span>')}
   </div>

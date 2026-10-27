@@ -14,7 +14,7 @@ H = [('ORD-2026-10482','26/10/2026',760,949752,'31/10/2026','Awaiting Confirmati
      ('ORD-2026-10290','10/09/2026',500,605900,'15/09/2026','Delivered','Paid'),
      ('ORD-2026-10265','03/09/2026',200,241000,'','Cancelled','Not Applicable')]
 rows = ''.join(f'<tr><td><a data-link="PRI-ORD-02"><b>{o}</b></a></td><td>{d}</td><td class="num">{N(s)}</td><td class="num"><b>{M(v)}</b></td><td>{dl or chr(8212)}</td><td>{chip(st)}</td><td>{chip(pay)}</td><td><div class="row-actions"><a class="btn sm" data-link="PRI-ORD-02">View</a></div></td></tr>\n' for o,d,s,v,dl,st,pay in H)
-tabs = [('All Orders',142,True),('Awaiting Confirmation',1,False),('Confirmed',1,False),('In Transit',1,False),('Delivered',136,False),('Cancelled',3,False)]
+tabs = [('All Orders',139,True),('Awaiting Confirmation',1,False),('Confirmed',1,False),('In Transit',1,False),('Delivered',133,False),('Cancelled',3,False)]
 tabs_html = ''.join(f'<span class="{"on" if on else ""}">{t}<b>{n}</b></span>' for t,n,on in tabs)
 body = f'''  <div class="head">
     <h1>Order History</h1>
@@ -34,7 +34,7 @@ body = f'''  <div class="head">
       <span class="sel"><small>Payment</small> All <i data-icon="down"></i></span>
       <span class="sel"><small>Delivery Location</small> All <i data-icon="down"></i></span></div>
     <div class="body"><div class="table-wrap"><table class="tbl"><thead><tr><th>Order Number</th><th>Order Date</th><th class="num">Sheets</th><th class="num">Value</th><th>Delivery Date</th><th>Order Status</th><th>Payment</th><th></th></tr></thead><tbody>{rows}</tbody></table></div>
-      <div class="pg"><span>Showing 1 to 10 of 142 orders</span><div class="pages"><span class="on">1</span><span>2</span><span>3</span><span>…</span><span>15</span></div></div></div>
+      <div class="pg"><span>Showing 1 to 10 of 139 orders</span><div class="pages"><span class="on">1</span><span>2</span><span>3</span><span>…</span><span>14</span></div></div></div>
   </section>
 '''
 page('primary','order-history','PRI-ORD-01','Primary Customer — Owner — Order History (PRI-ORD-01)', body)

@@ -88,7 +88,7 @@ returns `RTN-2026-0412`; support tickets `TKT-2026-0731`; schemes `SCH-2026-04`;
 - Credit limit ₹40,00,000; credit period 45 days; outstanding balance **₹14,86,320** (overdue ₹3,18,400).
 - Purchases from Crestline by month: May 22,10,000; June 25,60,000; July 19,80,000; August 27,40,000; September 24,30,000; October **33,52,882** (to 26 October).
 - Sales to dealers by month: May 24,80,000; June 28,10,000; July 22,40,000; August 30,60,000; September 27,90,000; October **31,20,000**.
-- Orders: 142 in total: Awaiting Confirmation 1, Confirmed 1, In Transit 1, Delivered 136, Cancelled 3 (changed from 2, 3, 2, 132 on 2026-10-27 so the counts match the orders listed: the latest ten orders hold every open order).
+- Orders: 139 in total: Awaiting Confirmation 1, Confirmed 1, In Transit 1, Delivered 133, Cancelled 3 (changed from 142 with 2, 3, 2, 132 on 2026-10-27: the latest ten orders hold every open order, and 134 invoices = 133 delivered + 1 in transit).
 - Schemes: **Festive Volume Rebate** (`SCH-2026-04`): 2% rebate on orders once 2,500 sheets are reached across October and November (changed from 3,000 on 2026-10-26 by the user); progress 2,750 of 2,500 sheets: **target reached**, 250 above. ORD-2026-10482 is the order that takes the total over the target (1,990 before it), so the rebate applies to that order only (−₹16,426); earlier invoices are not changed. **Marble Finish Launch Incentive**: ₹25 per sheet of LM-CAL-003, progress 140 of 300 sheets.
 
 ## Order flow (Place Order → Order Builder → Order Confirmation)

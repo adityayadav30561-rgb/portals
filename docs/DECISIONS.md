@@ -14,7 +14,7 @@ What the user asked for, liked and rejected. Read before any design change; neve
 | Full screen names | Names, menus, breadcrumbs, table headings and buttons are written in full so everyone understands; no abbreviations (SKU, GST, PDF excepted). Screen IDs are reference codes next to the full name, never instead of it. | 2026-10-26 |
 | No filler text | No eyebrow labels, taglines or paragraphs that describe the screen. A line under the title appears only when it carries information (counts, dates, status). | 2026-10-26 |
 | Opens by double-click | No dev server. `index.html` and each individual screen HTML file must open directly from disk (`file://`); verify that way, never only through a local server. Relative paths, classic scripts, bundled font and logo. | 2026-10-26 |
-| Static prototype | HTML/CSS/small JavaScript. No backend, login, database, storage, real logic. Fictional data. | 2026-10-26 |
+| Static prototype (revised 2026-10-27) | HTML/CSS/JavaScript, fictional data, no backend, database or real login. **Superseded in part:** controls now work in the browser (see "Everything works" below). | 2026-10-26 |
 | Design language | Light theme, deep navy text, blue accent, Inter, white cards on light grey, as in the MAVRO product screens; responsive (unlike the fixed-size MAVRO captures). | 2026-10-26 |
 
 ## Answered at the Phase 2 checkpoint (user, 2026-10-26)
@@ -105,6 +105,16 @@ No phase approval step: Phases 10 to 13 are done without a separate approval (us
 |---|---|
 | No approvals | The user does not give phase approvals; every built phase counts as done once verified. Nothing is marked "awaiting approval". |
 | Branch | Final work is pushed to `main` of the portals repository (user, 2026-10-27), and a zip of the prototype is handed over for download. |
+
+## Everything works (user, 2026-10-27: "every button, every filter and everything should work as it should, adding, removing and everything")
+
+| Decision | Detail |
+|---|---|
+| Controls work | Add to Order, quantity steppers, remove, search, every dropdown filter, tabs, sorting, pagination, grid/list toggle, forms with validation, Save and Submit, Approve and Reject, Close Ticket, Send Reply, Mark as Read, Export and Download. "For look only" screens are a defect. |
+| Still no backend | Everything runs in the browser from disk; nothing is sent anywhere. Totals, prices and credit are recomputed in JavaScript from `assets/catalog.js`, which the generators write from `data.py`, so screen and data never drift. |
+| State in the URL | Cart, created records and changed statuses travel in a `st` URL parameter (kept on every internal link, also written into the address bar so a reload keeps it). No localStorage, sessionStorage or cookies (the earlier ban stands; Firefox also isolates `file://` pages). A "Reset Data" button in the review bar clears it. |
+| No control contradicts its label | Tab counts and "Showing x to y of z" describe the rows that exist; a filter that cannot be answered from the data is not offered. Only the sample rows in the prototype exist. |
+| Draft order | The cart starts as the designed draft (Primary 5 products, Secondary 4, Tertiary 4), so the catalogue's Order Draft count and the quantities on the cards agree. |
 
 ## Rejected
 

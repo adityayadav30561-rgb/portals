@@ -3,7 +3,7 @@
 _Drafted 2026-10-26. Status: **approved 2026-10-26** (decisions in DECISIONS.md). Live status: [STATUS.md](STATUS.md)._
 
 A static, clickable HTML prototype of every proposed screen in the four portals, for stakeholders to review
-and approve before the real application is built. No backend, login, database, storage or business logic.
+and approve before the real application is built. No backend, real login, database or storage; every control works in the browser (DECISIONS.md, "Everything works").
 
 ## 1. Screen coverage review
 

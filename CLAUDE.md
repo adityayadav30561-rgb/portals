@@ -1,8 +1,10 @@
 # Laminates Customer Portal: screen prototype
 
-Static HTML prototype of the four portals (Company Administration, Primary Distributor, Secondary Dealer,
-Tertiary Retailer) for stakeholder approval. No backend, login, storage or business logic. Uses the official
-MAVRO.AI logo only.
+Clickable HTML prototype of the four portals (Company Administration, Primary Distributor, Secondary Dealer,
+Tertiary Retailer) for stakeholder approval. No backend, real login or storage, but **every control works in the
+browser** (user, 2026-10-27): add to order, search, filters, tabs, sorting, forms, approvals, exports. Behaviour is
+written once in `assets/app.js` and the other `assets/*.js` modules, not per screen. State travels in the URL
+(never localStorage). Uses the official MAVRO.AI logo only.
 
 ## Read before doing anything
 
@@ -27,6 +29,9 @@ MAVRO.AI logo only.
   summaries; exact (₹9,49,752) in orders, invoices, prices and tables; one format per amount on a screen. Helpers in
   `tools/author/data.py` (`M`, `ML`, `OPEN_ORDERS`); read docs/DATA.md.
 - Screens are written by the generator scripts in `tools/author/`; change the script, never the generated file.
+- **No dead controls.** Every button, link-button, dropdown, tab, stepper and checkbox must do something observable
+  (`node tools/interact.js` audits this and must report zero). New markup follows the conventions in `assets/app.js`
+  (docs/BEHAVIOUR.md); a control with no behaviour is a bug.
 - Fictional laminates data only. Logo: `brand/mavro-logo.jpg` and `assets/brand/`, never redrawn or recoloured.
 - Verify in the browser at 1440, 1366 × 768 and 390 px before calling a phase done.
 - Keep the docs current: at the end of every task update docs/STATUS.md (and DECISIONS.md for preferences), then

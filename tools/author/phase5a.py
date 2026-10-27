@@ -314,8 +314,8 @@ body = f'''  <div class="head">
     {kpi('Arriving From Distributor Alpha', f'{N(310)} <small>sheets</small>')}
   </div>
   <div class="grid g-2" style="--cols:.8fr 1.2fr">
-    <section class="card"><header><h2>Stock Health</h2></header><div class="body center">{chart('donut', series=[{'name': 'In Stock', 'value': 8, 'color': 'var(--ok)'}, {'name': 'Low Stock', 'value': 3, 'color': '#e0a030'}, {'name': 'Out of Stock', 'value': 1, 'color': 'var(--bad)'}], center='12', caption='products')}</div></section>
-    <section class="card flush"><header><h2>Incoming Shipments</h2></header><div class="body">{table([('Order', ''), ('Sheets', 'num'), ('Expected', ''), ('Status', '')], [ship_rows])}<div style="padding:.5rem 1.125rem 1rem">{kv([('Sheets Arriving', '310')], 'total')}</div></div></section>
+    <section class="card"><header><h2>Stock Health</h2><a class="more" data-link="SEC-INV-03" data-role="MGR">Low stock overview</a></header><div class="body center">{chart('donut', series=[{'name': 'In Stock', 'value': 8, 'color': 'var(--ok)'}, {'name': 'Low Stock', 'value': 3, 'color': '#e0a030'}, {'name': 'Out of Stock', 'value': 1, 'color': 'var(--bad)'}], center='12', caption='products')}</div></section>
+    <section class="card flush"><header><h2>Incoming Shipments</h2><a class="more" data-link="SEC-INV-05" data-role="MGR">All incoming stock</a></header><div class="body">{table([('Order', ''), ('Sheets', 'num'), ('Expected', ''), ('Status', '')], [ship_rows])}<div style="padding:.5rem 1.125rem 1rem">{kv([('Sheets Arriving', '310')], 'total')}</div></div></section>
   </div>
   <section class="card flush">
     {tabs([('All Products', 12, True), ('In Stock', 8, False), ('Low Stock', 3, False), ('Out of Stock', 1, False)])}

@@ -10,7 +10,7 @@ PARENT_NAME = {c['key']: ('Crestline Laminates' if c['parent'] is None else CUS[
 region_colors = {'West Maharashtra': '#0a48fd', 'North Maharashtra': '#0b8fa8', 'Konkan': '#7a36fb', 'Vidarbha': '#e0a030', 'Goa': '#0c9b6a'}
 open_rows = ''
 for o in ALPHA_ORDERS[:3]:
-    dsp = '<span class="mono">DSP-2026-5521</span>' if o[0] == 'ORD-2026-10447' else '—'
+    dsp = '<span class="mono">DSP-2026-5523</span>' if o[0] == 'ORD-2026-10447' else '—'
     open_rows += (f'<tr><td class="nowrap">{link("CMP-ORD-02", o[0])}</td><td>Distributor Alpha</td><td>{o[1]}</td><td class="num">{N(o[2])}</td><td class="num"><b>{M(o[3])}</b></td>'
                   f'<td>{o[4]}</td><td>{dsp}</td><td>{chip(o[5])}</td></tr>')
 tk_rows = ''.join(f'<tr><td class="mono nowrap">{link("CMP-SUP-02", t[0])}</td><td>Distributor Alpha</td><td>{t[2]}</td><td>{chip(t[4])}</td><td>{chip(t[6])}</td><td>{t[5]}</td></tr>' for t in CRL_TICKETS_OPEN)

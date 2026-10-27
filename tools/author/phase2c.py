@@ -14,7 +14,7 @@ H = [('ORD-2026-10482','26/10/2026',760,949752,'31/10/2026','Awaiting Confirmati
      ('ORD-2026-10290','10/09/2026',500,605900,'15/09/2026','Delivered','Paid'),
      ('ORD-2026-10265','03/09/2026',200,241000,'','Cancelled','Not Applicable')]
 rows = ''.join(f'<tr><td><a data-link="PRI-ORD-02"><b>{o}</b></a></td><td>{d}</td><td class="num">{N(s)}</td><td class="num"><b>{M(v)}</b></td><td>{dl or chr(8212)}</td><td>{chip(st)}</td><td>{chip(pay)}</td><td><div class="row-actions"><a class="btn sm" data-link="PRI-ORD-02">View</a></div></td></tr>\n' for o,d,s,v,dl,st,pay in H)
-tabs = [('All Orders',142,True),('Awaiting Confirmation',2,False),('Confirmed',3,False),('In Transit',2,False),('Delivered',132,False),('Cancelled',3,False)]
+tabs = [('All Orders',142,True),('Awaiting Confirmation',1,False),('Confirmed',1,False),('In Transit',1,False),('Delivered',136,False),('Cancelled',3,False)]
 tabs_html = ''.join(f'<span class="{"on" if on else ""}">{t}<b>{n}</b></span>' for t,n,on in tabs)
 body = f'''  <div class="head">
     <h1>Order History</h1>
@@ -23,8 +23,8 @@ body = f'''  <div class="head">
   <div class="kpis">
     <div class="card kpi"><label>Orders This Month</label><strong>6</strong></div>
     <div class="card kpi"><label>Order Value This Month</label><strong>{M(3352882)}</strong><div class="foot"><span class="delta up" title="Compared with September"><i data-icon="trend"></i>38.0%</span></div></div>
-    <div class="card kpi"><label>In Transit</label><strong>2</strong></div>
-    <div class="card kpi"><label>Awaiting Confirmation</label><strong>2</strong></div>
+    <div class="card kpi"><label>In Transit</label><strong>1</strong></div>
+    <div class="card kpi"><label>Awaiting Confirmation</label><strong>1</strong></div>
   </div>
   <section class="card flush">
     <div style="padding:0 1.125rem"><div class="tabs">{tabs_html}</div></div>
@@ -65,7 +65,7 @@ body = f'''  <div class="head">
         <tr><td class="nowrap">19/10/2026 10:15</td><td><b>Order placed</b></td><td>Rajesh Menon</td></tr></tbody></table></div></div></section>
     </div>
     <div class="stack">
-      <section class="card"><header><h2>Delivery</h2></header><div class="body"><dl class="kv"><dt>Dispatch Number</dt><dd class="mono">DSP-2026-5521</dd><dt>Deliver To</dt><dd>Bhiwandi Warehouse, Thane District</dd><dt>Expected</dt><dd>27/10/2026</dd><dt>Transporter</dt><dd>Western Freight Carriers</dd><dt>Vehicle</dt><dd>MH 04 KP 7712</dd><dt>Driver</dt><dd>Ramesh Pawar</dd><dt>Driver Phone</dt><dd>+91 90000 12345</dd></dl></div></section>
+      <section class="card"><header><h2>Delivery</h2></header><div class="body"><dl class="kv"><dt>Dispatch Number</dt><dd class="mono">DSP-2026-5523</dd><dt>Deliver To</dt><dd>Bhiwandi Warehouse, Thane District</dd><dt>Expected</dt><dd>27/10/2026</dd><dt>Transporter</dt><dd>Western Freight Carriers</dd><dt>Vehicle</dt><dd>MH 04 KP 7712</dd><dt>Driver</dt><dd>Ramesh Pawar</dd><dt>Driver Phone</dt><dd>+91 90000 12345</dd></dl></div></section>
       <section class="card"><header><h2>Invoice</h2></header><div class="body"><dl class="kv"><dt>Invoice Number</dt><dd><a data-link="PRI-BIL-02">INV-2026-03318</a></dd><dt>Issued</dt><dd>24/10/2026</dd><dt>Due</dt><dd>08/12/2026</dd><dt>Amount</dt><dd><b>{M(total)}</b></dd><dt>Status</dt><dd>{chip('Unpaid')}</dd></dl>
         <a class="btn block" data-link="PRI-BIL-02" style="margin-top:1rem">View Invoice</a></div></section>
       <section class="card"><header><h2>Order Information</h2></header><div class="body"><dl class="kv"><dt>Placed By</dt><dd>Rajesh Menon</dd><dt>Payment Terms</dt><dd>45 days</dd><dt>Transport</dt><dd>Company Transport</dd><dt>Scheme</dt><dd>None</dd><dt>Reference Number</dt><dd>DA-2026-117</dd></dl></div></section>

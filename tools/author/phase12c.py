@@ -121,10 +121,10 @@ SAL = (day('Today', n('CMP-SAL-09', 'Order Submitted', 'ORD-2026-10482', '11:42'
            n('CMP-CUS-03', 'Customer Request Waiting', 'DRQ-2026-0017', '09:00', 'user', 'warn', True))
        + day('23 October 2026', n('CMP-SAL-09', 'Order Confirmed', 'ORD-2026-10459', '16:10', 'cart', 'ok'))
        + day('20 October 2026', n('CMP-SAL-09', 'Order Confirmed', 'ORD-2026-10447', '09:40', 'cart', 'ok')))
-OPS = (day('Today', n('CMP-OPS-02', 'Packing Due Today', 'ORD-2026-10459', '08:00', 'box', 'warn', True), n('CMP-OPS-04', 'Shipment Arriving Tomorrow', 'DSP-2026-5521', '08:00', 'truck', '', True),
+OPS = (day('Today', n('CMP-OPS-02', 'Packing Due Today', 'ORD-2026-10459', '08:00', 'box', 'warn', True), n('CMP-OPS-04', 'Shipment Arriving Tomorrow', 'DSP-2026-5523', '08:00', 'truck', '', True),
            n('CMP-INV-01', 'Low Stock', 'LM-STN-009', '07:45', 'warn', 'warn', True))
        + day('Yesterday', n('CMP-OPS-06', 'Return Request Submitted', 'RTN-2026-0412', '11:20', 'ret'))
-       + day('24 October 2026', n('CMP-DSP-01', 'Shipment Dispatched', 'DSP-2026-5521', '06:30', 'truck', 'ok'))
+       + day('24 October 2026', n('CMP-DSP-01', 'Shipment Dispatched', 'DSP-2026-5523', '06:30', 'truck', 'ok'))
        + day('23 October 2026', n('CMP-ORD-02', 'Order Confirmed', 'ORD-2026-10459', '16:10', 'cart', 'ok')))
 body = f'''  <div class="head">
     <h1>Notifications</h1>

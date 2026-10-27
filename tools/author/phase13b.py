@@ -83,8 +83,8 @@ body = f'''  <div class="head">
 '''
 page('company', 'delayed-orders', 'CMP-OPS-03', 'Company Administration — Operations Manager — Delayed Orders (CMP-OPS-03)', body)
 
-# ---------- Dispatch Details (DSP-2026-5521) ----------
-sh = SHIPMENTS[1]; assert sh[0] == 'DSP-2026-5521'
+# ---------- Dispatch Details (DSP-2026-5523) ----------
+sh = SHIPMENTS[1]; assert sh[0] == 'DSP-2026-5523'
 L = ORDER_LINES['ORD-2026-10447']; kg = {s: q * 6.1 for s, q in L}; assert all(BY[s][3] == '1.0 mm' for s, _ in L) and sum(kg.values()) == 2196
 i_rows = ''.join(f'<tr><td>{prod_cell(s)}</td><td class="mono nowrap">{s}</td><td class="num">{N(q)}</td><td class="num">{N(round(kg[s]))} kg</td></tr>' for s, q in L)
 body = f'''  <div class="head">

@@ -56,7 +56,7 @@ body = f'''  <div class="head">
   </div>
   <div class="grid g-main-side" style="--side:24rem">
     {card('Orders and Sales to Dealers by Month', chart('bars', MONTHS, [{'name': 'Orders by distributors', 'values': PURCH_MONTH, 'color': 'var(--accent)'}, {'name': 'Sales to dealers', 'values': SALES_MONTH, 'color': 'var(--teal)'}], money=True, height=300))}
-    {card('Distributor Alpha', kv([('Customer Code', '<span class="mono">CUS-0018</span>'), ('Territory', 'Maharashtra and Goa'), ('Dealers', '8'), ('Retailers', '20'), ('Credit Limit', ML(CREDIT_LIMIT)), ('Credit Used', '37%'), ('Account Manager', 'Vikram Chopra')]))}
+    {card('Distributor Alpha', kv([('Customer Code', '<span class="mono">CUS-0018</span>'), ('Territory', 'Maharashtra and Goa'), ('Dealers', '8'), ('Retailers', '20'), ('Credit Limit', ML(CREDIT_LIMIT)), ('Credit Used', '37%'), ('Outstanding Balance', ML(OUTSTANDING)), ('Overdue Amount', ML(318400)), ('Credit Available', ML(CREDIT_AVAILABLE)), ('Account Manager', 'Vikram Chopra')]))}
   </div>
   <section class="card flush"><header><h2>Distributors Ranked by Orders</h2></header>
     <div class="body">{table([('Rank', 'num'), ('Distributor', ''), ('City', ''), ('Orders This Month', 'num'), ('Growth Over September', ''), ('Sales to Dealers', 'num'), ('Sales Target', 'num'), ('Target Achievement', ''), ('Status', '')], [dist_rows], 'wrap')}</div></section>

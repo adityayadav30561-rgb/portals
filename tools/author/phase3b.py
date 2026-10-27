@@ -56,7 +56,7 @@ body = f'''  <div class="head">
       '<tr><td class="nowrap">24/10/2026 06:30</td><td><b>Invoice issued</b></td><td>Crestline Laminates</td></tr>'])}</div></section>
     </div>
     <div class="stack">
-      {card('Invoice Information', kv([('Invoice Number', f'<span class="mono">{inv[0]}</span>'), ('Order Number', link('PRI-ORD-02', inv[1], False)), ('Dispatch Number', '<span class="mono">DSP-2026-5521</span>'), ('Payment Terms', '45 days'), ('Status', chip('Unpaid'))]))}
+      {card('Invoice Information', kv([('Invoice Number', f'<span class="mono">{inv[0]}</span>'), ('Order Number', link('PRI-ORD-02', inv[1], False)), ('Dispatch Number', '<span class="mono">DSP-2026-5523</span>'), ('Payment Terms', '45 days'), ('Status', chip('Unpaid'))]))}
       {card('Billed To', kv([('Customer', 'Distributor Alpha Private Limited'), ('GST Number', '<span style="white-space:nowrap">27AABCD4521F1Z7</span>'), ('Address', 'Plot 14, Bhiwandi Logistics Park, Thane District, Maharashtra, Postal Code 421302')]))}
       {card('Issued By', kv([('Company', 'Crestline Laminates'), ('GST Number', '<span style="white-space:nowrap">24AABCC7782M1Z4</span>'), ('Warehouse', 'Plant Warehouse, Vapi, Gujarat')]))}
     </div>

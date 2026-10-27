@@ -167,7 +167,7 @@ _n = 5440
 for _i, _s in enumerate(SALES):
     _a = _ANCHOR.get((_s['dealer'], _s['day']))
     _n = _a if _a else _n + 1 + _i % 2
-    if _n == 5521 and not _a: _n += 1                         # 5521 is Crestline's dispatch of ORD-2026-10447
+    if _n == 5521 and not _a: _n += 1                         # 5521 stays unused (Crestline's dispatch of ORD-2026-10447 is DSP-2026-5523)
     _s['dispatch'] = f'DSP-2026-{_n}'; _s['number'] = f'SAL-2026-{3010 + _i}'
     _s['date'] = f"{_s['day']:02d}/10/2026"
     _s['payment'] = 'Paid' if _s['paid'] == _s['value'] else 'Unpaid' if _s['paid'] == 0 else 'Partly Paid'
@@ -1247,7 +1247,7 @@ USER_STATUS['Active'] += USERS_OTHER; assert USER_STATUS == {'Active': 64, 'Invi
 TR_W, TR_K = 'Western Freight Carriers', 'Konkan Roadlines'
 SHIPMENTS = [  # dispatch number, order, transporter, sheets, dispatched, expected, status
  ('—',              'ORD-2026-10459', TR_W, 280, '26/10/2026', '29/10/2026', 'Being Packed'),
- ('DSP-2026-5521',  'ORD-2026-10447', TR_W, 360, '24/10/2026', '27/10/2026', 'In Transit'),
+ ('DSP-2026-5523',  'ORD-2026-10447', TR_W, 360, '24/10/2026', '27/10/2026', 'In Transit'),
  ('DSP-2026-5501',  'ORD-2026-10431', TR_W, 520, '18/10/2026', '20/10/2026', 'Delivered'),
  ('DSP-2026-5476',  'ORD-2026-10398', TR_K, 430, '11/10/2026', '13/10/2026', 'Delivered'),
  ('DSP-2026-5456',  'ORD-2026-10372', TR_W, 400, '04/10/2026', '06/10/2026', 'Delivered'),
@@ -1259,7 +1259,7 @@ _ord = {o[0]: o for o in ALPHA_ORDERS}
 assert all(sh[3] == _ord[sh[1]][2] and sh[5] == _ord[sh[1]][4] for sh in SHIPMENTS)
 _alpha_d = [(int(s['dispatch'][-4:]), pd(s['date'])) for s in SALES]
 for _sh in SHIPMENTS:                                            # a number between two of Alpha's dispatches must fall between their dates
-    if _sh[0] in ('—', 'DSP-2026-5521'): continue                  # 5521 is the number the earlier phases fixed
+    if _sh[0] in ('—', 'DSP-2026-5523'): continue                  # 5523 is the number the earlier phases fixed
     _n = int(_sh[0][-4:]); _d = pd(_sh[4])
     assert _n not in {a for a, _ in _alpha_d} and all((pd_ <= _d) if a < _n else (pd_ >= _d) for a, pd_ in _alpha_d), _sh[0]
 SHIP_STATUS = {st: sum(1 for s in SHIPMENTS if s[6] == st) for st in ('Being Packed', 'In Transit', 'Delivered')}
@@ -1353,7 +1353,7 @@ AUDIT = [
  ('25/10/2026 11:20', 'Rajesh Menon', 'Distributor Alpha', 'Returns', 'Created return request', 'RTN-2026-0412'),
  ('24/10/2026 16:20', 'Rajesh Menon', 'Distributor Alpha', 'Support', 'Created ticket', 'TKT-2026-0731'),
  ('24/10/2026 06:32', 'Crestline Laminates', 'Crestline Laminates', 'Invoices', 'Sent invoice by email', 'INV-2026-03318'),
- ('24/10/2026 06:30', 'Neha Kulkarni', 'Crestline Laminates', 'Dispatch', 'Dispatched shipment', 'DSP-2026-5521'),
+ ('24/10/2026 06:30', 'Neha Kulkarni', 'Crestline Laminates', 'Dispatch', 'Dispatched shipment', 'DSP-2026-5523'),
  ('23/10/2026 16:40', 'Neha Kulkarni', 'Crestline Laminates', 'Inventory', 'Reserved stock at Plant Warehouse', 'ORD-2026-10459'),
  ('23/10/2026 16:10', 'Vikram Chopra', 'Crestline Laminates', 'Orders', 'Confirmed order', 'ORD-2026-10459'),
  ('22/10/2026 16:30', 'Anita Deshmukh', 'Crestline Laminates', 'Payments', 'Confirmed payment', 'PAY-2026-02217'),

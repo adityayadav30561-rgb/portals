@@ -89,7 +89,7 @@ body = f'''  <div class="head">
   </div>
   <div class="grid g-2" style="--cols:.8fr 1.2fr">
     <section class="card"><header><h2>Stock Health</h2></header><div class="body center">{chart('donut', series=[{'name': 'In Stock', 'value': n_in, 'color': 'var(--ok)'}, {'name': 'Low Stock', 'value': 3, 'color': '#e0a030'}, {'name': 'Out of Stock', 'value': 1, 'color': 'var(--bad)'}], center='12', caption='products')}</div></section>
-    <section class="card flush"><header><h2>Incoming Shipments</h2></header><div class="body">{table([('Order', ''), ('Sheets', 'num'), ('Expected', ''), ('Status', '')], [ship_rows], 'wrap')}<div style="padding:.5rem 1.125rem 1rem">{kv([('Sheets Arriving', '100')], 'total')}</div></div></section>
+    <section class="card flush"><header><h2>Incoming Shipments</h2><a class="more" data-link="TER-INV-06" data-role="PUR">All deliveries</a></header><div class="body">{table([('Order', ''), ('Sheets', 'num'), ('Expected', ''), ('Status', '')], [ship_rows], 'wrap')}<div style="padding:.5rem 1.125rem 1rem">{kv([('Sheets Arriving', '100')], 'total')}</div></div></section>
   </div>
   <section class="card flush">
     {tabs([('All Products', 12, True), ('In Stock', n_in, False), ('Low Stock', 3, False), ('Out of Stock', 1, False)])}

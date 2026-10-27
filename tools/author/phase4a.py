@@ -21,7 +21,7 @@ OUT_ACTIVE = STATUS_COUNT['Being Packed'] + STATUS_COUNT['In Transit']          
 IN_ACTIVE = sum(1 for _o, (_d, st, _l) in OPEN_ORDERS.items() if st == 'In Transit')   # 1 incoming shipment on its way
 DISPATCHES = []                                                                  # dispatches in progress: incoming first, then outgoing
 for o, (dt, st, lines) in OPEN_ORDERS.items():
-    if st == 'In Transit': DISPATCHES.append(('DSP-2026-5521', 'Incoming', 'Crestline Laminates', sum(q for _, q in lines), dt, st))
+    if st == 'In Transit': DISPATCHES.append(('DSP-2026-5523', 'Incoming', 'Crestline Laminates', sum(q for _, q in lines), dt, st))
 for s in SALES:
     if s['status'] != 'Delivered': DISPATCHES.append((s['dispatch'], 'Outgoing', DLR[s['dealer']][1], s['sheets'], s['expected'], s['status']))
 assert len(DISPATCHES) == OUT_ACTIVE + IN_ACTIVE == 4
@@ -134,7 +134,7 @@ page('primary', 'stock-movement-history', 'PRI-INV-04', 'Primary Customer — Sa
 out_rows = ''.join(f'<tr><td class="mono nowrap"><b>{s["dispatch"]}</b></td><td class="mono nowrap">{s["number"]}</td><td>{link("PRI-DLR-02", DLR[s["dealer"]][1])}</td><td>{s["city"]}</td><td class="num">{N(s["sheets"])}</td><td>{s["date"]}</td><td>{s["expected"]}</td><td>{ful(s["status"])}</td></tr>' for s in SALES[:10])
 inc_rows = ''
 for o, (dt, st, lines) in OPEN_ORDERS.items():
-    inc_rows += (f'<tr><td>{link("PRI-ORD-02", o)}</td><td class="{"mono nowrap" if st == "In Transit" else ""}">{"DSP-2026-5521" if st == "In Transit" else "—"}</td><td>{"Western Freight Carriers" if st == "In Transit" else "—"}</td>'
+    inc_rows += (f'<tr><td>{link("PRI-ORD-02", o)}</td><td class="{"mono nowrap" if st == "In Transit" else ""}">{"DSP-2026-5523" if st == "In Transit" else "—"}</td><td>{"Western Freight Carriers" if st == "In Transit" else "—"}</td>'
                  f'<td class="num">{N(sum(q for _, q in lines))}</td><td>{dt}</td><td>{chip(st)}</td></tr>')
 body = f'''  <div class="head">
     <h1>Dispatch Overview</h1>

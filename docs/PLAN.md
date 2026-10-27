@@ -251,7 +251,7 @@ widths, the inventory regenerated, docs/STATUS.md updated, a commit and a push.
 | **11. Company Super Admin, part 1** ✓ built 2026-10-26, awaiting approval | Dashboard, customers, hierarchy explorer, users, products, orders | 13 | |
 | **12. Company Super Admin, part 2** ✓ built 2026-10-27, awaiting approval | Dispatch, inventory, analytics, the four sales reports, invoices, schemes, support, territory, audit, settings, My Profile, notifications | 19 | |
 | **13. Company Sales and Operations Managers** ✓ built 2026-10-27, awaiting approval | Both dashboards and their own screens | 18 | Company Administration complete (50) |
-| **14. Review and hand-over** | Links between related screens, full responsive pass, README, screen inventory and counts, optional hosting for stakeholders | | Definition of Done in the brief met |
+| **14. Review and hand-over** ✓ done 2026-10-27 (hosting not decided; Firefox and Safari not checked) | Links between related screens, full responsive pass, README, screen inventory and counts, optional hosting for stakeholders | | Definition of Done in the brief met |
 
 Portal naming: screen names use the brief's pattern with the portal as "Primary Customer", "Secondary Customer",
 "Tertiary Customer" and "Company"; the directory cards use the brief's card titles (Primary Distributor, and so on).

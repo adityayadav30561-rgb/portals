@@ -231,7 +231,7 @@ OWN = (day('Today', n('TER-ORD-02', 'Order Submitted', PEND_ORDER['number'], '11
        + day('23 October 2026', n('TER-BIL-05', 'Payment Confirmed', 'PAY-2026-B0388', '10:05', 'cash', 'ok')))
 SLS = (day('Today', n('TER-INV-02', 'Low Stock', 'LM-CAL-003', '08:30', 'warn', 'warn', True), n('TER-INV-02', 'Low Stock', 'LM-CHR-007', '08:30', 'warn', 'warn', True), n('TER-SUP-03', 'New Reply on Support Ticket', 'TKT-2026-B0452', '10:45', 'help', '', True))
        + day('24 October 2026', n('TER-RTS-03', 'Sale Recorded', 'RSL-2026-0395', '11:03', 'trend')))
-PUR = (day('Today', n('TER-ORD-02', 'Order Submitted', PEND_ORDER['number'], '11:20', 'cart', '', True), n('TER-INV-02', 'Low Stock', 'LM-CAL-003', '08:30', 'warn', 'warn', True), n('TER-ORD-02', 'Delivery Arriving Tomorrow', 'TSL-2026-0412', '08:00', 'truck', '', True))
+PUR = (day('Today', n('TER-ORD-02', 'Order Submitted', PEND_ORDER['number'], '11:20', 'cart', '', True), n('TER-INV-02', 'Low Stock', 'LM-CAL-003', '08:30', 'warn', 'warn', True), n('TER-INV-06', 'Delivery Arriving Tomorrow', 'TSL-2026-0412', '08:00', 'truck', '', True))
        + day('20 October 2026', n('TER-ORD-02', 'Order Delivered', 'TSL-2026-0409', '14:20', 'truck', 'ok')))
 body = f'''  <div class="head">
     <h1>Notifications</h1>
